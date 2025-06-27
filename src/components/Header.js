@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 
 const Header = () => {
@@ -10,6 +11,8 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const { t } = useTranslation();
   const { isDarkMode } = useTheme();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,17 +24,28 @@ const Header = () => {
   }, []);
 
   const navItems = [
-    { name: t('nav.home'), href: '#home' },
-    { name: t('nav.about'), href: '#about' },
-    { name: t('nav.skills'), href: '#skills' },
-    { name: t('nav.projects'), href: '#projects' },
-    { name: t('nav.contact'), href: '#contact' }
+    { name: t('nav.home'), href: '#home', path: '/' },
+    { name: t('nav.about'), href: '#about', path: '/' },
+    { name: t('nav.skills'), href: '#skills', path: '/' },
+    { name: t('nav.projects'), href: '#projects', path: '/' },
+    { name: t('nav.blog'), href: '#blog', path: '/' },
+    { name: t('nav.contact'), href: '#contact', path: '/' }
   ];
 
-  const scrollToSection = (href) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSection = (href, path) => {
+    if (location.pathname !== path) {
+      navigate(path);
+      setTimeout(() => {
+        const element = document.querySelector(href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
     setIsOpen(false);
   };
@@ -64,7 +78,7 @@ const Header = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.1 }}
-                onClick={() => scrollToSection(item.href)}
+                onClick={() => scrollToSection(item.href, item.path)}
                 className={`transition-colors duration-300 ${
                   isDarkMode 
                     ? 'text-gray-300 hover:text-white' 
@@ -111,7 +125,7 @@ const Header = () => {
               {navItems.map((item) => (
                 <button
                   key={item.name}
-                  onClick={() => scrollToSection(item.href)}
+                  onClick={() => scrollToSection(item.href, item.path)}
                   className={`block w-full text-left py-2 transition-colors duration-300 ${
                     isDarkMode 
                       ? 'text-gray-300 hover:text-white' 

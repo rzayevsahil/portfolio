@@ -4,16 +4,19 @@
     "about": "Hakkımda",
     "skills": "Yetenekler",
     "projects": "Projeler",
+    "blog": "Blog",
     "contact": "İletişim"
   },
   "hero": {
     "greeting": "Merhaba, ben",
     "name": "Sahil Rzayev",
-    "title": ".NET Developer",
+    "title": "Sahil Rzayev",
     "description": "C#, ASP.NET Core ve Entity Framework kullanarak ölçeklenebilir web uygulamaları geliştiren Backend / .NET Developer. RESTful API'ler, SQL, Clean Architecture ve mikroservisler konusunda deneyimli. Docker, Azure, Redis, Hangfire ve GitHub Actions, Azure DevOps gibi CI/CD araçlarına aşina. Cloud-native development, DevOps ve temiz, test edilebilir kod yazma konusunda tutkulu.",
     "cta": "Projelerimi Görüntüle",
     "downloadCV": "CV İndir",
-    "scroll": "Aşağı Kaydır"
+    "scroll": "Aşağı Kaydır",
+    "blogButton": "📝 Blog & Makaleler",
+    "subtitle": ".NET Developer"
   },
   "about": {
     "title": "Hakkımda",
@@ -161,5 +164,70 @@
   "language": {
     "tr": "Türkçe",
     "en": "English"
+  },
+  "blog": {
+    "title": "Blog & Makaleler",
+    "subtitle": "Yazılım geliştirme, teknoloji ve best practices hakkında yazılarım",
+    "searchPlaceholder": "Makalelerde ara...",
+    "categories": {
+      "all": "Tümü",
+      "technology": "Teknoloji",
+      "development": "Geliştirme",
+      "tutorial": "Eğitim",
+      "tips": "İpuçları"
+    },
+    "featured": "Öne Çıkan",
+    "readMore": "Devamını Oku",
+    "noResults": "Arama kriterlerinize uygun makale bulunamadı.",
+    "showMore": "Daha Fazla Göster",
+    "articles": {
+      "article1": {
+        "title": "ASP.NET Core ile Modern Web API Geliştirme",
+        "excerpt": "Bu makalede ASP.NET Core kullanarak modern, ölçeklenebilir web API'leri nasıl geliştireceğimizi öğreneceğiz.",
+        "content": "<h2>Modern Web API Geliştirme: ASP.NET Core ile Adım Adım</h2>\n<p>Modern web uygulamalarında API geliştirmek, yazılım dünyasının en önemli konularından biri haline geldi. Bu makalede ASP.NET Core ile RESTful Web API geliştirme sürecini adım adım inceleyeceğiz.</p>\n<h3>Proje Kurulumu</h3>\n<p>Yeni bir ASP.NET Core Web API projesi oluşturmak için terminalde şu komutu kullanabilirsiniz:</p>\n<pre><code>dotnet new webapi -n MyWebApi\ncd MyWebApi</code></pre>\n<h3>Temel Controller</h3>\n<p>Aşağıda örnek bir <code>ProductsController</code> kodu yer almaktadır:</p>\n<pre><code>[ApiController]\n[Route(\"api/[controller]\")]\npublic class ProductsController : ControllerBase\n{\n    [HttpGet]\n    public IEnumerable&lt;Product&gt; Get() => new List&lt;Product&gt;\n    {\n        new Product { Id = 1, Name = \"Laptop\", Price = 1500 },\n        new Product { Id = 2, Name = \"Mouse\", Price = 25 }\n    };\n}\n</code></pre>\n<h3>Örnek Tablo</h3>\n<table>\n  <thead>\n    <tr><th>Id</th><th>Ürün Adı</th><th>Fiyat</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>1</td><td>Laptop</td><td>1500</td></tr>\n    <tr><td>2</td><td>Mouse</td><td>25</td></tr>\n  </tbody>\n</table>\n<h3>Görsel</h3>\n<img src=\"https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=400&fit=crop\" alt=\"Web API\" />\n<h3>Sonuç</h3>\n<p>Bu makalede ASP.NET Core ile modern bir Web API'nin temellerini öğrendik. Daha fazlası için beni takipte kalın!</p>",
+        "readTime": "{{count}} dk"
+      },
+      "article2": {
+        "title": "Clean Architecture Prensipleri",
+        "excerpt": "Clean Architecture, yazılım geliştirmede sürdürülebilir ve test edilebilir kod yazmanın temel prensiplerini açıklar.",
+        "content": "<h2>Clean Architecture Nedir?</h2>\n<p>Clean Architecture, Robert C. Martin tarafından ortaya atılan bir mimari yaklaşımdır.</p>\n<h2>Temel Prensipler</h2>\n<ul>\n  <li>Bağımlılık Kuralı</li>\n  <li>Abstraction Kuralı</li>\n  <li>Dependency Inversion</li>\n</ul>\n<h2>Sonuç</h2>\n<p>Clean Architecture, büyük projelerde kod kalitesini artırmak için kullanılan güçlü bir yaklaşımdır.</p>",
+        "readTime": "{{count}} dk"
+      },
+      "article3": {
+        "title": "Docker ile Mikroservis Deployment",
+        "excerpt": "Mikroservis mimarisinde Docker kullanarak uygulamaları nasıl containerize edeceğimizi öğreneceğiz.",
+        "content": "<h2>Docker Nedir?</h2>\n<p>Docker, uygulamaları container'lar içinde çalıştırmamızı sağlayan popüler bir platformdur.</p>\n<h2>Dockerfile Oluşturma</h2>\n<pre><code>FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build\nWORKDIR /src\nCOPY [\"MyApp.csproj\", \"./\"]\nRUN dotnet restore \"MyApp.csproj\"</code></pre>\n<h2>Sonuç</h2>\n<p>Docker, mikroservis mimarisinde deployment süreçlerini kolaylaştıran güçlü bir araçtır.</p>",
+        "readTime": "{{count}} dk"
+      },
+      "article4": {
+        "title": "Yazılımda Verimlilik İçin 10 İpucu",
+        "excerpt": "Günlük yazılım geliştirme süreçlerinde verimliliği artırmak için kullanabileceğiniz 10 pratik ipucu.",
+        "content": "<h2>Yazılımda Verimlilik İçin 10 İpucu</h2>\n<p>Yazılım geliştiriciler için zaman yönetimi ve verimlilik çok önemlidir. Bu makalede, günlük işlerinizi kolaylaştıracak 10 ipucunu bulabilirsiniz.</p>\n<ul>\n  <li>Odaklanma zamanları oluşturun</li>\n  <li>Kısa molalar verin</li>\n  <li>Otomasyon araçları kullanın</li>\n  <li>Notlar alın</li>\n  <li>Takımınızla iletişimde kalın</li>\n  <li>Gereksiz toplantılardan kaçının</li>\n  <li>Sağlığınıza dikkat edin</li>\n  <li>Yapılacaklar listesi oluşturun</li>\n  <li>Önceliklendirme yapın</li>\n  <li>Yeni teknolojileri takip edin</li>\n</ul>\n<p>Daha fazlası için blogu takipte kalın!</p>",
+        "readTime": "{{count}} dk"
+      }
+    }
+  },
+  "articleDetail": {
+    "comments": {
+      "title": "Yorumlar",
+      "noComments": "Henüz yorum yok. İlk yorumu siz yazın!"
+    },
+    "form": {
+      "namePlaceholder": "Adınız",
+      "commentPlaceholder": "Yorumunuz...",
+      "submit": "Yorum Yap"
+    },
+    "errors": {
+      "emptyFields": "Lütfen adınızı ve yorumunuzu girin.",
+      "success": "Yorumunuz başarıyla eklendi!"
+    },
+    "coffee": {
+      "text": "Dilersen bana bir fincan kahve ısmarlayabilirsin ☕",
+      "button": "Kahve Ismarla"
+    },
+    "locale": "tr-TR",
+    "back": "Geri Dön",
+    "share": "Paylaş",
+    "readTime": "{{count}} dk"
   }
 } 

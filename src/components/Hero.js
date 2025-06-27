@@ -114,6 +114,26 @@ const Hero = () => {
               {t('hero.downloadCV')}
             </motion.button>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="mb-8"
+          >
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => document.querySelector('#blog').scrollIntoView({ behavior: 'smooth' })}
+              className={`inline-flex items-center space-x-2 px-6 py-3 rounded-full text-lg font-medium transition-all duration-300 ${
+                isDarkMode 
+                  ? 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 hover:text-white border border-gray-700/50' 
+                  : 'bg-white/50 text-gray-700 hover:bg-gray-100/50 hover:text-gray-900 border border-gray-200/50 shadow-lg'
+              }`}
+            >
+              <span>{t('hero.blogButton')}</span>
+            </motion.button>
+          </motion.div>
         </motion.div>
 
         {/* Scroll Indicator */}

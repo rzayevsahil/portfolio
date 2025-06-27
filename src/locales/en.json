@@ -4,16 +4,18 @@
     "about": "About",
     "skills": "Skills",
     "projects": "Projects",
+    "blog": "Blog",
     "contact": "Contact"
   },
   "hero": {
     "greeting": "Hello, I'm",
     "name": "Sahil Rzayev",
-    "title": ".NET Developer",
+    "title": "Sahil Rzayev",
     "description": "Backend / .NET Developer with strong experience in building scalable web applications using C#, ASP.NET Core, and Entity Framework. Skilled in RESTful APIs, SQL, Clean Architecture, and microservices. Familiar with Docker, Azure, Redis, Hangfire, and CI/CD tools like GitHub Actions and Azure DevOps. Passionate about cloud-native development, DevOps, and writing clean, testable code.",
     "cta": "View My Projects",
     "downloadCV": "Download CV",
-    "scroll": "Scroll Down"
+    "scroll": "Scroll Down",
+    "blogButton": "📝 Blog & Articles"
   },
   "about": {
     "title": "About Me",
@@ -165,5 +167,70 @@
   "common": {
     "loading": "Loading...",
     "scrollToTop": "Scroll to top"
+  },
+  "blog": {
+    "title": "Blog & Articles",
+    "subtitle": "My articles about software development, technology and best practices",
+    "searchPlaceholder": "Search articles...",
+    "categories": {
+      "all": "All",
+      "technology": "Technology",
+      "development": "Development",
+      "tutorial": "Tutorial",
+      "tips": "Tips"
+    },
+    "featured": "Featured",
+    "readMore": "Read More",
+    "noResults": "No articles found matching your search criteria.",
+    "articles": {
+      "article1": {
+        "title": "Modern Web API Development with ASP.NET Core",
+        "excerpt": "In this article, we will learn how to develop modern, scalable web APIs using ASP.NET Core.",
+        "content": "<h2>Modern Web API Development: Step by Step with ASP.NET Core</h2>\n<p>Developing APIs in modern web applications has become one of the most important topics in the software world. In this article, we will examine the process of developing a RESTful Web API with ASP.NET Core step by step.</p>\n<h3>Project Setup</h3>\n<p>You can create a new ASP.NET Core Web API project with the following command in the terminal:</p>\n<pre><code>dotnet new webapi -n MyWebApi\ncd MyWebApi</code></pre>\n<h3>Basic Controller</h3>\n<p>Below is a sample <code>ProductsController</code> code:</p>\n<pre><code>[ApiController]\n[Route(\"api/[controller]\")]\npublic class ProductsController : ControllerBase\n{\n    [HttpGet]\n    public IEnumerable&lt;Product&gt; Get() => new List&lt;Product&gt;\n    {\n        new Product { Id = 1, Name = \"Laptop\", Price = 1500 },\n        new Product { Id = 2, Name = \"Mouse\", Price = 25 }\n    };\n}\n</code></pre>\n<h3>Sample Table</h3>\n<table>\n  <thead>\n    <tr><th>Id</th><th>Product Name</th><th>Price</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>1</td><td>Laptop</td><td>1500</td></tr>\n    <tr><td>2</td><td>Mouse</td><td>25</td></tr>\n  </tbody>\n</table>\n<h3>Image</h3>\n<img src=\"https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=400&fit=crop\" alt=\"Web API\" />\n<h3>Conclusion</h3>\n<p>In this article, we learned the basics of a modern Web API with ASP.NET Core. Stay tuned for more!</p>",
+        "readTime": "{{count}} min"
+      },
+      "article2": {
+        "title": "Clean Architecture Principles",
+        "excerpt": "Clean Architecture explains the fundamental principles of writing sustainable and testable code in software development.",
+        "content": "<h2>What is Clean Architecture?</h2>\n<p>Clean Architecture is an architectural approach introduced by Robert C. Martin.</p>\n<h2>Core Principles</h2>\n<ul>\n  <li>Dependency Rule</li>\n  <li>Abstraction Rule</li>\n  <li>Dependency Inversion</li>\n</ul>\n<h2>Conclusion</h2>\n<p>Clean Architecture is a powerful approach used to improve code quality in large projects.</p>",
+        "readTime": "{{count}} min"
+      },
+      "article3": {
+        "title": "Microservice Deployment with Docker",
+        "excerpt": "We will learn how to containerize applications using Docker in microservice architecture.",
+        "content": "<h2>What is Docker?</h2>\n<p>Docker is a popular platform that allows us to run applications inside containers.</p>\n<h2>Creating a Dockerfile</h2>\n<pre><code>FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build\nWORKDIR /src\nCOPY [\"MyApp.csproj\", \"./\"]\nRUN dotnet restore \"MyApp.csproj\"</code></pre>\n<h2>Conclusion</h2>\n<p>Docker is a powerful tool that simplifies deployment processes in microservice architecture.</p>",
+        "readTime": "{{count}} min"
+      },
+      "article4": {
+        "title": "10 Tips for Productivity in Software Development",
+        "excerpt": "10 practical tips to boost your productivity in daily software development routines.",
+        "content": "<h2>10 Tips for Productivity in Software Development</h2>\n<p>Time management and productivity are crucial for software developers. In this article, you will find 10 tips to make your daily work easier.</p>\n<ul>\n  <li>Create focus times</li>\n  <li>Take short breaks</li>\n  <li>Use automation tools</li>\n  <li>Take notes</li>\n  <li>Stay in touch with your team</li>\n  <li>Avoid unnecessary meetings</li>\n  <li>Take care of your health</li>\n  <li>Make a to-do list</li>\n  <li>Prioritize tasks</li>\n  <li>Follow new technologies</li>\n</ul>\n<p>Stay tuned for more on the blog!</p>",
+        "readTime": "{{count}} min"
+      }
+    },
+    "showMore": "Show More"
+  },
+  "articleDetail": {
+    "comments": {
+      "title": "Comments",
+      "noComments": "No comments yet. Be the first to comment!"
+    },
+    "form": {
+      "namePlaceholder": "Your name",
+      "commentPlaceholder": "Your comment...",
+      "submit": "Submit Comment"
+    },
+    "errors": {
+      "emptyFields": "Please enter your name and comment.",
+      "success": "Your comment has been added!"
+    },
+    "coffee": {
+      "text": "If you wish, you can buy me a coffee ☕",
+      "button": "Buy Me a Coffee"
+    },
+    "locale": "en-US",
+    "back": "Back",
+    "share": "Share",
+    "readTime": "{{count}} min"
   }
 } 

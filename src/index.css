@@ -602,5 +602,792 @@ body.dark {
 }
 
 .contact-send-btn:active {
-  transform: scale(0.95) !important;
+  transform: scale(0.98);
+}
+
+/* Line clamp utilities for text truncation */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Prose styles for article content */
+.prose {
+  color: var(--text-primary);
+  max-width: 65ch;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose h1 {
+  font-size: 2.25rem;
+}
+
+.prose h2 {
+  font-size: 1.875rem;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+}
+
+.prose h4 {
+  font-size: 1.25rem;
+}
+
+.prose p {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose ul,
+.prose ol {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-left: 1.625rem;
+}
+
+.prose li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose blockquote {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--text-secondary);
+  border-left-width: 0.25rem;
+  border-left-color: var(--accent);
+  quotes: '"' '"' "'" "'";
+  margin-top: 1.6rem;
+  margin-bottom: 1.6rem;
+  padding-left: 1rem;
+}
+
+.prose code {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.875em;
+  background-color: var(--bg-tertiary);
+  padding: 0.25rem 0.375rem;
+  border-radius: 0.375rem;
+}
+
+.prose pre {
+  color: var(--text-primary);
+  background-color: var(--bg-tertiary);
+  overflow-x: auto;
+  font-weight: 400;
+  font-size: 0.875em;
+  line-height: 1.7142857;
+  margin-top: 1.7142857em;
+  margin-bottom: 1.7142857em;
+  border-radius: 0.375rem;
+  padding: 0.8571429em 1.1428571em;
+}
+
+.prose pre code {
+  background-color: transparent;
+  border-width: 0;
+  border-radius: 0;
+  padding: 0;
+  font-weight: inherit;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+}
+
+.prose table {
+  width: 100%;
+  table-layout: auto;
+  text-align: left;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  font-size: 0.875em;
+  line-height: 1.7142857;
+}
+
+.prose thead {
+  color: var(--text-primary);
+  font-weight: 600;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--border);
+}
+
+.prose thead th {
+  vertical-align: bottom;
+  padding-right: 0.5714286em;
+  padding-bottom: 0.5714286em;
+  padding-left: 0.5714286em;
+}
+
+.prose tbody tr {
+  border-bottom-width: 1px;
+  border-bottom-color: var(--border);
+}
+
+.prose tbody tr:last-child {
+  border-bottom-width: 0;
+}
+
+.prose tbody td {
+  vertical-align: baseline;
+  padding: 0.5714286em;
+}
+
+.prose img {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border-radius: 0.375rem;
+}
+
+.prose video {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.prose figure {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.prose figure > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.prose h2 code {
+  font-size: 0.875em;
+}
+
+.prose h3 code {
+  font-size: 0.9em;
+}
+
+.prose ul > li > *:first-child,
+.prose ol > li > *:first-child {
+  margin-top: 1.25rem;
+}
+
+.prose ul > li > *:last-child,
+.prose ol > li > *:last-child {
+  margin-bottom: 1.25rem;
+}
+
+.prose ul ul,
+.prose ul ol,
+.prose ol ul,
+.prose ol ol {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose hr {
+  border-color: var(--border);
+  border-top-width: 1px;
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+.prose > ul > li > *:first-child,
+.prose > ol > li > *:first-child {
+  margin-top: 1.25rem;
+}
+
+.prose > ul > li > *:last-child,
+.prose > ol > li > *:last-child {
+  margin-bottom: 1.25rem;
+}
+
+.prose > ul ul,
+.prose > ul ol,
+.prose > ol ul,
+.prose > ol ol {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose hr + * {
+  margin-top: 0;
+}
+
+.prose h2 + * {
+  margin-top: 0;
+}
+
+.prose h3 + * {
+  margin-top: 0;
+}
+
+.prose h4 + * {
+  margin-top: 0;
+}
+
+.prose h6 + * {
+  margin-top: 0;
+}
+
+.prose thead th:first-child {
+  padding-left: 0;
+}
+
+.prose thead th:last-child {
+  padding-right: 0;
+}
+
+.prose tbody td:first-child {
+  padding-left: 0;
+}
+
+.prose tbody td:last-child {
+  padding-right: 0;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.prose-sm {
+  font-size: 0.875rem;
+  line-height: 1.7142857;
+}
+
+.prose-sm p {
+  margin-top: 1.1428571em;
+  margin-bottom: 1.1428571em;
+}
+
+.prose-sm [class~="lead"] {
+  font-size: 1.2857143em;
+  line-height: 1.5555556;
+  margin-top: 0.8888889em;
+  margin-bottom: 0.8888889em;
+}
+
+.prose-sm blockquote {
+  margin-top: 1.3333333em;
+  margin-bottom: 1.3333333em;
+  padding-left: 1.1111111em;
+}
+
+.prose-sm h1 {
+  font-size: 2.1428571em;
+  margin-top: 0;
+  margin-bottom: 0.8em;
+  line-height: 1.2;
+}
+
+.prose-sm h2 {
+  font-size: 1.4285714em;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+  line-height: 1.3333333;
+}
+
+.prose-sm h3 {
+  font-size: 1.2857143em;
+  margin-top: 1.5555556em;
+  margin-bottom: 0.4444444em;
+  line-height: 1.4444444;
+}
+
+.prose-sm h4 {
+  margin-top: 1.4285714em;
+  margin-bottom: 0.5714286em;
+  line-height: 1.2;
+}
+
+.prose-sm figure {
+  margin-top: 1.7142857em;
+  margin-bottom: 1.7142857em;
+}
+
+.prose-sm figure > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.prose-sm figure figcaption {
+  color: var(--text-secondary);
+  font-size: 0.8571429em;
+  line-height: 1.3333333;
+  margin-top: 0.6666667em;
+}
+
+.prose-sm code {
+  font-size: 0.8571429em;
+}
+
+.prose-sm h2 code {
+  font-size: 0.9em;
+}
+
+.prose-sm h3 code {
+  font-size: 0.8888889em;
+}
+
+.prose-sm pre {
+  font-size: 0.8571429em;
+  line-height: 1.6666667;
+  margin-top: 1.6666667em;
+  margin-bottom: 1.6666667em;
+  border-radius: 0.25rem;
+  padding: 0.6666667em 1em;
+}
+
+.prose-sm table {
+  font-size: 0.8571429em;
+  line-height: 1.5;
+}
+
+.prose-sm thead th {
+  padding-right: 0.5714286em;
+  padding-bottom: 0.5714286em;
+  padding-left: 0.5714286em;
+}
+
+.prose-sm thead th:first-child {
+  padding-left: 0;
+}
+
+.prose-sm thead th:last-child {
+  padding-right: 0;
+}
+
+.prose-sm tbody td {
+  padding: 0.5714286em;
+}
+
+.prose-sm tbody td:first-child {
+  padding-left: 0;
+}
+
+.prose-sm tbody td:last-child {
+  padding-right: 0;
+}
+
+.prose-lg {
+  font-size: 1.125rem;
+  line-height: 1.7777778;
+}
+
+.prose-lg p {
+  margin-top: 1.3333333em;
+  margin-bottom: 1.3333333em;
+}
+
+.prose-lg [class~="lead"] {
+  font-size: 1.2222222em;
+  line-height: 1.4545455;
+  margin-top: 1.0909091em;
+  margin-bottom: 1.0909091em;
+}
+
+.prose-lg blockquote {
+  margin-top: 1.6666667em;
+  margin-bottom: 1.6666667em;
+  padding-left: 1em;
+}
+
+.prose-lg h1 {
+  font-size: 2.6666667em;
+  margin-top: 0;
+  margin-bottom: 0.8333333em;
+  line-height: 1;
+}
+
+.prose-lg h2 {
+  font-size: 2em;
+  margin-top: 1.6666667em;
+  margin-bottom: 0.6666667em;
+  line-height: 1.3333333;
+}
+
+.prose-lg h3 {
+  font-size: 1.3333333em;
+  margin-top: 1.5555556em;
+  margin-bottom: 0.4444444em;
+  line-height: 1.5555556;
+}
+
+.prose-lg h4 {
+  margin-top: 1.6666667em;
+  margin-bottom: 0.5em;
+  line-height: 1.1111111;
+}
+
+.prose-lg figure {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.prose-lg figure > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.prose-lg figure figcaption {
+  color: var(--text-secondary);
+  font-size: 0.8888889em;
+  line-height: 1.5;
+  margin-top: 1em;
+}
+
+.prose-lg code {
+  font-size: 0.8888889em;
+}
+
+.prose-lg h2 code {
+  font-size: 0.9em;
+}
+
+.prose-lg h3 code {
+  font-size: 0.875em;
+}
+
+.prose-lg pre {
+  font-size: 0.8888889em;
+  line-height: 1.75;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border-radius: 0.375rem;
+  padding: 1em 1.5em;
+}
+
+.prose-lg table {
+  font-size: 0.8888889em;
+  line-height: 1.5;
+}
+
+.prose-lg thead th {
+  padding-right: 0.75em;
+  padding-bottom: 0.75em;
+  padding-left: 0.75em;
+}
+
+.prose-lg thead th:first-child {
+  padding-left: 0;
+}
+
+.prose-lg thead th:last-child {
+  padding-right: 0;
+}
+
+.prose-lg tbody td {
+  padding: 0.75em;
+}
+
+.prose-lg tbody td:first-child {
+  padding-left: 0;
+}
+
+.prose-lg tbody td:last-child {
+  padding-right: 0;
+}
+
+.prose-xl {
+  font-size: 1.25rem;
+  line-height: 1.8;
+}
+
+.prose-xl p {
+  margin-top: 1.4em;
+  margin-bottom: 1.4em;
+}
+
+.prose-xl [class~="lead"] {
+  font-size: 1.2em;
+  line-height: 1.5;
+  margin-top: 1.1666667em;
+  margin-bottom: 1.1666667em;
+}
+
+.prose-xl blockquote {
+  margin-top: 1.8em;
+  margin-bottom: 1.8em;
+  padding-left: 1.2em;
+}
+
+.prose-xl h1 {
+  font-size: 3em;
+  margin-top: 0;
+  margin-bottom: 0.8333333em;
+  line-height: 1;
+}
+
+.prose-xl h2 {
+  font-size: 2.2em;
+  margin-top: 1.8181818em;
+  margin-bottom: 0.7272727em;
+  line-height: 1.3333333;
+}
+
+.prose-xl h3 {
+  font-size: 1.4em;
+  margin-top: 1.5714286em;
+  margin-bottom: 0.4285714em;
+  line-height: 1.6;
+}
+
+.prose-xl h4 {
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+  line-height: 1.1111111;
+}
+
+.prose-xl figure {
+  margin-top: 2.2em;
+  margin-bottom: 2.2em;
+}
+
+.prose-xl figure > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.prose-xl figure figcaption {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  line-height: 1.5555556;
+  margin-top: 1.1111111em;
+}
+
+.prose-xl code {
+  font-size: 0.9em;
+}
+
+.prose-xl h2 code {
+  font-size: 0.9090909em;
+}
+
+.prose-xl h3 code {
+  font-size: 0.8571429em;
+}
+
+.prose-xl pre {
+  font-size: 0.9em;
+  line-height: 1.7777778;
+  margin-top: 2.2em;
+  margin-bottom: 2.2em;
+  border-radius: 0.5rem;
+  padding: 1.1111111em 1.6666667em;
+}
+
+.prose-xl table {
+  font-size: 0.9em;
+  line-height: 1.5555556;
+}
+
+.prose-xl thead th {
+  padding-right: 0.8888889em;
+  padding-bottom: 0.8888889em;
+  padding-left: 0.8888889em;
+}
+
+.prose-xl thead th:first-child {
+  padding-left: 0;
+}
+
+.prose-xl thead th:last-child {
+  padding-right: 0;
+}
+
+.prose-xl tbody td {
+  padding: 0.8888889em;
+}
+
+.prose-xl tbody td:first-child {
+  padding-left: 0;
+}
+
+.prose-xl tbody td:last-child {
+  padding-right: 0;
+}
+
+.prose-2xl {
+  font-size: 1.5rem;
+  line-height: 1.8333333;
+}
+
+.prose-2xl p {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+.prose-2xl [class~="lead"] {
+  font-size: 1.125em;
+  line-height: 1.6666667;
+  margin-top: 1.3333333em;
+  margin-bottom: 1.3333333em;
+}
+
+.prose-2xl blockquote {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  padding-left: 1.5em;
+}
+
+.prose-2xl h1 {
+  font-size: 3.3333333em;
+  margin-top: 0;
+  margin-bottom: 0.8em;
+  line-height: 1;
+}
+
+.prose-2xl h2 {
+  font-size: 2.5em;
+  margin-top: 2em;
+  margin-bottom: 0.8em;
+  line-height: 1.3333333;
+}
+
+.prose-2xl h3 {
+  font-size: 1.5em;
+  margin-top: 1.6666667em;
+  margin-bottom: 0.3333333em;
+  line-height: 1.6666667;
+}
+
+.prose-2xl h4 {
+  margin-top: 2em;
+  margin-bottom: 0.6666667em;
+  line-height: 1.1111111;
+}
+
+.prose-2xl figure {
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+}
+
+.prose-2xl figure > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.prose-2xl figure figcaption {
+  color: var(--text-secondary);
+  font-size: 0.9166667em;
+  line-height: 1.6363636;
+  margin-top: 1.2727273em;
+}
+
+.prose-2xl code {
+  font-size: 0.9166667em;
+}
+
+.prose-2xl h2 code {
+  font-size: 0.92em;
+}
+
+.prose-2xl h3 code {
+  font-size: 0.8666667em;
+}
+
+.prose-2xl pre {
+  font-size: 0.9166667em;
+  line-height: 1.8181818;
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+  border-radius: 0.5rem;
+  padding: 1.25em 2em;
+}
+
+.prose-2xl table {
+  font-size: 0.9166667em;
+  line-height: 1.6363636;
+}
+
+.prose-2xl thead th {
+  padding-right: 1em;
+  padding-bottom: 1em;
+  padding-left: 1em;
+}
+
+.prose-2xl thead th:first-child {
+  padding-left: 0;
+}
+
+.prose-2xl thead th:last-child {
+  padding-right: 0;
+}
+
+.prose-2xl tbody td {
+  padding: 1em;
+}
+
+.prose-2xl tbody td:first-child {
+  padding-left: 0;
+}
+
+.prose-2xl tbody td:last-child {
+  padding-right: 0;
+}
+
+/* Dark mode prose adjustments */
+.dark .prose {
+  color: var(--text-primary-dark);
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6 {
+  color: var(--text-primary-dark);
+}
+
+.dark .prose blockquote {
+  color: var(--text-secondary-dark);
+  border-left-color: var(--accent-dark);
+}
+
+.dark .prose code {
+  color: var(--accent-dark);
+  background-color: var(--bg-tertiary-dark);
+}
+
+.dark .prose pre {
+  color: var(--text-primary-dark);
+  background-color: var(--bg-tertiary-dark);
+}
+
+.dark .prose thead {
+  color: var(--text-primary-dark);
+  border-bottom-color: var(--border-dark);
+}
+
+.dark .prose tbody tr {
+  border-bottom-color: var(--border-dark);
+}
+
+.dark .prose hr {
+  border-color: var(--border-dark);
 } 
