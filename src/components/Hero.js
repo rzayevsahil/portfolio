@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaTwitter, FaArrowDown } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,42 @@ const Hero = () => {
     document.querySelector('#about').scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Typewriter animasyonu için iki ayrı satır
+  const greeting = t('hero.greeting');
+  const name = t('hero.title');
+  const [typedGreeting, setTypedGreeting] = useState('');
+  const [typedName, setTypedName] = useState('');
+
+  useEffect(() => {
+    setTypedGreeting('');
+    setTypedName('');
+    let i = 0;
+    let j = 0;
+    const typeGreeting = () => {
+      if (i <= greeting.length) {
+        setTypedGreeting(greeting.slice(0, i));
+        i++;
+        setTimeout(typeGreeting, 110);
+      } else {
+        typeName();
+      }
+    };
+    const typeName = () => {
+      if (j <= name.length) {
+        setTypedName(name.slice(0, j));
+        j++;
+        setTimeout(typeName, 110);
+      }
+    };
+    typeGreeting();
+    // cleanup
+    return () => {
+      setTypedGreeting(greeting);
+      setTypedName(name);
+    };
+    // eslint-disable-next-line
+  }, [greeting, name]);
+
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Background Gradient */}
@@ -20,6 +56,13 @@ const Hero = () => {
           ? 'bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-pink-900/20' 
           : 'bg-gradient-to-br from-blue-100/50 via-purple-100/50 to-pink-100/50'
       }`}></div>
+      {/* Profile Photo Background */}
+      <img
+        src="/profile.jpg"
+        alt="Sahil Rzayev"
+        className={`absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 w-[340px] h-[340px] md:w-[520px] md:h-[520px] rounded-full object-cover z-0 pointer-events-none select-none shadow-2xl ${isDarkMode ? 'opacity-70' : 'opacity-85'}`}
+        style={{ filter: 'blur(0.5px)' }}
+      />
       
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
@@ -59,7 +102,7 @@ const Hero = () => {
         />
       </div>
 
-      <div className="container mx-auto px-4 text-center relative z-10">
+      <div className="container mx-auto px-4 text-center relative z-10 mt-40 md:mt-56">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -72,11 +115,12 @@ const Hero = () => {
             className="text-5xl md:text-7xl font-bold mb-6"
           >
             <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              {t('hero.greeting')}
+              {typedGreeting}
             </span>
             <br />
             <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>
-              {t('hero.title')}
+              {typedName}
+              <span className="inline-block w-2 h-7 align-middle animate-pulse ml-1" style={{verticalAlign:'-0.2em'}}></span>
             </span>
           </motion.h1>
 
