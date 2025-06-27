@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
+import logoImg from '../assets/logo.png';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,7 +67,7 @@ const Header = () => {
             whileHover={{ scale: 1.05 }}
             className="flex items-center"
           >
-            <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
+            <img src={logoImg} alt="Logo" className="h-10 w-auto" />
           </motion.div>
 
           {/* Desktop Navigation */}

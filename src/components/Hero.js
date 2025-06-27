@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaTwitter, FaArrowDown } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
+import profileImg from '../assets/profile.jpg';
 
 const Hero = () => {
   const { t } = useTranslation();
@@ -58,7 +59,7 @@ const Hero = () => {
       }`}></div>
       {/* Profile Photo Background */}
       <img
-        src="/profile.jpg"
+        src={profileImg}
         alt="Sahil Rzayev"
         className={`absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 w-[340px] h-[340px] md:w-[520px] md:h-[520px] rounded-full object-cover z-0 pointer-events-none select-none shadow-2xl ${isDarkMode ? 'opacity-70' : 'opacity-85'}`}
         style={{ filter: 'blur(0.5px)' }}
@@ -129,7 +130,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
             className={`text-xl md:text-2xl mb-8 max-w-3xl mx-auto ${
-              isDarkMode ? 'text-gray-300' : 'text-gray-600'
+              isDarkMode ? 'text-gray-300' : 'text-gray-900'
             }`}
           >
             {t('hero.subtitle')}
