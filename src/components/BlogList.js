@@ -232,7 +232,7 @@ const BlogList = () => {
                         ? 'text-blue-400 hover:text-blue-300' 
                         : 'text-blue-600 hover:text-blue-700'
                     }`}
-                    onClick={() => navigate(`/article/${article.id}`)}
+                    onClick={() => navigate(`/article/${article.id}`, { state: { fromBlogList: true } })}
                   >
                     <span>{t('blog.readMore')}</span>
                     <FaArrowRight size={12} />

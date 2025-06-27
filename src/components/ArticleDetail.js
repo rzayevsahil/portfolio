@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaCalendar, FaUser, FaTags, FaClock, FaShare } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import i18n from '../i18n';
 const ArticleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const { isDarkMode } = useTheme();
 
@@ -106,10 +107,14 @@ const ArticleDetail = () => {
   };
 
   const handleBack = () => {
-    navigate('/', { replace: false });
-    setTimeout(() => {
-      window.location.hash = '#blog';
-    }, 100);
+    if (location.state && location.state.fromBlogList) {
+      navigate('/blog');
+    } else {
+      navigate('/', { replace: false });
+      setTimeout(() => {
+        window.location.hash = '#blog';
+      }, 100);
+    }
   };
 
   useEffect(() => {
