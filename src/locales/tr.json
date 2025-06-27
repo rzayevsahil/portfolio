@@ -1,0 +1,165 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "about": "Hakkımda",
+    "skills": "Yetenekler",
+    "projects": "Projeler",
+    "contact": "İletişim"
+  },
+  "hero": {
+    "greeting": "Merhaba, ben",
+    "name": "Sahil Rzayev",
+    "title": ".NET Developer",
+    "description": "C#, ASP.NET Core ve Entity Framework kullanarak ölçeklenebilir web uygulamaları geliştiren Backend / .NET Developer. RESTful API'ler, SQL, Clean Architecture ve mikroservisler konusunda deneyimli. Docker, Azure, Redis, Hangfire ve GitHub Actions, Azure DevOps gibi CI/CD araçlarına aşina. Cloud-native development, DevOps ve temiz, test edilebilir kod yazma konusunda tutkulu.",
+    "cta": "Projelerimi Görüntüle",
+    "downloadCV": "CV İndir",
+    "scroll": "Aşağı Kaydır"
+  },
+  "about": {
+    "title": "Hakkımda",
+    "subtitle": "Backend / .NET Developer olarak modern web teknolojileri ile çalışıyorum",
+    "greeting": "Merhaba! Ben",
+    "developer": ".NET Developer",
+    "description1": "C#, ASP.NET Core ve Entity Framework kullanarak ölçeklenebilir web uygulamaları geliştiren deneyimli bir Backend / .NET Developer'ım. RESTful API'ler, SQL, Clean Architecture ve mikroservisler konusunda güçlü bir temel oluşturdum.",
+    "description2": "Docker, Azure, Redis, Hangfire ve GitHub Actions, Azure DevOps gibi CI/CD araçlarına aşinayım. Cloud-native development, DevOps ve temiz, test edilebilir kod yazma konusunda tutkulu bir geliştiricisiyim.",
+    "description3": "Sürekli öğrenmeye ve kendimi geliştirmeye odaklanıyorum. Yeni teknolojileri takip ediyor ve projelerimde uyguluyorum. Takım çalışmasına değer veriyor ve açık kaynak projelere katkıda bulunmaktan keyif alıyorum.",
+    "moreInfo": "Daha Fazla Bilgi",
+    "stats": {
+      "projects": "Proje Tamamlandı",
+      "experience": "Yıl Deneyim",
+      "clients": "Mutlu Müşteri",
+      "success": "Başarı Oranı"
+    },
+    "experience": {
+      "title": "İş Deneyimi",
+      "current": {
+        "period": "06/2023 - 04/2025",
+        "title": "Fullstack Developer",
+        "company": "Elasoft Yazılım Bilgi Teknolojileri",
+        "description": "ASP.NET Core ve Angular JS kullanarak modüler web uygulamaları geliştirdim. Yeniden kullanılabilir UI bileşenleri oluşturdum ve client-side filtreleme mantığı uyguladım. FastReport ile dinamik raporlar oluşturdum. RESTful API'ler tasarladım ve performans için SQL sorgularını optimize ettim."
+      },
+      "previous1": {
+        "period": "02/2022 - 12/2022",
+        "title": "Fullstack Developer",
+        "company": "Morphosium Software",
+        "description": "Kasiyer ve müşteri etkileşimleri için çift ekran işlevselliği içeren restoran otomasyon çözümü geliştirdim. RESTful API'ler aracılığıyla gerçek zamanlı sipariş yönetimi sağladım."
+      },
+      "previous2": {
+        "period": "09/2019 - 08/2023",
+        "title": "Software Engineering",
+        "company": "Karadeniz Technical University",
+        "description": "Yazılım Mühendisliği bölümünden mezun oldum. Modern yazılım geliştirme metodolojileri ve teknolojileri konusunda kapsamlı eğitim aldım."
+      }
+    }
+  },
+  "skills": {
+    "title": "Yetenekler",
+    "subtitle": "Modern web geliştirme teknolojilerinde uzmanlaştığım alanlar",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "tools": "DevOps & Araçlar",
+    "level": "Seviye",
+    "otherSkills": "Diğer Yetenekler",
+    "learning": {
+      "title": "Sürekli Öğrenme",
+      "description": "Teknoloji dünyası sürekli gelişiyor ve ben de bu gelişime ayak uydurmak için sürekli yeni teknolojiler öğreniyorum. Şu anda odaklandığım alanlar:",
+      "areas": ["Cloud-Native Development", "Microservices", "DevOps", "AI/ML Integration"]
+    }
+  },
+  "projects": {
+    "title": "Projeler",
+    "subtitle": "Geliştirdiğim bazı projeler ve çalışmalarım",
+    "filters": {
+      "all": "Tümü",
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "fullstack": "Full Stack"
+    },
+    "featured": "Öne Çıkan",
+    "github": "GitHub",
+    "liveDemo": "Canlı Demo",
+    "moreProjects": {
+      "title": "Daha Fazla Proje",
+      "description": "GitHub profilimde daha fazla proje ve açık kaynak katkılarımı görebilirsiniz.",
+      "button": "GitHub Profilimi Görüntüle"
+    }
+  },
+  "contact": {
+    "title": "İletişim",
+    "subtitle": "Projeleriniz için benimle iletişime geçin",
+    "info": {
+      "title": "İletişim Bilgileri",
+      "email": "E-posta",
+      "phone": "Telefon",
+      "location": "Konum"
+    },
+    "social": "Sosyal Medya",
+    "workingHours": {
+      "title": "Çalışma Saatleri",
+      "weekdays": "Pazartesi - Cuma: 09:00 - 18:00",
+      "weekend": "Hafta Sonu: 10:00 - 16:00"
+    },
+    "form": {
+      "title": "Mesaj Gönder",
+      "name": "Ad Soyad",
+      "namePlaceholder": "Adınızı ve soyadınızı girin",
+      "email": "E-posta",
+      "emailPlaceholder": "E-posta adresinizi girin",
+      "subject": "Konu",
+      "subjectPlaceholder": "Mesaj konusunu girin",
+      "message": "Mesaj",
+      "messagePlaceholder": "Mesajınızı buraya yazın...",
+      "send": "Mesaj Gönder",
+      "sending": "Gönderiliyor..."
+    },
+    "freelance": {
+      "title": "Freelance Projeler",
+      "description": "Yeni projeler ve freelance çalışmalar için her zaman açığım. Detayları konuşmak için iletişime geçin.",
+      "button": "Proje Teklifi Ver"
+    },
+    "proposal": {
+      "title": "Proje Teklifi Formu",
+      "projectName": "Proje Adı",
+      "projectNamePlaceholder": "Projenizin adını girin",
+      "clientName": "Müşteri Adı",
+      "clientNamePlaceholder": "Adınızı ve soyadınızı girin",
+      "email": "E-posta",
+      "emailPlaceholder": "E-posta adresinizi girin",
+      "phone": "Telefon",
+      "phonePlaceholder": "Telefon numaranızı girin",
+      "projectType": "Proje Türü",
+      "selectProjectType": "Proje türünü seçin",
+      "webDevelopment": "Web Geliştirme",
+      "mobileDevelopment": "Mobil Uygulama",
+      "desktopApplication": "Masaüstü Uygulama",
+      "databaseDesign": "Veritabanı Tasarımı",
+      "apiDevelopment": "API Geliştirme",
+      "other": "Diğer",
+      "budget": "Bütçe",
+      "budgetPlaceholder": "Proje bütçenizi belirtin (örn: 5000-10000 TL)",
+      "timeline": "Zaman Çizelgesi",
+      "timelinePlaceholder": "Proje süresini belirtin (örn: 2-3 ay)",
+      "description": "Proje Açıklaması",
+      "descriptionPlaceholder": "Projenizin detaylarını, gereksinimlerini ve beklentilerinizi açıklayın...",
+      "send": "Teklif Gönder",
+      "sending": "Gönderiliyor...",
+      "cancel": "İptal"
+    }
+  },
+  "footer": {
+    "description": "C#, ASP.NET Core ve modern web teknolojileri ile yaratıcı çözümler geliştiren tutkulu bir .NET Developer.",
+    "quickLinks": "Hızlı Bağlantılar",
+    "services": "Hizmetler",
+    "contact": "İletişim",
+    "copyright": "© 2024 Sahil Rzayev. Tüm hakları saklıdır.",
+    "madeWith": "React ve Tailwind CSS ile yapıldı"
+  },
+  "theme": {
+    "light": "Açık",
+    "dark": "Koyu"
+  },
+  "language": {
+    "tr": "Türkçe",
+    "en": "English"
+  }
+} 

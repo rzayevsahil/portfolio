@@ -1,0 +1,169 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "skills": "Skills",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "hero": {
+    "greeting": "Hello, I'm",
+    "name": "Sahil Rzayev",
+    "title": ".NET Developer",
+    "description": "Backend / .NET Developer with strong experience in building scalable web applications using C#, ASP.NET Core, and Entity Framework. Skilled in RESTful APIs, SQL, Clean Architecture, and microservices. Familiar with Docker, Azure, Redis, Hangfire, and CI/CD tools like GitHub Actions and Azure DevOps. Passionate about cloud-native development, DevOps, and writing clean, testable code.",
+    "cta": "View My Projects",
+    "downloadCV": "Download CV",
+    "scroll": "Scroll Down"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Working with modern web technologies as a Backend / .NET Developer",
+    "greeting": "Hello! I'm a",
+    "developer": ".NET Developer",
+    "description1": "I am an experienced Backend / .NET Developer who builds scalable web applications using C#, ASP.NET Core, and Entity Framework. I have built a strong foundation in RESTful APIs, SQL, Clean Architecture, and microservices.",
+    "description2": "I am familiar with Docker, Azure, Redis, Hangfire, and CI/CD tools like GitHub Actions and Azure DevOps. I am passionate about cloud-native development, DevOps, and writing clean, testable code.",
+    "description3": "I focus on continuous learning and self-improvement. I follow new technologies and apply them in my projects. I value teamwork and enjoy contributing to open source projects.",
+    "moreInfo": "Learn More",
+    "stats": {
+      "projects": "Projects Completed",
+      "experience": "Years Experience",
+      "clients": "Happy Clients",
+      "success": "Success Rate"
+    },
+    "experience": {
+      "title": "Work Experience",
+      "current": {
+        "period": "06/2023 - 04/2025",
+        "title": "Fullstack Developer",
+        "company": "Elasoft Yazılım Bilgi Teknolojileri",
+        "description": "Developed modular web applications using ASP.NET Core and Angular JS. Built reusable UI components and implemented client-side filtering logic. Created dynamic reports with FastReport, including sub-report support. Designed RESTful APIs and optimized SQL queries for performance."
+      },
+      "previous1": {
+        "period": "02/2022 - 12/2022",
+        "title": "Fullstack Developer",
+        "company": "Morphosium Software",
+        "description": "Developed a restaurant automation solution featuring dual-screen functionality for cashier and customer interactions. Enabled real-time order management via RESTful APIs, improving efficiency."
+      },
+      "previous2": {
+        "period": "09/2019 - 08/2023",
+        "title": "Software Engineering",
+        "company": "Karadeniz Technical University",
+        "description": "Graduated from Software Engineering department. Received comprehensive education in modern software development methodologies and technologies."
+      }
+    }
+  },
+  "skills": {
+    "title": "Skills",
+    "subtitle": "Areas where I specialize in modern web development technologies",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "tools": "DevOps & Tools",
+    "level": "Level",
+    "otherSkills": "Other Skills",
+    "learning": {
+      "title": "Continuous Learning",
+      "description": "The technology world is constantly evolving and I continuously learn new technologies to keep up with this development. Areas I'm currently focusing on:",
+      "areas": ["Cloud-Native Development", "Microservices", "DevOps", "AI/ML Integration"]
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Some projects and works I've developed",
+    "filters": {
+      "all": "All",
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "fullstack": "Full Stack"
+    },
+    "featured": "Featured",
+    "github": "GitHub",
+    "liveDemo": "Live Demo",
+    "moreProjects": {
+      "title": "More Projects",
+      "description": "You can see more projects and open source contributions on my GitHub profile.",
+      "button": "View GitHub Profile"
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Get in touch with me for your projects",
+    "info": {
+      "title": "Contact Information",
+      "email": "Email",
+      "phone": "Phone",
+      "location": "Location"
+    },
+    "social": "Social Media",
+    "workingHours": {
+      "title": "Working Hours",
+      "weekdays": "Monday - Friday: 09:00 - 18:00",
+      "weekend": "Weekend: 10:00 - 16:00"
+    },
+    "form": {
+      "title": "Send Message",
+      "name": "Full Name",
+      "namePlaceholder": "Enter your name and surname",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email address",
+      "subject": "Subject",
+      "subjectPlaceholder": "Enter message subject",
+      "message": "Message",
+      "messagePlaceholder": "Write your message here...",
+      "send": "Send Message",
+      "sending": "Sending..."
+    },
+    "freelance": {
+      "title": "Freelance Projects",
+      "description": "I'm always open to new projects and freelance work. Get in touch to discuss details.",
+      "button": "Get Project Quote"
+    },
+    "proposal": {
+      "title": "Project Quote Form",
+      "projectName": "Project Name",
+      "projectNamePlaceholder": "Enter your project name",
+      "clientName": "Client Name",
+      "clientNamePlaceholder": "Enter your name and surname",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email address",
+      "phone": "Phone",
+      "phonePlaceholder": "Enter your phone number",
+      "projectType": "Project Type",
+      "selectProjectType": "Select project type",
+      "webDevelopment": "Web Development",
+      "mobileDevelopment": "Mobile Application",
+      "desktopApplication": "Desktop Application",
+      "databaseDesign": "Database Design",
+      "apiDevelopment": "API Development",
+      "other": "Other",
+      "budget": "Budget",
+      "budgetPlaceholder": "Specify your project budget (e.g., $5000-$10000)",
+      "timeline": "Timeline",
+      "timelinePlaceholder": "Specify project duration (e.g., 2-3 months)",
+      "description": "Project Description",
+      "descriptionPlaceholder": "Describe your project details, requirements, and expectations...",
+      "send": "Send Quote",
+      "sending": "Sending...",
+      "cancel": "Cancel"
+    }
+  },
+  "footer": {
+    "description": "A passionate .NET Developer creating creative solutions with C#, ASP.NET Core and modern web technologies.",
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "contact": "Contact",
+    "copyright": "© 2024 Sahil Rzayev. All rights reserved.",
+    "madeWith": "Made with React and Tailwind CSS"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": {
+    "tr": "Türkçe",
+    "en": "English"
+  },
+  "common": {
+    "loading": "Loading...",
+    "scrollToTop": "Scroll to top"
+  }
+} 
