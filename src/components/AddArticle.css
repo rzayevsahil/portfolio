@@ -1,0 +1,7 @@
+.ql-editor.ql-blank::before {
+  color: #9ca3af; /* Light mode: Tailwind'in placeholder-gray-400'u */
+}
+
+body.dark .ql-editor.ql-blank::before {
+  color: #fff !important; /* Dark mode: beyaz */
+} 

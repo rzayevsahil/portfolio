@@ -232,5 +232,25 @@
     "back": "Back",
     "share": "Share",
     "readTime": "{{count}} min"
+  },
+  "addArticle": {
+    "title": "Add Article",
+    "button": "Add Article",
+    "placeholders": {
+      "title": "Title",
+      "content": "Content",
+      "author": "Author",
+      "image": "Image URL"
+    },
+    "success": "Article added successfully!",
+    "errors": {
+      "fillAll": "Please fill in all fields.",
+      "general": "An error occurred. Please try again.",
+      "server": "Cannot reach the server."
+    },
+    "translating": "Translating..."
+  },
+  "adminPanel": {
+    "title": "Admin Panel"
   }
 } 

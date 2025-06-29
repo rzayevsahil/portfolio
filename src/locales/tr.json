@@ -229,5 +229,25 @@
     "back": "Geri Dön",
     "share": "Paylaş",
     "readTime": "{{count}} dk"
+  },
+  "addArticle": {
+    "title": "Makale Ekle",
+    "button": "Makale Ekle",
+    "placeholders": {
+      "title": "Başlık",
+      "content": "İçerik",
+      "author": "Yazar",
+      "image": "Resim URL"
+    },
+    "success": "Makale başarıyla eklendi!",
+    "errors": {
+      "fillAll": "Lütfen tüm alanları doldurun.",
+      "general": "Bir hata oluştu. Lütfen tekrar deneyin.",
+      "server": "Sunucuya ulaşılamıyor.",
+      "translating": "Çeviri yapılıyor..."
+    }
+  },
+  "adminPanel": {
+    "title": "Yönetici Paneli"
   }
 } 

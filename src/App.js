@@ -13,6 +13,10 @@ import ArticleDetail from './components/ArticleDetail';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import BlogList from './components/BlogList';
+import AdminPanel from './components/AdminPanel';
+import AdminLayout from './layouts/AdminLayout';
+import EditProfile from './pages/admin/EditProfile';
+import EditContact from './pages/admin/EditContact';
 import './i18n';
 
 function HomePage() {
@@ -83,6 +87,11 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/article/:id" element={<ArticleDetail />} />
               <Route path="/blog" element={<BlogList />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminPanel />} />
+                <Route path="profile" element={<EditProfile />} />
+                <Route path="contact" element={<EditContact />} />
+              </Route>
             </Routes>
           </div>
         </Router>

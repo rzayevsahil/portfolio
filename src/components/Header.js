@@ -51,6 +51,7 @@ const Header = () => {
     setIsOpen(false);
   };
 
+  const isAdmin = location.pathname.startsWith('/admin');
   return (
     <motion.header
       initial={{ y: -100 }}
@@ -62,56 +63,64 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center"
-          >
-            <img src={logoImg} alt="Logo" className="h-10 w-auto" />
-          </motion.div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navItems.map((item, index) => (
-              <motion.button
-                key={item.name}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.1 }}
-                onClick={() => scrollToSection(item.href, item.path)}
-                className={`transition-colors duration-300 ${
-                  isDarkMode 
-                    ? 'text-gray-300 hover:text-white' 
-                    : 'text-gray-700 hover:text-gray-900'
-                }`}
-              >
-                {item.name}
-              </motion.button>
-            ))}
-            
-            {/* Theme Toggle */}
-            <ThemeToggle />
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center space-x-2">
-            <ThemeToggle />
-            <button
-              className={`p-2 rounded-lg transition-colors duration-300 ${
-                isDarkMode 
-                  ? 'text-white hover:bg-gray-800/50' 
-                  : 'text-gray-700 hover:bg-gray-200/50'
-              }`}
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-            </button>
-          </div>
+        <div className={`flex items-center h-16 ${isAdmin ? 'justify-end' : 'justify-between'}`}>
+          {/* Sadece admin panelinde: sadece ThemeToggle ve dil seçici */}
+          {isAdmin ? (
+            <div className="flex items-center space-x-4">
+              <ThemeToggle />
+              {/* Dil seçici ThemeToggle içinde */}
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center w-full justify-between">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="flex items-center"
+                >
+                  <img src={logoImg} alt="Logo" className="h-10 w-auto" />
+                </motion.div>
+                {/* Desktop Navigation */}
+                <nav className="hidden md:flex items-center space-x-8">
+                  {navItems.map((item, index) => (
+                    <motion.button
+                      key={item.name}
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      whileHover={{ scale: 1.1 }}
+                      onClick={() => scrollToSection(item.href, item.path)}
+                      className={`transition-colors duration-300 ${
+                        isDarkMode 
+                          ? 'text-gray-300 hover:text-white' 
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                    >
+                      {item.name}
+                    </motion.button>
+                  ))}
+                  {/* Theme Toggle */}
+                  <ThemeToggle />
+                </nav>
+              </div>
+              {/* Mobile Menu Button */}
+              <div className="md:hidden flex items-center space-x-2">
+                <ThemeToggle />
+                <button
+                  className={`p-2 rounded-lg transition-colors duration-300 ${
+                    isDarkMode 
+                      ? 'text-white hover:bg-gray-800/50' 
+                      : 'text-gray-700 hover:bg-gray-200/50'
+                  }`}
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+                </button>
+              </div>
+            </>
+          )}
         </div>
-
         {/* Mobile Navigation */}
-        {isOpen && (
+        {!isAdmin && isOpen && (
           <motion.nav
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}

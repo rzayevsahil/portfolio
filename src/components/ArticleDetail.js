@@ -5,6 +5,7 @@ import { FaArrowLeft, FaCalendar, FaUser, FaTags, FaClock, FaShare } from 'react
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import i18n from '../i18n';
+import emptyBlogImg from '../assets/empty-blog.png';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -121,50 +122,42 @@ const ArticleDetail = () => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
 
-  if (!article) {
-    return (
-      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
-        <div className="text-center max-w-xl mx-auto">
-          <h1 className="text-2xl font-bold mb-4">Örnek Makale</h1>
-          <div className="prose prose-lg mx-auto text-left">
-            <h2>Modern Web API Geliştirme: ASP.NET Core ile Adım Adım</h2>
-            <p>Modern web uygulamalarında API geliştirmek, yazılım dünyasının en önemli konularından biri haline geldi. Bu makalede ASP.NET Core ile RESTful Web API geliştirme sürecini adım adım inceleyeceğiz.</p>
-            <h3>Proje Kurulumu</h3>
-            <p>Yeni bir ASP.NET Core Web API projesi oluşturmak için terminalde şu komutu kullanabilirsiniz:</p>
-            <pre><code>dotnet new webapi -n MyWebApi
-cd MyWebApi</code></pre>
-            <h3>Temel Controller</h3>
-            <p>Aşağıda örnek bir <code>ProductsController</code> kodu yer almaktadır:</p>
-            <pre><code>{`[ApiController]
-[Route("api/[controller]")]
-public class ProductsController : ControllerBase
-{
-    [HttpGet]
-    public IEnumerable<Product> Get() => new List<Product>
-    {
-        new Product { Id = 1, Name = "Laptop", Price = 1500 },
-        new Product { Id = 2, Name = "Mouse", Price = 25 }
-    };
-}`}</code></pre>
-            <h3>Örnek Tablo</h3>
-            <table>
-              <thead>
-                <tr><th>Id</th><th>Ürün Adı</th><th>Fiyat</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>1</td><td>Laptop</td><td>1500</td></tr>
-                <tr><td>2</td><td>Mouse</td><td>25</td></tr>
-              </tbody>
-            </table>
-            <h3>Görsel</h3>
-            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=400&fit=crop" alt="Web API" />
-            <h3>Sonuç</h3>
-            <p>Bu makalede ASP.NET Core ile modern bir Web API'nin temellerini öğrendik. Daha fazlası için beni takipte kalın!</p>
-          </div>
-        </div>
-      </div>
-    );
+  // API'den makale çekme (örnek makaleler yerine)
+  const [apiArticle, setApiArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    // Eğer id varsa API'den makale çek
+    if (id) {
+      fetch(`http://localhost:5000/api/makaleler/${id}`)
+        .then(res => {
+          if (!res.ok) throw new Error('Makale bulunamadı');
+          return res.json();
+        })
+        .then(data => {
+          setApiArticle(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setError('Makale bulunamadı.');
+          setLoading(false);
+        });
+    }
+  }, [id]);
+
+  if (loading) {
+    return <div className="text-center py-12">Yükleniyor...</div>;
   }
+  if (error) {
+    return <div className="text-center py-12 text-red-500">{error}</div>;
+  }
+
+  // Eğer API'den makale geldiyse onu göster, yoksa örnek makaleyi göster
+  const currentArticle = apiArticle || article;
+  const lang = i18n.language;
+  const baslik = lang === 'en' ? currentArticle.baslikEn || currentArticle.title : currentArticle.baslikTr || currentArticle.title;
+  const icerik = lang === 'en' ? currentArticle.icerikEn || currentArticle.content : currentArticle.icerikTr || currentArticle.content;
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -179,8 +172,8 @@ public class ProductsController : ControllerBase
   const shareArticle = () => {
     if (navigator.share) {
       navigator.share({
-        title: article.title,
-        text: article.excerpt,
+        title: currentArticle.title,
+        text: currentArticle.excerpt,
         url: window.location.href
       });
     } else {
@@ -244,11 +237,11 @@ public class ProductsController : ControllerBase
               className="mb-6"
             >
               <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                {article.title}
+                {baslik}
               </h1>
               
               <p className={`text-xl mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                {article.excerpt}
+                {currentArticle.excerpt}
               </p>
             </motion.div>
 
@@ -260,17 +253,17 @@ public class ProductsController : ControllerBase
             >
               <div className="flex items-center space-x-2">
                 <FaUser size={14} />
-                <span>{article.author}</span>
+                <span>{currentArticle.author}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <FaCalendar size={14} />
-                <span>{formatDate(article.date)}</span>
+                <span>{formatDate(currentArticle.date)}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <FaClock size={14} />
-                <span>{getLocalizedReadTime(article.readTime)}</span>
+                <span>{getLocalizedReadTime(currentArticle.readTime)}</span>
               </div>
-              {article.featured && (
+              {currentArticle.featured && (
                 <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-medium">
                   {t('blog.featured')}
                 </div>
@@ -283,7 +276,7 @@ public class ProductsController : ControllerBase
               transition={{ delay: 0.6, duration: 0.8 }}
               className="flex flex-wrap gap-2 mt-6"
             >
-              {article.tags.map((tag) => (
+              {Array.isArray(currentArticle.tags) && currentArticle.tags.map((tag) => (
                 <span
                   key={tag}
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -303,8 +296,8 @@ public class ProductsController : ControllerBase
             className="mb-8 rounded-lg overflow-hidden"
           >
             <img
-              src={article.image}
-              alt={article.title}
+              src={currentArticle.image && currentArticle.image.trim() !== '' ? currentArticle.image : emptyBlogImg}
+              alt={currentArticle.title}
               className="w-full h-64 md:h-96 object-cover"
             />
           </motion.div>
@@ -313,12 +306,8 @@ public class ProductsController : ControllerBase
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
-            className={`prose prose-lg max-w-none ${
-              isDarkMode 
-                ? 'prose-invert prose-gray' 
-                : 'prose-gray'
-            }`}
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            className={`prose prose-lg max-w-none ${isDarkMode ? 'prose-invert prose-gray' : 'prose-gray'}`}
+            dangerouslySetInnerHTML={{ __html: icerik }}
           />
         </motion.article>
 
