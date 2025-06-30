@@ -399,15 +399,10 @@ const Contact = () => {
                 disabled={isSubmitting}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.3 }}
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="w-full btn btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed contact-send-btn"
-                style={{
-                  transform: 'scale(1)',
-                  transition: 'transform 0.3s ease-in-out'
-                }}
               >
                 {isSubmitting ? t('contact.form.sending') : t('contact.form.send')}
               </motion.button>

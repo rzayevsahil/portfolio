@@ -17,18 +17,35 @@ import AdminPanel from './components/AdminPanel';
 import AdminLayout from './layouts/AdminLayout';
 import EditProfile from './pages/admin/EditProfile';
 import EditContact from './pages/admin/EditContact';
+import AddArticle from './pages/admin/AddArticle';
+import MediumEditor from './pages/admin/MediumEditor';
 import './i18n';
 
 function HomePage() {
   useEffect(() => {
+    const scrollToHash = () => {
     if (window.location.hash) {
+        let count = 0;
+        const maxTries = 10;
+        const tryScroll = () => {
       const el = document.querySelector(window.location.hash);
       if (el) {
-        setTimeout(() => {
           el.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+          } else if (count < maxTries) {
+            count++;
+            setTimeout(tryScroll, 100);
       }
-    }
+        };
+        tryScroll();
+      }
+    };
+
+    window.addEventListener('hashchange', scrollToHash);
+    scrollToHash();
+
+    return () => {
+      window.removeEventListener('hashchange', scrollToHash);
+    };
   }, []);
   return (
     <>
@@ -89,9 +106,11 @@ function App() {
               <Route path="/blog" element={<BlogList />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminPanel />} />
+                <Route path="add-article" element={<AddArticle />} />
                 <Route path="profile" element={<EditProfile />} />
                 <Route path="contact" element={<EditContact />} />
               </Route>
+              <Route path="/admin/medium" element={<MediumEditor />} />
             </Routes>
           </div>
         </Router>

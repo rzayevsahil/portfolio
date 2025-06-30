@@ -88,7 +88,7 @@ const Blog = () => {
                   key={article.id}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  transition={{ delay: index * 0.1, duration: 0.1 }}
                   whileHover={{ y: -5 }}
                   className={`h-[420px] flex flex-col rounded-lg overflow-hidden border transition-all duration-300 ${
                     isDarkMode 
@@ -136,12 +136,14 @@ const Blog = () => {
 
         {articles.length > 3 && (
           <div className="flex justify-center mt-8">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/blog')}
               className={`px-6 py-3 rounded-lg font-semibold shadow transition-colors duration-300 ${isDarkMode ? 'bg-blue-600 text-white hover:bg-blue-500' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
             >
               {t('blog.showMore')}
-            </button>
+            </motion.button>
           </div>
         )}
 

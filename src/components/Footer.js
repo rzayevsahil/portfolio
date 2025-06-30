@@ -44,6 +44,7 @@ const Footer = () => {
     { name: t('nav.about'), href: '#about' },
     { name: t('nav.skills'), href: '#skills' },
     { name: t('nav.projects'), href: '#projects' },
+    { name: t('nav.blog'), href: '#blog' },
     { name: t('nav.contact'), href: '#contact' }
   ];
 
@@ -201,7 +202,7 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`}>
-              {t('footer.copyright')}
+              {t('footer.copyright', { year: new Date().getFullYear() })}
             </p>
             <div className="flex items-center space-x-2">
               <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`}>

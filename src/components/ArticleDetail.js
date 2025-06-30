@@ -113,7 +113,12 @@ const ArticleDetail = () => {
     } else {
       navigate('/', { replace: false });
       setTimeout(() => {
+        const blogSection = document.getElementById('blog');
+        if (blogSection) {
+          blogSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
         window.location.hash = '#blog';
+        }
       }, 100);
     }
   };
@@ -253,11 +258,17 @@ const ArticleDetail = () => {
             >
               <div className="flex items-center space-x-2">
                 <FaUser size={14} />
-                <span>{currentArticle.author}</span>
+                <span>{currentArticle.yazar || currentArticle.author || t('articleDetail.unknownAuthor')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <FaCalendar size={14} />
-                <span>{formatDate(currentArticle.date)}</span>
+                <span>
+                  {currentArticle.tarih
+                    ? `${formatDate(currentArticle.tarih)} ${new Date(currentArticle.tarih).toLocaleTimeString(t('articleDetail.locale', { defaultValue: i18n.language }), { hour: '2-digit', minute: '2-digit' })}`
+                    : currentArticle.date
+                      ? `${formatDate(currentArticle.date)} ${new Date(currentArticle.date).toLocaleTimeString(t('articleDetail.locale', { defaultValue: i18n.language }), { hour: '2-digit', minute: '2-digit' })}`
+                      : t('articleDetail.noDate')}
+                </span>
               </div>
               <div className="flex items-center space-x-2">
                 <FaClock size={14} />
@@ -302,13 +313,9 @@ const ArticleDetail = () => {
             />
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.8 }}
-            className={`prose prose-lg max-w-none ${isDarkMode ? 'prose-invert prose-gray' : 'prose-gray'}`}
-            dangerouslySetInnerHTML={{ __html: icerik }}
-          />
+          <div className="prose max-w-none dark:prose-invert text-lg leading-relaxed mt-6 mb-8">
+            <div dangerouslySetInnerHTML={{ __html: icerik }} />
+          </div>
         </motion.article>
 
         {/* Yorumlar Bölümü */}

@@ -1390,4 +1390,156 @@ body.dark {
 
 .dark .prose hr {
   border-color: var(--border-dark);
+}
+
+/* Makale detayında ve .prose içinde linkler mavi ve altı çizili olsun */
+.prose a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+/* Üst menüdeki nav butonları için modern focus efekti */
+nav button:focus, nav a:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  position: relative;
+}
+
+nav button:focus::after, nav a:focus::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+  animation: nav-underline-fade-in 0.25s ease;
+}
+
+@keyframes nav-underline-fade-in {
+  from { opacity: 0; transform: scaleX(0.5);}
+  to   { opacity: 1; transform: scaleX(1);}
+}
+
+/* Hero animasyonlu gradient arka plan */
+.hero-animated-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(120deg, #3b82f6, #8b5cf6, #3b82f6, #8b5cf6);
+  background-size: 200% 200%;
+  animation: gradientMove 8s ease-in-out infinite;
+  filter: blur(60px);
+}
+
+/* Light ve dark mod için opaklık ayarı */
+body.light .hero-animated-bg {
+  opacity: 0.35;
+}
+body.dark .hero-animated-bg {
+  opacity: 0.5;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%;}
+  50% { background-position: 100% 50%;}
+  100% { background-position: 0% 50%;}
+}
+
+/* Yazılım temalı hareketli kod satırı efekti */
+@keyframes moveCode {
+  0% { transform: translateY(0);}
+  100% { transform: translateY(40px);}
+}
+.animate-move-code {
+  animation: moveCode 6s ease-in-out infinite alternate;
+}
+
+/* Kod satırı efektleri için light/dark mod renk ve opaklık ayarı */
+body.light .hero-code-green {
+  color: #22c55e;
+  opacity: 0.13;
+}
+body.dark .hero-code-green {
+  color: #22d3ee;
+  opacity: 0.20;
+}
+body.light .hero-code-blue {
+  color: #2563eb;
+  opacity: 0.13;
+}
+body.dark .hero-code-blue {
+  color: #60a5fa;
+  opacity: 0.20;
+}
+body.light .hero-code-pink {
+  color: #ec4899;
+  opacity: 0.13;
+}
+body.dark .hero-code-pink {
+  color: #f472b6;
+  opacity: 0.20;
+}
+
+.nav-underline-hover {
+  position: relative;
+  overflow: visible;
+}
+.nav-underline-hover::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6 60%, #8b5cf6 100%);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+  z-index: 2;
+}
+.nav-underline-hover:hover::after {
+  transform: scaleX(1);
+}
+
+.nav-underline-hover.active::after {
+  transform: scaleX(1);
+}
+
+@keyframes moveCodeAlt {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-30px) scale(1.05); }
+}
+.animate-move-code-alt {
+  animation: moveCodeAlt 7s ease-in-out infinite alternate;
+}
+@keyframes iconBounce {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-18px) scale(1.08); }
+}
+.animate-icon-bounce {
+  animation: iconBounce 6s ease-in-out infinite alternate;
+}
+@keyframes iconBounceAlt {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(18px) scale(1.08); }
+}
+.animate-icon-bounce-alt {
+  animation: iconBounceAlt 8s ease-in-out infinite alternate;
+}
+
+.tiptap-editable p,
+.tiptap-editable blockquote,
+.tiptap-editable pre,
+.tiptap-editable h2 {
+  margin-top: 0;
+  margin-bottom: 1.1em;
+}
+
+.tiptap-editable br {
+  display: inline;
 } 

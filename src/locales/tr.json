@@ -154,7 +154,7 @@
     "quickLinks": "Hızlı Bağlantılar",
     "services": "Hizmetler",
     "contact": "İletişim",
-    "copyright": "© 2024 Sahil Rzayev. Tüm hakları saklıdır.",
+    "copyright": "© {{year}} Sahil Rzayev. Tüm hakları saklıdır.",
     "madeWith": "React ve Tailwind CSS ile yapıldı"
   },
   "theme": {

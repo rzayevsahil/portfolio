@@ -15,7 +15,8 @@
     "cta": "View My Projects",
     "downloadCV": "Download CV",
     "scroll": "Scroll Down",
-    "blogButton": "📝 Blog & Articles"
+    "blogButton": "📝 Blog & Articles",    
+    "subtitle": ".NET Developer"
   },
   "about": {
     "title": "About Me",
@@ -153,7 +154,7 @@
     "quickLinks": "Quick Links",
     "services": "Services",
     "contact": "Contact",
-    "copyright": "© 2024 Sahil Rzayev. All rights reserved.",
+    "copyright": "© {{year}} Sahil Rzayev. All rights reserved.",
     "madeWith": "Made with React and Tailwind CSS"
   },
   "theme": {

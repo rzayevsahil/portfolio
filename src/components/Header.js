@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,9 @@ import logoImg from '../assets/logo.png';
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeNav, setActiveNav] = useState('#home');
+  const [isNavLocked, setIsNavLocked] = useState(false);
+  const observerRef = useRef(null);
   const { t } = useTranslation();
   const { isDarkMode } = useTheme();
   const location = useLocation();
@@ -19,10 +22,35 @@ const Header = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
-
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    // Intersection Observer ile section takibi
+    const sectionIds = ['#home', '#about', '#skills', '#projects', '#blog', '#contact'];
+    const sections = sectionIds.map(id => document.querySelector(id));
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+    observerRef.current = new window.IntersectionObserver(
+      (entries) => {
+        if (isNavLocked) return;
+        const visible = entries.filter(e => e.isIntersecting);
+        if (visible.length > 0) {
+          // En üstteki görünür section'ı seç
+          const topMost = visible.reduce((prev, curr) =>
+            prev.boundingClientRect.top < curr.boundingClientRect.top ? prev : curr
+          );
+          setActiveNav(`#${topMost.target.id}`);
+        }
+      },
+      { threshold: 0.2 }
+    );
+    sections.forEach(section => {
+      if (section) observerRef.current.observe(section);
+    });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (observerRef.current) observerRef.current.disconnect();
+    };
+  }, [isNavLocked]);
 
   const navItems = [
     { name: t('nav.home'), href: '#home', path: '/' },
@@ -34,6 +62,10 @@ const Header = () => {
   ];
 
   const scrollToSection = (href, path) => {
+    setActiveNav(href);
+    setIsNavLocked(true);
+    window.location.hash = href;
+    setTimeout(() => setIsNavLocked(false), 1000);
     if (location.pathname !== path) {
       navigate(path);
       setTimeout(() => {
@@ -81,23 +113,25 @@ const Header = () => {
                 </motion.div>
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center space-x-8">
-                  {navItems.map((item, index) => (
-                    <motion.button
-                      key={item.name}
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      whileHover={{ scale: 1.1 }}
-                      onClick={() => scrollToSection(item.href, item.path)}
-                      className={`transition-colors duration-300 ${
-                        isDarkMode 
-                          ? 'text-gray-300 hover:text-white' 
-                          : 'text-gray-700 hover:text-gray-900'
-                      }`}
-                    >
-                      {item.name}
-                    </motion.button>
-                  ))}
+                  {navItems.map((item, index) => {
+                    const isActive = activeNav === item.href;
+                    return (
+                      <motion.button
+                        key={item.name}
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        whileHover={{ scale: 1.1 }}
+                        onClick={() => scrollToSection(item.href, item.path)}
+                        className={`nav-underline-hover transition-colors duration-300${isActive ? ' active' : ''} ${
+                          isDarkMode 
+                            ? 'text-gray-300 hover:text-white' 
+                            : 'text-gray-700 hover:text-gray-900'
+                        }`}
+                      >
+                        {item.name}
+                      </motion.button>
+                    );
+                  })}
                   {/* Theme Toggle */}
                   <ThemeToggle />
                 </nav>

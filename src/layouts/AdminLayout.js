@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaUser, FaFileAlt, FaEnvelope } from 'react-icons/fa';
 
 const menuItems = [
-  { to: '/admin', label: 'Makale Ekle', icon: <FaFileAlt /> },
+  { to: '/admin/add-article', label: 'Makale Ekle', icon: <FaFileAlt /> },
   { to: '/admin/profile', label: 'Profil Bilgileri', icon: <FaUser /> },
   { to: '/admin/contact', label: 'İletişim Bilgileri', icon: <FaEnvelope /> },
 ];
@@ -82,19 +82,24 @@ const AdminLayout = () => {
               to={item.to}
               end={item.to === '/admin'}
               className={({ isActive }) =>
-                `flex items-center ${open ? 'gap-3 px-4 justify-start' : 'gap-0 px-0 justify-center'} py-2 rounded-lg font-medium transition-colors duration-200 ${isActive ? 'bg-blue-600 text-white' : isDarkMode ? 'text-gray-200 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`
+                `flex items-center py-2 rounded-lg font-medium transition-colors duration-200
+                ${open ? 'gap-3 px-4 justify-start w-full' : 'gap-0 px-0 justify-center w-auto'}
+                ${isActive ? 'bg-blue-600 text-white' : isDarkMode ? 'text-gray-200 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`
               }
             >
-              <div className="flex items-center gap-3 px-4 justify-start h-10 min-h-[40px] w-full">
-                <span className="w-6 min-w-[24px] flex items-center">{item.icon}</span>
+              <div className={`flex items-center h-10 min-h-[40px] ${open ? 'gap-3 pl-1 justify-start w-full' : 'justify-center w-auto'}`}>
+                <span className="w-6 min-w-[24px] flex items-center justify-center">{item.icon}</span>
+                {open && (
                 <motion.span
-                  initial={false}
-                  animate={{ opacity: open ? 1 : 0, x: open ? 0 : -10 }}
-                  transition={{ duration: 0.2, delay: open ? 0.1 : 0 }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.2 }}
                   style={{ overflow: 'hidden', whiteSpace: 'nowrap', display: 'inline-block' }}
                 >
                   {item.label}
                 </motion.span>
+                )}
               </div>
             </NavLink>
           ))}

@@ -17,6 +17,8 @@ const BlogList = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const blogsPerPage = 9;
 
   useEffect(() => {
     fetch(API_URL)
@@ -29,6 +31,16 @@ const BlogList = () => {
         setError('Makaleler yüklenemedi.');
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    const savedScroll = localStorage.getItem('blogScroll');
+    if (savedScroll) {
+      setTimeout(() => {
+        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'auto' });
+        localStorage.removeItem('blogScroll');
+      }, 100);
+    }
   }, []);
 
   const formatDate = (dateString) => {
@@ -60,6 +72,28 @@ const BlogList = () => {
     const matchesSearch = baslik.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  // Sayfalama için slice
+  const indexOfLastBlog = currentPage * blogsPerPage;
+  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+  const currentBlogs = filteredArticles.slice(indexOfFirstBlog, indexOfLastBlog);
+  const totalPages = Math.ceil(filteredArticles.length / blogsPerPage);
+
+  // Sayfa değişince yukarı kaydır
+  useEffect(() => {
+    if (filteredArticles.length > 0) {
+      const blogListSection = document.getElementById('blog-list');
+      if (blogListSection) {
+        blogListSection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  }, [currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, activeCategory]);
 
   function getExcerpt(html, maxLength = 100) {
     const tempDiv = document.createElement('div');
@@ -103,8 +137,19 @@ const BlogList = () => {
                 placeholder={t('blog.searchPlaceholder') || 'Ara...'}
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className={`w-full pl-10 pr-4 py-3 rounded-lg border transition-colors duration-300 ${isDarkMode ? 'bg-gray-800/50 border-gray-700/50 text-white placeholder-gray-400 focus:border-blue-500' : 'bg-white border-gray-200 text-gray-900 placeholder-gray-500 focus:border-blue-500'}`}
+                className={`w-full pl-10 pr-10 py-3 rounded-lg border transition-colors duration-300 ${isDarkMode ? 'bg-gray-800/50 border-gray-700/50 text-white placeholder-gray-400 focus:border-blue-500' : 'bg-white border-gray-200 text-gray-900 placeholder-gray-500 focus:border-blue-500'}`}
               />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                  tabIndex={-1}
+                  aria-label="Temizle"
+                >
+                  &#10005;
+                </button>
+              )}
             </div>
             <div className="flex flex-wrap gap-2">
               {categories.map(category => (
@@ -130,7 +175,7 @@ const BlogList = () => {
             transition={{ duration: 0.5 }}
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch"
           >
-            {filteredArticles.map((article, index) => {
+            {currentBlogs.map((article, index) => {
               const lang = i18n.language;
               const baslik = lang === 'en' ? article.baslikEn : article.baslikTr;
               const icerik = lang === 'en' ? article.icerikEn : article.icerikTr;
@@ -170,7 +215,10 @@ const BlogList = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className={`flex items-center space-x-2 text-sm font-medium transition-colors duration-300 mt-2 mb-4 px-4 ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}
-                    onClick={() => navigate(`/article/${article.id}`, { state: { fromBlogList: true } })}
+                    onClick={() => {
+                      localStorage.setItem('blogScroll', window.scrollY);
+                      navigate(`/article/${article.id}`, { state: { fromBlogList: true } });
+                    }}
                   >
                     <span>{t('blog.readMore')}</span>
                     <FaArrowRight size={12} />
@@ -180,6 +228,21 @@ const BlogList = () => {
             })}
           </motion.div>
         </AnimatePresence>
+
+        {/* Sayfalama butonları */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-10 gap-2">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i+1}
+                onClick={() => setCurrentPage(i+1)}
+                className={`px-4 py-2 rounded-lg font-semibold border transition-colors duration-200 ${currentPage === i+1 ? 'bg-blue-600 text-white border-blue-600' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+              >
+                {i+1}
+              </button>
+            ))}
+          </div>
+        )}
 
         {filteredArticles.length === 0 && (
           <motion.div

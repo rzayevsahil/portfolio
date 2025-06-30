@@ -77,9 +77,13 @@ const About = () => {
               viewport={{ once: true }}
               className="mt-8"
             >
-              <button className="btn">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn"
+              >
                 {t('about.moreInfo')}
-              </button>
+              </motion.button>
             </motion.div>
           </motion.div>
 

@@ -1,0 +1,141 @@
+/* Quill placeholder text for dark mode */
+.dark .ql-editor.ql-blank::before {
+    color: #fff !important;
+    opacity: 0.6;
+}
+
+/* Quill toolbar yazı ve ikonlarını dark modda açık renk yap */
+.dark .ql-toolbar,
+.dark .ql-toolbar .ql-picker-label,
+.dark .ql-toolbar .ql-picker-item,
+.dark .ql-toolbar button,
+.dark .ql-toolbar svg {
+  color: #fff !important;
+  fill: #fff !important;
+  opacity: 0.9;
+}
+
+.dark .ql-toolbar .ql-stroke {
+  stroke: #fff !important;
+}
+.dark .ql-toolbar .ql-fill {
+  fill: #fff !important;
+}
+
+
+
+/* Dark modda Quill toolbar butonlarına hover ve aktifken mavi vurgu */
+.dark .ql-toolbar button.ql-active,
+.dark .ql-toolbar button:focus,
+.dark .ql-toolbar button:hover,
+.dark .ql-toolbar .ql-picker-label.ql-active,
+.dark .ql-toolbar .ql-picker-label:focus,
+.dark .ql-toolbar .ql-picker-label:hover,
+.dark .ql-toolbar .ql-picker-item.ql-selected,
+.dark .ql-toolbar .ql-picker-item:hover {
+  color: #2563eb !important;
+  fill: #2563eb !important;
+  border-radius: 0.375rem;
+  outline: none;
+}
+
+/* Dark modda Quill ikonlarının kendisi de mavi olsun */
+.dark .ql-toolbar button.ql-active .ql-stroke,
+.dark .ql-toolbar button:focus .ql-stroke,
+.dark .ql-toolbar button:hover .ql-stroke,
+.dark .ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.dark .ql-toolbar .ql-picker-label:focus .ql-stroke,
+.dark .ql-toolbar .ql-picker-label:hover .ql-stroke,
+.dark .ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.dark .ql-toolbar .ql-picker-item:hover .ql-stroke {
+  stroke: #2563eb !important;
+}
+
+.dark .ql-toolbar button.ql-active .ql-fill,
+.dark .ql-toolbar button:focus .ql-fill,
+.dark .ql-toolbar button:hover .ql-fill,
+.dark .ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.dark .ql-toolbar .ql-picker-label:focus .ql-fill,
+.dark .ql-toolbar .ql-picker-label:hover .ql-fill,
+.dark .ql-toolbar .ql-picker-item.ql-selected .ql-fill,
+.dark .ql-toolbar .ql-picker-item:hover .ql-fill {
+  fill: #2563eb !important;
+}
+
+
+/* Quill editörünün input alanını genişlet */
+.ql-editor {
+    min-height: 200px;
+  }
+
+/* Quill editöründe resim silme butonu için stil */
+.ql-editor .quill-image-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.ql-editor .quill-image-delete {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 16px;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.ql-editor .quill-image-delete:hover {
+  opacity: 1;
+}
+
+/* Dark modda Quill başlık dropdown menüsü ve itemleri */
+.dark .ql-picker.ql-header .ql-picker-options {
+  background: #23272f !important;
+  color: #fff !important;
+  border-color: #444 !important;
+  opacity: 1 !important;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.15);
+}
+
+.dark .ql-picker.ql-header .ql-picker-item {
+  color: #fff !important;
+}
+
+.dark .ql-picker.ql-header .ql-picker-item:hover,
+.dark .ql-picker.ql-header .ql-picker-item.ql-selected {
+  color: #2563eb !important;
+}
+
+/* Dark modda Quill başlık dropdown item'larının tıklanabilirliğini garanti et */
+.dark .ql-picker.ql-header .ql-picker-options,
+.dark .ql-picker.ql-header .ql-picker-item {
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  z-index: 1000 !important;
+}
+
+/* Quill başlık dropdown menüsünün her zaman en üstte görünmesini sağla */
+.dark .ql-picker.ql-header .ql-picker-options,
+.ql-picker.ql-header .ql-picker-options {
+  z-index: 9999 !important;
+}
+
+.ql-toolbar {
+  position: relative;
+  z-index: 10;
+  overflow: visible !important;
+}
+
+.ql-container {
+  position: relative;
+  z-index: 1;
+}

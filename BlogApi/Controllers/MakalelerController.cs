@@ -16,23 +16,62 @@ namespace BlogApi.Controllers
             _context = context;
         }
 
+        // DTO tanımı
+        public class MakaleDto
+        {
+            public int Id { get; set; }
+            public string BaslikTr { get; set; }
+            public string BaslikEn { get; set; }
+            public string IcerikTr { get; set; }
+            public string IcerikEn { get; set; }
+            public string Yazar { get; set; }
+            public string Tarih { get; set; }
+            public string Image { get; set; }
+            public bool Status { get; set; }
+        }
+
         // Tüm makaleleri getir
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Makale>>> GetMakaleler()
+        public async Task<ActionResult<IEnumerable<MakaleDto>>> GetMakaleler()
         {
-            return await _context.Makaleler.Where(m => m.Status).Include(m => m.Yorumlar).ToListAsync();
+            var makaleler = await _context.Makaleler.Where(m => m.Status).Include(m => m.Yorumlar).ToListAsync();
+            var result = makaleler.Select(m => new MakaleDto
+            {
+                Id = m.Id,
+                BaslikTr = m.BaslikTr,
+                BaslikEn = m.BaslikEn,
+                IcerikTr = m.IcerikTr,
+                IcerikEn = m.IcerikEn,
+                Yazar = m.Yazar,
+                Tarih = m.Tarih.ToString("yyyy-MM-ddTHH:mm:ss"),
+                Image = m.Image,
+                Status = m.Status
+            }).ToList();
+            return result;
         }
 
         // Tek makale getir
         [HttpGet("{id}")]
-        public async Task<ActionResult<Makale>> GetMakale(int id)
+        public async Task<ActionResult<MakaleDto>> GetMakale(int id)
         {
             var makale = await _context.Makaleler.FindAsync(id);
             if (makale == null || !makale.Status)
             {
                 return NotFound();
             }
-            return makale;
+            var result = new MakaleDto
+            {
+                Id = makale.Id,
+                BaslikTr = makale.BaslikTr,
+                BaslikEn = makale.BaslikEn,
+                IcerikTr = makale.IcerikTr,
+                IcerikEn = makale.IcerikEn,
+                Yazar = makale.Yazar,
+                Tarih = makale.Tarih.ToString("yyyy-MM-ddTHH:mm:ss"),
+                Image = makale.Image,
+                Status = makale.Status
+            };
+            return result;
         }
 
         // Makale ekle
