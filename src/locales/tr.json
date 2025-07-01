@@ -205,7 +205,8 @@
         "content": "<h2>Yazılımda Verimlilik İçin 10 İpucu</h2>\n<p>Yazılım geliştiriciler için zaman yönetimi ve verimlilik çok önemlidir. Bu makalede, günlük işlerinizi kolaylaştıracak 10 ipucunu bulabilirsiniz.</p>\n<ul>\n  <li>Odaklanma zamanları oluşturun</li>\n  <li>Kısa molalar verin</li>\n  <li>Otomasyon araçları kullanın</li>\n  <li>Notlar alın</li>\n  <li>Takımınızla iletişimde kalın</li>\n  <li>Gereksiz toplantılardan kaçının</li>\n  <li>Sağlığınıza dikkat edin</li>\n  <li>Yapılacaklar listesi oluşturun</li>\n  <li>Önceliklendirme yapın</li>\n  <li>Yeni teknolojileri takip edin</li>\n</ul>\n<p>Daha fazlası için blogu takipte kalın!</p>",
         "readTime": "{{count}} dk"
       }
-    }
+    },
+    "gotoPage": "Sayfa numarası..."
   },
   "articleDetail": {
     "comments": {
@@ -237,14 +238,18 @@
       "title": "Başlık",
       "content": "İçerik",
       "author": "Yazar",
-      "image": "Resim URL"
+      "image": "Resim URL",
+      "contentWrite": "Yazmaya başla..."
     },
     "success": "Makale başarıyla eklendi!",
     "errors": {
       "fillAll": "Lütfen tüm alanları doldurun.",
       "general": "Bir hata oluştu. Lütfen tekrar deneyin.",
       "server": "Sunucuya ulaşılamıyor.",
-      "translating": "Çeviri yapılıyor..."
+      "translating": "Çeviri yapılıyor...",
+      "title": "Başlık alanı zorunludur.",
+      "author": "Yazar alanı zorunludur.",
+      "content": "İçerik alanı zorunludur."
     }
   },
   "adminPanel": {

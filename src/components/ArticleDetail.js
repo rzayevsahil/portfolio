@@ -313,9 +313,50 @@ const ArticleDetail = () => {
             />
           </motion.div>
 
-          <div className="prose max-w-none dark:prose-invert text-lg leading-relaxed mt-6 mb-8">
+          <div className="blog-content text-lg leading-relaxed mt-6 mb-8" style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div dangerouslySetInnerHTML={{ __html: icerik }} />
           </div>
+          <style>{`
+            .blog-content > * {
+              width: 100%;
+              max-width: 100%;
+              box-sizing: border-box;
+              margin-bottom: 24px;
+            }
+            .blog-content img,
+            .blog-content video,
+            .blog-content iframe,
+            .blog-content div {
+              display: block;
+              width: 100%;
+              max-width: 800px;
+              margin: 24px auto;
+              border-radius: 16px;
+              margin-bottom: 24px !important;
+            }
+            .blog-content pre, .blog-content code {
+              background: #f5f5f5 !important;
+              color: #222 !important;
+              border-radius: 8px;
+              padding: 6px 16px;
+              font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+              font-size: 15px;
+              overflow-x: auto;
+              margin: 12px 0;
+              display: block;
+              box-sizing: border-box;
+            }
+            .blog-content blockquote {
+              border-left: 8px solid #8ddc97;
+              background: #f8fafc;
+              color: #444;
+              font-style: italic;
+              padding: 16px 24px;
+              margin: 24px 0;
+              border-radius: 8px;
+              font-size: 1.1em;
+            }
+          `}</style>
         </motion.article>
 
         {/* Yorumlar Bölümü */}

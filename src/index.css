@@ -1542,4 +1542,16 @@ body.dark .hero-code-pink {
 
 .tiptap-editable br {
   display: inline;
+}
+
+/* Admin menüsünde alt çizgi olmasın */
+.admin-menu-link-no-underline {
+  box-shadow: none !important;
+  border-bottom: none !important;
+  text-decoration: none !important;
+  position: relative;
+}
+.admin-menu-link-no-underline::after {
+  display: none !important;
+  content: none !important;
 } 

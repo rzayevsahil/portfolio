@@ -6,6 +6,7 @@ import { FaUser, FaFileAlt, FaEnvelope } from 'react-icons/fa';
 
 const menuItems = [
   { to: '/admin/add-article', label: 'Makale Ekle', icon: <FaFileAlt /> },
+  { to: '/admin/medium', label: 'Medium Ekle', icon: <FaFileAlt /> },
   { to: '/admin/profile', label: 'Profil Bilgileri', icon: <FaUser /> },
   { to: '/admin/contact', label: 'İletişim Bilgileri', icon: <FaEnvelope /> },
 ];
@@ -84,10 +85,11 @@ const AdminLayout = () => {
               className={({ isActive }) =>
                 `flex items-center py-2 rounded-lg font-medium transition-colors duration-200
                 ${open ? 'gap-3 px-4 justify-start w-full' : 'gap-0 px-0 justify-center w-auto'}
-                ${isActive ? 'bg-blue-600 text-white' : isDarkMode ? 'text-gray-200 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`
+                ${isActive ? 'bg-blue-600 text-white' : isDarkMode ? 'text-gray-200 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}
+                admin-menu-link-no-underline`
               }
             >
-              <div className={`flex items-center h-10 min-h-[40px] ${open ? 'gap-3 pl-1 justify-start w-full' : 'justify-center w-auto'}`}>
+              <div className={`flex items-center h-10 min-h-[40px] ${open ? 'gap-3 pl-1 justify-start w-full' : 'justify-center w-auto'}`} style={{ boxShadow: 'none', borderBottom: 'none' }}>
                 <span className="w-6 min-w-[24px] flex items-center justify-center">{item.icon}</span>
                 {open && (
                 <motion.span

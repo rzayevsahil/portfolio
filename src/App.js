@@ -109,8 +109,8 @@ function App() {
                 <Route path="add-article" element={<AddArticle />} />
                 <Route path="profile" element={<EditProfile />} />
                 <Route path="contact" element={<EditContact />} />
+                <Route path="medium" element={<MediumEditor />} />
               </Route>
-              <Route path="/admin/medium" element={<MediumEditor />} />
             </Routes>
           </div>
         </Router>

@@ -18,6 +18,7 @@ const BlogList = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageInput, setPageInput] = useState(1);
   const blogsPerPage = 9;
 
   useEffect(() => {
@@ -94,6 +95,10 @@ const BlogList = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, activeCategory]);
+
+  useEffect(() => {
+    setPageInput(currentPage);
+  }, [currentPage]);
 
   function getExcerpt(html, maxLength = 100) {
     const tempDiv = document.createElement('div');
@@ -231,16 +236,105 @@ const BlogList = () => {
 
         {/* Sayfalama butonları */}
         {totalPages > 1 && (
-          <div className="flex justify-center mt-10 gap-2">
-            {Array.from({ length: totalPages }, (_, i) => (
+          <div className="flex justify-center mt-10 gap-2 items-center">
+            <div className="flex gap-2 items-center">
+              {/* Önceki butonu */}
               <button
-                key={i+1}
-                onClick={() => setCurrentPage(i+1)}
-                className={`px-4 py-2 rounded-lg font-semibold border transition-colors duration-200 ${currentPage === i+1 ? 'bg-blue-600 text-white border-blue-600' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className={`px-3 py-2 rounded-lg font-semibold border transition-colors duration-200 flex items-center justify-center ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+                aria-label="Previous"
               >
-                {i+1}
+                &#8249;
               </button>
-            ))}
+              {/* Akıllı sayfa numaraları */}
+              {(() => {
+                const pages = [];
+                const pageWindow = 1; // aktif sayfanın sağında/solunda kaç sayfa gösterilsin
+                let start = Math.max(2, currentPage - pageWindow);
+                let end = Math.min(totalPages - 1, currentPage + pageWindow);
+                // İlk sayfa
+                pages.push(
+                  <button
+                    key={1}
+                    onClick={() => setCurrentPage(1)}
+                    className={`px-4 py-2 rounded-lg font-semibold border transition-colors duration-200 ${currentPage === 1 ? 'bg-blue-600 text-white border-blue-600' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+                  >1</button>
+                );
+                // ... (ilk ile start arasında)
+                if (start > 2) {
+                  pages.push(<span key="start-ellipsis" className="px-2 text-gray-400 select-none">...</span>);
+                }
+                // Ortadaki sayfalar
+                for (let i = start; i <= end; i++) {
+                  pages.push(
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i)}
+                      className={`px-4 py-2 rounded-lg font-semibold border transition-colors duration-200 ${currentPage === i ? 'bg-blue-600 text-white border-blue-600' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+                    >{i}</button>
+                  );
+                }
+                // ... (end ile son arasında)
+                if (end < totalPages - 1) {
+                  pages.push(<span key="end-ellipsis" className="px-2 text-gray-400 select-none">...</span>);
+                }
+                // Son sayfa
+                if (totalPages > 1) {
+                  pages.push(
+                    <button
+                      key={totalPages}
+                      onClick={() => setCurrentPage(totalPages)}
+                      className={`px-4 py-2 rounded-lg font-semibold border transition-colors duration-200 ${currentPage === totalPages ? 'bg-blue-600 text-white border-blue-600' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+                    >{totalPages}</button>
+                  );
+                }
+                return pages;
+              })()}
+              {/* Sonraki butonu */}
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-2 rounded-lg font-semibold border transition-colors duration-200 flex items-center justify-center ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+                aria-label="Next"
+              >
+                &#8250;
+              </button>
+            </div>
+            {/* Sayfa numarası inputu */}
+            <input
+              type="number"
+              min={1}
+              max={totalPages}
+              placeholder={t('blog.gotoPage') || 'Sayfa numarası...'}
+              value={pageInput}
+              onChange={e => setPageInput(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  let val = parseInt(e.target.value, 10);
+                  if (isNaN(val)) {
+                    setPageInput(currentPage);
+                    return;
+                  }
+                  val = Math.max(1, Math.min(totalPages, val));
+                  setCurrentPage(val);
+                  setPageInput(val);
+                }
+              }}
+              onBlur={e => {
+                let val = parseInt(e.target.value, 10);
+                if (isNaN(val)) {
+                  setPageInput(currentPage);
+                  return;
+                }
+                val = Math.max(1, Math.min(totalPages, val));
+                setCurrentPage(val);
+                setPageInput(val);
+              }}
+              className={`w-48 ml-4 px-3 py-2 rounded-lg border font-semibold text-center outline-none focus:ring-2 focus:ring-blue-400 transition-all ${isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 placeholder-gray-500' : 'bg-white text-gray-700 border-gray-300 placeholder-gray-400'}`}
+              style={{ minWidth: 80 }}
+              aria-label="Sayfa numarası"
+            />
           </div>
         )}
 

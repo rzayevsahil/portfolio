@@ -96,11 +96,11 @@ const Hero = () => {
           </div>
         </div>
         {/* Background Gradient */}
-        <div className={`absolute inset-0 ${
+        {/* <div className={`absolute inset-0 ${
           isDarkMode 
             ? 'bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-pink-900/20' 
             : 'bg-gradient-to-br from-blue-100/50 via-purple-100/50 to-pink-100/50'
-        }`}></div>
+        }`}></div> */}
         {/* Profile Photo Background */}
         <img
           src={profileImg}

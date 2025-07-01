@@ -209,7 +209,8 @@
         "readTime": "{{count}} min"
       }
     },
-    "showMore": "Show More"
+    "showMore": "Show More",
+    "gotoPage": "Page number..."
   },
   "articleDetail": {
     "comments": {
@@ -241,13 +242,18 @@
       "title": "Title",
       "content": "Content",
       "author": "Author",
-      "image": "Image URL"
+      "image": "Image URL",      
+      "contentWrite": "Start writing..."
     },
     "success": "Article added successfully!",
     "errors": {
       "fillAll": "Please fill in all fields.",
       "general": "An error occurred. Please try again.",
-      "server": "Cannot reach the server."
+      "server": "Cannot reach the server.",
+      "translating": "Translating...",
+      "title": "Title is required.",
+      "author": "Author is required.",
+      "content": "Content is required."
     },
     "translating": "Translating..."
   },
