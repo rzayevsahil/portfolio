@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
-import logoImg from '../assets/logo.png';
+import logoImgWhite from '../assets/default-monochrome-white.svg';
+import logoImgDark from '../assets/default-monochrome-black.svg';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -109,7 +110,11 @@ const Header = () => {
                   whileHover={{ scale: 1.05 }}
                   className="flex items-center"
                 >
-                  <img src={logoImg} alt="Logo" className="h-10 w-auto" />
+                  {isDarkMode ? (
+                    <img src={logoImgWhite} alt="Logo" className="h-10 w-auto" />
+                  ) : (
+                    <img src={logoImgDark} alt="Logo" className="h-10 w-auto" />
+                  )}
                 </motion.div>
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center space-x-8">

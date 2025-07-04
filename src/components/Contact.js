@@ -3,6 +3,27 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaTimes } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
+import { contactApi, workingHoursApi } from '../api/api';
+
+const dayTranslations = {
+  'Pazartesi': { en: 'Monday', tr: 'Pazartesi' },
+  'Salı': { en: 'Tuesday', tr: 'Salı' },
+  'Çarşamba': { en: 'Wednesday', tr: 'Çarşamba' },
+  'Perşembe': { en: 'Thursday', tr: 'Perşembe' },
+  'Cuma': { en: 'Friday', tr: 'Cuma' },
+  'Cumartesi': { en: 'Saturday', tr: 'Cumartesi' },
+  'Pazar': { en: 'Sunday', tr: 'Pazar' }
+};
+
+const WEEKDAYS = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'];
+const WEEKEND = ['Cumartesi', 'Pazar'];
+
+function translateDays(daysString, lang = 'tr', allDays = []) {
+  if (!daysString) return '';
+  const daysArr = daysString.split(',');
+  const sorted = allDays.length > 0 ? allDays.filter(day => daysArr.includes(day)) : daysArr;
+  return sorted.map(day => dayTranslations[day]?.[lang] || day).join(', ');
+}
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -26,8 +47,14 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProposalSubmitting, setIsProposalSubmitting] = useState(false);
   const [showProposalModal, setShowProposalModal] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isDarkMode } = useTheme();
+  const [contactData, setContactData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [workingHours, setWorkingHours] = useState(null);
+  const [whLoading, setWhLoading] = useState(true);
+  const [whError, setWhError] = useState('');
 
   // Handle escape key to close modal
   useEffect(() => {
@@ -47,6 +74,34 @@ const Contact = () => {
       document.body.style.overflow = 'unset'; // Restore scrolling
     };
   }, [showProposalModal]);
+
+  useEffect(() => {
+    setLoading(true);
+    setError('');
+    contactApi.get()
+      .then(data => {
+        setContactData(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('İletişim bilgileri yüklenemedi.');
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    setWhLoading(true);
+    setWhError('');
+    workingHoursApi.get()
+      .then(data => {
+        setWorkingHours(data);
+        setWhLoading(false);
+      })
+      .catch(() => {
+        setWhError('Çalışma saatleri yüklenemedi.');
+        setWhLoading(false);
+      });
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -104,52 +159,56 @@ const Contact = () => {
     setShowProposalModal(false);
   };
 
+  if (loading) return <div className="p-6 text-gray-300">Yükleniyor...</div>;
+  if (error) return <div className="p-6 text-red-400">{error}</div>;
+  if (!contactData) return null;
+
   const contactInfo = [
     {
       icon: FaEnvelope,
       title: t('contact.info.email'),
-      value: 'sahilrzayev200d@gmail.com',
-      link: 'mailto:sahilrzayev200d@gmail.com'
+      value: contactData.email,
+      link: `mailto:${contactData.email}`
     },
     {
       icon: FaMapMarkerAlt,
       title: t('contact.info.location'),
-      value: 'Istanbul, Turkey',
+      value: contactData.location,
       link: '#'
     },
     {
       icon: FaGithub,
       title: 'GitHub',
-      value: 'github.com/rzayevsahil',
-      link: 'https://github.com/rzayevsahil'
+      value: contactData.github.replace('https://', ''),
+      link: contactData.github
     }
   ];
 
   const socialLinks = [
-    { 
-      icon: FaGithub, 
-      href: 'https://github.com/rzayevsahil', 
+    {
+      icon: FaGithub,
+      href: contactData.github,
       label: 'GitHub',
       color: '#000000',
       hoverColor: '#333333'
     },
-    { 
-      icon: FaLinkedin, 
-      href: 'https://linkedin.com/in/sahil-rzayev', 
+    {
+      icon: FaLinkedin,
+      href: contactData.linkedin,
       label: 'LinkedIn',
       color: '#0077B5',
       hoverColor: '#005885'
     },
-    { 
-      icon: FaTwitter, 
-      href: 'https://twitter.com/sahilrzayev', 
+    {
+      icon: FaTwitter,
+      href: contactData.twitter,
       label: 'Twitter',
       color: '#1DA1F2',
       hoverColor: '#0d8bd9'
     },
-    { 
-      icon: FaInstagram, 
-      href: 'https://instagram.com/sahilrzayev', 
+    {
+      icon: FaInstagram,
+      href: contactData.instagram,
       label: 'Instagram',
       color: '#E4405F',
       hoverColor: '#c13584'
@@ -271,12 +330,26 @@ const Contact = () => {
               <h4 className={`text-lg font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {t('contact.workingHours.title')}
               </h4>
-              <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                {t('contact.workingHours.weekdays')}
-              </p>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                {t('contact.workingHours.weekend')}
-              </p>
+              {whLoading ? (
+                <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Yükleniyor...</p>
+              ) : whError || !workingHours || (!workingHours.weekdays && !workingHours.weekend) ? (
+                <p className="text-sm mb-2 text-red-400">Çalışma saatleri eklenmedi.</p>
+              ) : (
+                <>
+                  {workingHours.weekdays && (
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      <span className="font-semibold mr-2">{t('contact.workingHours.weekdaysLabel')}:</span>
+                      {translateDays(workingHours.weekdays, i18n.language, WEEKDAYS)} {workingHours.weekdayStart} - {workingHours.weekdayEnd}
+                    </p>
+                  )}
+                  {workingHours.weekend && (
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      <span className="font-semibold mr-2">{t('contact.workingHours.weekendLabel')}:</span>
+                      {translateDays(workingHours.weekend, i18n.language, WEEKEND)} {workingHours.weekendStart} - {workingHours.weekendEnd}
+                    </p>
+                  )}
+                </>
+              )}
             </motion.div>
           </motion.div>
 

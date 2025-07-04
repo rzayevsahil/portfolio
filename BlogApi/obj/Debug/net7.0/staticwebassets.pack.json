@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\profile_photos\\903d402c-6c2c-45d2-b79d-7faf7d1df2a7.png",
+      "PackagePath": "staticwebassets\\profile_photos\\903d402c-6c2c-45d2-b79d-7faf7d1df2a7.png"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.BlogApi.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.BlogApi.props",
+      "PackagePath": "build\\BlogApi.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.BlogApi.props",
+      "PackagePath": "buildMultiTargeting\\BlogApi.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.BlogApi.props",
+      "PackagePath": "buildTransitive\\BlogApi.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

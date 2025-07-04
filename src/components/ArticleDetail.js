@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import i18n from '../i18n';
 import emptyBlogImg from '../assets/empty-blog.png';
+import { articleApi } from '../api/api';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -133,22 +134,17 @@ const ArticleDetail = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    // Eğer id varsa API'den makale çek
-    if (id) {
-      fetch(`http://localhost:5000/api/makaleler/${id}`)
-        .then(res => {
-          if (!res.ok) throw new Error('Makale bulunamadı');
-          return res.json();
-        })
-        .then(data => {
-          setApiArticle(data);
-          setLoading(false);
-        })
-        .catch(() => {
-          setError('Makale bulunamadı.');
-          setLoading(false);
-        });
-    }
+    setLoading(true);
+    setError('');
+    articleApi.getById(id)
+      .then(data => {
+        setApiArticle(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Makale bulunamadı.');
+        setLoading(false);
+      });
   }, [id]);
 
   if (loading) {

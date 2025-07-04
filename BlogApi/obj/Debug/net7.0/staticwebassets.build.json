@@ -1,11 +1,37 @@
 {
   "Version": 1,
-  "Hash": "JqS6VciEiQQqqf0Tji2ERGPs9j0pfg4OV5Cbe2KQax8=",
+  "Hash": "Ldm23c+7wzft8x77wpYlqTb3PCCcKIcwUX/ecwqyRXY=",
   "Source": "BlogApi",
   "BasePath": "_content/BlogApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "BlogApi\\wwwroot",
+      "Source": "BlogApi",
+      "ContentRoot": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\",
+      "BasePath": "_content/BlogApi",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\profile_photos\\903d402c-6c2c-45d2-b79d-7faf7d1df2a7.png",
+      "SourceId": "BlogApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\",
+      "BasePath": "_content/BlogApi",
+      "RelativePath": "profile_photos/903d402c-6c2c-45d2-b79d-7faf7d1df2a7.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\profile_photos\\903d402c-6c2c-45d2-b79d-7faf7d1df2a7.png"
+    }
+  ]
 }

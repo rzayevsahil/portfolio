@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import emptyBlogImg from '../assets/empty-blog.png';
-
-const API_URL = 'http://localhost:5000/api/makaleler';
+import { articleApi } from '../api/api';
 
 const BlogList = () => {
   const [articles, setArticles] = useState([]);
@@ -22,8 +21,9 @@ const BlogList = () => {
   const blogsPerPage = 9;
 
   useEffect(() => {
-    fetch(API_URL)
-      .then(res => res.json())
+    setLoading(true);
+    setError('');
+    articleApi.getAll()
       .then(data => {
         setArticles(data);
         setLoading(false);

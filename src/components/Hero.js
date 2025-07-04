@@ -4,7 +4,7 @@ import { FaGithub, FaLinkedin, FaTwitter, FaArrowDown } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import profileImg from '../assets/profile.jpg';
-import { SiReact, SiNodedotjs, SiJavascript, SiPython, SiCsharp, SiDotnet } from 'react-icons/si';
+import { SiReact, SiNodedotjs, SiJavascript, SiPython, SiCsharp, SiDotnet, SiAngular, SiSwagger, SiHtml5, SiCss3, SiApple, SiXcode, SiAndroid, SiAndroidstudio, SiOpenai, SiVisualstudio, SiVisualstudiocode, SiJetbrains, SiMicrosoftsqlserver } from 'react-icons/si';
 
 const Hero = () => {
   const { t } = useTranslation();
@@ -64,26 +64,42 @@ const Hero = () => {
         <div className="hero-animated-bg"></div>
         {/* Yazılım temalı hareketli kod satırı efektleri */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <div className="animate-move-code absolute left-4 top-8 hero-code-green font-mono text-lg select-none">
+          <div className="animate-move-code absolute left-4 top-8 hero-code-green font-mono text-lg select-none opacity-40">
             {'function helloWorld() { ... }'}
           </div>
-          <div className="animate-move-code-alt absolute right-8 top-16 hero-code-blue font-mono text-base select-none">
+          <div className="animate-move-code-alt absolute right-8 top-16 hero-code-blue font-mono text-base select-none opacity-40">
             {'<div>AI & Software</div>'}
           </div>
-          <div className="animate-move-code absolute left-8 bottom-8 hero-code-pink font-mono text-base select-none">
+          <div className="animate-move-code absolute left-8 bottom-8 hero-code-pink font-mono text-base select-none opacity-40">
             {'0101010101010101'}
           </div>
-          <div className="animate-move-code-alt absolute right-4 bottom-12 hero-code-green font-mono text-lg select-none">
+          <div className="animate-move-code-alt absolute right-4 bottom-12 hero-code-green font-mono text-lg select-none opacity-40">
             {'console.log("Hello!")'}
           </div>
           <div className={`animate-icon-bounce absolute left-8 top-1/2 ${isDarkMode ? 'text-blue-400 opacity-40' : 'text-blue-700 opacity-70'} text-5xl`}>
             <SiReact />
           </div>
+          {/* Angular */}
+          <div className={`animate-icon-bounce-alt absolute left-20 top-24 ${isDarkMode ? 'text-red-400 opacity-40' : 'text-red-700 opacity-70'} text-5xl`}>
+            <SiAngular />
+          </div>
+          {/* Swagger */}
+          <div className={`animate-icon-bounce absolute right-24 bottom-24 ${isDarkMode ? 'text-green-300 opacity-40' : 'text-green-600 opacity-70'} text-5xl`}>
+            <SiSwagger />
+          </div>
           <div className={`animate-icon-bounce-alt absolute right-8 top-1/3 ${isDarkMode ? 'text-green-400 opacity-40' : 'text-green-700 opacity-70'} text-5xl`}>
             <SiNodedotjs />
           </div>
+          {/* HTML5 */}
+          <div className={`animate-icon-bounce absolute right-20 top-24 ${isDarkMode ? 'text-orange-400 opacity-40' : 'text-orange-600 opacity-70'} text-5xl`}>
+            <SiHtml5 />
+          </div>
           <div className={`animate-icon-bounce absolute left-1/4 bottom-8 ${isDarkMode ? 'text-yellow-400 opacity-40' : 'text-yellow-600 opacity-70'} text-5xl`}>
             <SiJavascript />
+          </div>
+          {/* CSS3 */}
+          <div className={`animate-icon-bounce-alt absolute left-12 bottom-20 ${isDarkMode ? 'text-blue-300 opacity-40' : 'text-blue-500 opacity-70'} text-5xl`}>
+            <SiCss3 />
           </div>
           <div className={`animate-icon-bounce-alt absolute right-1/4 bottom-8 ${isDarkMode ? 'text-blue-300 opacity-40' : 'text-blue-700 opacity-70'} text-5xl`}>
             <SiPython />
@@ -93,6 +109,34 @@ const Hero = () => {
           </div>
           <div className={`animate-icon-bounce-alt absolute right-1/2 bottom-4 ${isDarkMode ? 'text-gray-400 opacity-40' : 'text-gray-700 opacity-70'} text-5xl`}>
             <SiDotnet />
+          </div>
+          {/* iOS (Apple) */}
+          <div className={`animate-icon-bounce absolute right-12 bottom-60 ${isDarkMode ? 'text-gray-200 opacity-40' : 'text-gray-700 opacity-70'} text-5xl`}>
+            <SiApple />
+          </div>
+          {/* Xcode */}
+          <div className={`animate-icon-bounce-alt absolute right-1/2 top-32 ${isDarkMode ? 'text-blue-300 opacity-40' : 'text-blue-500 opacity-70'} text-5xl`}>
+            <SiXcode />
+          </div>
+          {/* Android */}
+          <div className={`animate-icon-bounce absolute left-60 top-12 ${isDarkMode ? 'text-green-400 opacity-40' : 'text-green-600 opacity-70'} text-5xl`}>
+            <SiAndroid />
+          </div>
+          {/* Android Studio */}
+          <div className={`animate-icon-bounce-alt absolute right-72 top-6 ${isDarkMode ? 'text-green-300 opacity-40' : 'text-green-700 opacity-70'} text-5xl`}>
+            <SiAndroidstudio />
+          </div>
+          <div className={`animate-icon-bounce-alt absolute right-72 top-48 ${isDarkMode ? 'text-green-300 opacity-40' : 'text-green-700 opacity-70'} text-5xl`}>
+            <SiOpenai />
+          </div>
+          <div className={`animate-icon-bounce-alt absolute right-72 top-96 ${isDarkMode ? 'text-green-300 opacity-40' : 'text-green-700 opacity-70'} text-5xl`}>
+            <SiVisualstudio />
+          </div>
+          <div className={`animate-icon-bounce-alt absolute left-72 top-96 ${isDarkMode ? 'text-green-300 opacity-40' : 'text-green-700 opacity-70'} text-5xl`}>
+            <SiVisualstudiocode />
+          </div>
+          <div className={`animate-icon-bounce-alt absolute left-72 top-48 ${isDarkMode ? 'text-green-300 opacity-40' : 'text-green-700 opacity-70'} text-5xl`}>
+            <SiMicrosoftsqlserver />
           </div>
         </div>
         {/* Background Gradient */}

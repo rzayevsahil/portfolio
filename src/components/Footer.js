@@ -1,43 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaHeart } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
+import { contactApi } from '../api/api';
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isDarkMode } = useTheme();
+  const [contactData, setContactData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const socialLinks = [
+  useEffect(() => {
+    setLoading(true);
+    setError('');
+    contactApi.get()
+      .then(data => {
+        setContactData(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('İletişim bilgileri yüklenemedi.');
+        setLoading(false);
+      });
+  }, []);
+
+  const socialLinks = contactData ? [
     { 
       icon: FaGithub, 
-      href: 'https://github.com/rzayevsahil', 
+      href: contactData.github, 
       label: 'GitHub',
       color: '#000000',
       hoverColor: '#333333'
     },
     { 
       icon: FaLinkedin, 
-      href: 'https://linkedin.com/in/sahil-rzayev', 
+      href: contactData.linkedin, 
       label: 'LinkedIn',
       color: '#0077B5',
       hoverColor: '#005885'
     },
     { 
       icon: FaTwitter, 
-      href: 'https://twitter.com/sahilrzayev', 
+      href: contactData.twitter, 
       label: 'Twitter',
       color: '#1DA1F2',
       hoverColor: '#0d8bd9'
     },
     { 
       icon: FaInstagram, 
-      href: 'https://instagram.com/sahilrzayev', 
+      href: contactData.instagram, 
       label: 'Instagram',
       color: '#E4405F',
       hoverColor: '#c13584'
     }
-  ];
+  ] : [];
 
   const quickLinks = [
     { name: t('nav.home'), href: '#home' },
@@ -90,7 +108,7 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  transition={{ delay: 0.1 + (index * 0.1), duration: 0.5 }}
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.1, y: -3 }}
                   whileTap={{ scale: 0.9 }}
@@ -99,13 +117,11 @@ const Footer = () => {
                   style={{
                     transition: 'all 0.03s ease-in-out'
                   }}
-                  onMouseEnter={(e) => {
+                  onMouseEnter={e => {
                     e.currentTarget.style.color = social.hoverColor;
-                    e.currentTarget.style.transform = 'scale(1.1) translateY(-3px)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={e => {
                     e.currentTarget.style.color = '';
-                    e.currentTarget.style.transform = 'scale(1) translateY(0)';
                   }}
                 >
                   <social.icon size={20} />
@@ -125,7 +141,7 @@ const Footer = () => {
             <ul className="space-y-2">
               {quickLinks.map((link, index) => (
                 <motion.li
-                  key={link.name}
+                  key={link.name + '-' + i18n.language}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 + (index * 0.1), duration: 0.5 }}
@@ -179,15 +195,21 @@ const Footer = () => {
           >
             <h4 className="text-lg font-semibold mb-4 text-blue-400">{t('footer.contact')}</h4>
             <div className="space-y-3">
-              <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-300'}`}>
-                sahilrzayev200d@gmail.com
-              </p>
-              <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-300'}`}>
-                Istanbul, Turkey
-              </p>
-              <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-300'}`}>
-                github.com/rzayevsahil
-              </p>
+              {loading ? (
+                <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-300'}`}>Yükleniyor...</div>
+              ) : error ? (
+                <div className="text-red-400">{error}</div>
+              ) : contactData ? (
+                <>
+                  <div className="flex items-center text-gray-300 text-base">{contactData.email}</div>
+                  <div className="flex items-center text-gray-300 text-base">{contactData.location}</div>
+                  <div className="flex items-center text-gray-300 text-base">
+                    <a href={contactData.github} target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition break-all">
+                      {contactData.github.replace('https://', '')}
+                    </a>
+                  </div>
+                </>
+              ) : null}
             </div>
           </motion.div>
         </div>

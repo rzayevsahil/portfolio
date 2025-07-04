@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Header from './components/Header';
@@ -19,6 +19,10 @@ import EditProfile from './pages/admin/EditProfile';
 import EditContact from './pages/admin/EditContact';
 import AddArticle from './pages/admin/AddArticle';
 import MediumEditor from './pages/admin/MediumEditor';
+import EditWorkingHours from './pages/admin/EditWorkingHours';
+import Login from './pages/admin/Login';
+import { LoadingProvider, useLoading } from './context/LoadingContext';
+import GlobalLoader from './components/GlobalLoader';
 import './i18n';
 
 function HomePage() {
@@ -60,6 +64,15 @@ function HomePage() {
   );
 }
 
+function PrivateRoute({ children }) {
+  const token = localStorage.getItem('token');
+  const location = useLocation();
+  if (!token) {
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+  }
+  return children;
+}
+
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -95,28 +108,44 @@ function App() {
   }
 
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <Router>
-          <div className="App">
-            <Header />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/article/:id" element={<ArticleDetail />} />
-              <Route path="/blog" element={<BlogList />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminPanel />} />
-                <Route path="add-article" element={<AddArticle />} />
-                <Route path="profile" element={<EditProfile />} />
-                <Route path="contact" element={<EditContact />} />
-                <Route path="medium" element={<MediumEditor />} />
-              </Route>
-            </Routes>
-          </div>
-        </Router>
-      </LanguageProvider>
-    </ThemeProvider>
+    <LoadingProvider>
+      <GlobalLoaderWrapper />
+      <ThemeProvider>
+        <LanguageProvider>
+          <Router>
+            <div className="App">
+              <Header />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/article/:id" element={<ArticleDetail />} />
+                <Route path="/blog" element={<BlogList />} />
+                <Route path="/admin/login" element={<Login />} />
+                <Route path="/admin/*" element={
+                  <PrivateRoute>
+                    <Routes>
+                      <Route path="" element={<AdminLayout />}>
+                        <Route index element={<AdminPanel />} />
+                        <Route path="add-article" element={<AddArticle />} />
+                        <Route path="profile" element={<EditProfile />} />
+                        <Route path="contact" element={<EditContact />} />
+                        <Route path="medium" element={<MediumEditor />} />
+                        <Route path="working-hours" element={<EditWorkingHours />} />
+                      </Route>
+                    </Routes>
+                  </PrivateRoute>
+                } />
+              </Routes>
+            </div>
+          </Router>
+        </LanguageProvider>
+      </ThemeProvider>
+    </LoadingProvider>
   );
+}
+
+function GlobalLoaderWrapper() {
+  const { globalLoading } = useLoading();
+  return <GlobalLoader show={globalLoading} />;
 }
 
 export default App; 

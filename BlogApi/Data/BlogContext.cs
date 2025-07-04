@@ -9,5 +9,8 @@ namespace BlogApi.Data
 
         public DbSet<Makale> Makaleler { get; set; }
         public DbSet<Yorum> Yorumlar { get; set; }
+        public DbSet<ContactInfo> ContactInfos { get; set; }
+        public DbSet<WorkingHours> WorkingHours { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
     }
 } 

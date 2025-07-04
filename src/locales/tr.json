@@ -100,7 +100,9 @@
     "workingHours": {
       "title": "Çalışma Saatleri",
       "weekdays": "Pazartesi - Cuma: 09:00 - 18:00",
-      "weekend": "Hafta Sonu: 10:00 - 16:00"
+      "weekend": "Hafta Sonu: 10:00 - 16:00",
+      "weekdaysLabel": "Hafta İçi",
+      "weekendLabel": "Hafta Sonu"
     },
     "form": {
       "title": "Mesaj Gönder",

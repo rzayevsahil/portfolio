@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaUser, FaFileAlt, FaEnvelope } from 'react-icons/fa';
+import { FaUser, FaFileAlt, FaEnvelope, FaClock } from 'react-icons/fa';
 
 const menuItems = [
   { to: '/admin/add-article', label: 'Makale Ekle', icon: <FaFileAlt /> },
   { to: '/admin/medium', label: 'Medium Ekle', icon: <FaFileAlt /> },
   { to: '/admin/profile', label: 'Profil Bilgileri', icon: <FaUser /> },
   { to: '/admin/contact', label: 'İletişim Bilgileri', icon: <FaEnvelope /> },
+  { to: '/admin/working-hours', label: 'Çalışma Saatleri', icon: <FaClock /> },
 ];
 
 const HamburgerIcon = ({ open }) => (
@@ -43,6 +44,12 @@ const HamburgerIcon = ({ open }) => (
 const AdminLayout = () => {
   const { isDarkMode } = useTheme();
   const [open, setOpen] = useState(true);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/admin/login';
+  };
+
   return (
     <div className={`min-h-screen flex transition-colors duration-300 ${isDarkMode ? 'bg-gray-900/50' : 'bg-gray-50'}`}>
       {/* Sidebar */}
@@ -106,6 +113,7 @@ const AdminLayout = () => {
             </NavLink>
           ))}
         </nav>
+        <button onClick={handleLogout} className="ml-4 px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white">Çıkış</button>
       </motion.aside>
       {/* Main Content */}
       <main className="flex-1 p-8" style={{ marginTop: '64px' }}>

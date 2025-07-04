@@ -17,6 +17,41 @@ namespace BlogApi.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
 
+            modelBuilder.Entity("BlogApi.Models.ContactInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Github")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Instagram")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Linkedin")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Twitter")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactInfos");
+                });
+
             modelBuilder.Entity("BlogApi.Models.Makale", b =>
                 {
                     b.Property<int>("Id")
@@ -56,6 +91,68 @@ namespace BlogApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Makaleler");
+                });
+
+            modelBuilder.Entity("BlogApi.Models.Profile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Profiles");
+                });
+
+            modelBuilder.Entity("BlogApi.Models.WorkingHours", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("WeekdayEnd")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WeekdayStart")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Weekdays")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Weekend")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WeekendEnd")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WeekendStart")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkingHours");
                 });
 
             modelBuilder.Entity("BlogApi.Models.Yorum", b =>

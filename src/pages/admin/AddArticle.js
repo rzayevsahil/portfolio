@@ -7,8 +7,8 @@ import './AddArticle.css';
 import Quill from 'quill';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { articleApi } from '../../api/api';
 
-const API_URL = 'http://localhost:5000/api/makaleler';
 
 const quillModules = {
   toolbar: {
@@ -48,6 +48,8 @@ const AddArticle = () => {
   const [error, setError] = useState('');
   const [translating, setTranslating] = useState(false);
   const quillRef = useRef();
+  const [form, setForm] = useState({ title: '', content: '' });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (window.Quill) {
@@ -56,58 +58,23 @@ const AddArticle = () => {
     }
   }, []);
 
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess('');
+    setLoading(true);
     setError('');
-
-    if (!baslikTr || !icerikTr || !yazar || !image) {
-      setError(t('addArticle.errors.fillAll'));
-      return;
-    }
-
-    setTranslating(true);
-    let autoBaslikEn = '';
-    let autoIcerikEn = '';
+    setSuccess(false);
     try {
-      autoBaslikEn = await translateToEnglish(baslikTr);
-      autoIcerikEn = await translateHtmlContent(icerikTr);
+      await articleApi.add(form);
+      setSuccess(true);
+      setForm({ title: '', content: '' });
     } catch {
-      setError('Başlık veya içerik çevirisi başarısız oldu.');
-      setTranslating(false);
-      return;
+      setError('Makale eklenemedi.');
     }
-    setTranslating(false);
-
-    const makale = {
-      baslikTr,
-      baslikEn: autoBaslikEn,
-      icerikTr,
-      icerikEn: autoIcerikEn,
-      yazar,
-      image,
-      tarih: new Date().toISOString()
-    };
-
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(makale)
-      });
-
-      if (response.ok) {
-        setSuccess(t('addArticle.success'));
-        setBaslikTr(''); setBaslikEn(''); setIcerikTr(''); setIcerikEn(''); setYazar(''); setImage('');
-        if (quillRef.current) {
-          quillRef.current.getEditor().setContents([]);
-        }
-      } else {
-        setError(t('addArticle.errors.general'));
-      }
-    } catch (err) {
-      setError(t('addArticle.errors.server'));
-    }
+    setLoading(false);
   };
 
   const translateToEnglish = async (text) => {
@@ -176,13 +143,14 @@ const AddArticle = () => {
         <input
           type="text"
           placeholder={t('addArticle.placeholders.title')}
-          value={baslikTr}
-          onChange={e => setBaslikTr(e.target.value)}
+          value={form.title}
+          onChange={handleChange}
+          name="title"
           className={`border rounded-lg px-4 py-2 ${isDarkMode ? 'text-white bg-gray-900/80 placeholder-gray-400' : 'text-gray-900 bg-white placeholder-gray-500'}`}
         />
         <ReactQuill
           ref={quillRef}
-          value={icerikTr}
+          value={form.content}
           onChange={setIcerikTr}
           placeholder={t('addArticle.placeholders.content')}
           className={`${isDarkMode ? 'bg-gray-900/80 text-white' : 'bg-white text-gray-900'} rounded-lg`}
@@ -205,12 +173,12 @@ const AddArticle = () => {
         />
         <button
           type="submit"
-          className={`btn btn-primary mt-4 ${translating ? 'opacity-50 cursor-not-allowed' : ''}`}
-          disabled={translating}
+          className={`btn btn-primary mt-4 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={loading}
         >
           {t('addArticle.button')}
         </button>
-        {translating && (
+        {loading && (
           <div className="text-blue-500 text-center mt-2">
             {t('addArticle.translating')}
           </div>

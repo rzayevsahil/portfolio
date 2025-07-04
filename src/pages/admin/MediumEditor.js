@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FaPlus, FaTimes, FaImage, FaRegSquare, FaVideo, FaCode, FaQuoteRight, FaEllipsisH, FaLink, FaHeading, FaRegCommentDots } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../context/ThemeContext';
+import { articleApi } from '../../api/api';
 
-const API_URL = 'http://localhost:5000/api/makaleler';
 
 function BlockMenu({ onClose, onAction, ...props }) {
   const { isDarkMode } = useTheme();
@@ -550,16 +550,8 @@ export default function MediumEditor() {
       tarih
     };
     try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(makale)
-      });
-      if (response.ok) {
-        showNotif(t('addArticle.success'), 'success');
-      } else {
-        showNotif(t('addArticle.errors.general'), 'error');
-      }
+      await articleApi.add(makale);
+      showNotif(t('addArticle.success'), 'success');
     } catch (err) {
       showNotif(t('addArticle.errors.server'), 'error');
     }

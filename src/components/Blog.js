@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import emptyBlogImg from '../assets/empty-blog.png';
-
-const API_URL = 'http://localhost:5000/api/makaleler';
+import { articleApi } from '../api/api';
 
 function getExcerpt(html, maxLength = 100) {
   const tempDiv = document.createElement('div');
@@ -24,8 +23,9 @@ const Blog = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(API_URL)
-      .then(res => res.json())
+    setLoading(true);
+    setError('');
+    articleApi.getAll()
       .then(data => {
         setArticles(data);
         setLoading(false);

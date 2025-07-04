@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using BlogApi.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,29 @@ builder.Services.AddCors(options =>
         });
 });
 
+// JWT authentication ekle
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? builder.Configuration["Jwt:Secret"];
+if (string.IsNullOrEmpty(jwtSecret) || jwtSecret.Length < 32)
+    throw new Exception("JWT_SECRET environment variable must be set and at least 32 characters!");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSecret))
+    };
+});
+
+builder.Services.AddScoped<BlogApi.Services.JwtService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -36,10 +62,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+// Statik dosya sunumu
+app.UseStaticFiles();
 
 // CORS middleware'ini ekle
 app.UseCors("AllowReactApp");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

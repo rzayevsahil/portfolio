@@ -65,3 +65,14 @@ C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\obj\Debug\net7
 C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\obj\Debug\net7.0\BlogApi.pdb
 C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\obj\Debug\net7.0\BlogApi.genruntimeconfig.cache
 C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\obj\Debug\net7.0\ref\BlogApi.dll
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\BlogApi.staticwebassets.runtime.json
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\Microsoft.Bcl.TimeProvider.dll
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Sahil Rzayev\Desktop\CursorAI Projects\portfolio\BlogApi\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll

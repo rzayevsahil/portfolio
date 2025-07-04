@@ -100,7 +100,9 @@
     "workingHours": {
       "title": "Working Hours",
       "weekdays": "Monday - Friday: 09:00 - 18:00",
-      "weekend": "Weekend: 10:00 - 16:00"
+      "weekend": "Weekend: 10:00 - 16:00",
+      "weekdaysLabel": "Weekdays",
+      "weekendLabel": "Weekend"
     },
     "form": {
       "title": "Send Message",
