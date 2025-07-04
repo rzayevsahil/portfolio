@@ -119,8 +119,8 @@ MIT
 ## 📞 İletişim
 
 Her türlü soru ve katkı için:  
-- Email: info@example.com  
-- GitHub: [GitHub Profilim](https://github.com/yourusername)
+- Email: sahilrzayev200d@gmail.com  
+- GitHub: [GitHub Profilim](https://github.com/rzayevsahil)
 
 ---
 
