@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaUser, FaFileAlt, FaEnvelope, FaClock } from 'react-icons/fa';
+import { FaUser, FaFileAlt, FaEnvelope, FaClock, FaSignOutAlt, FaBlog } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
+import Logo from '../components/Logo';
 
 const menuItems = [
-  { to: '/admin/add-article', label: 'Makale Ekle', icon: <FaFileAlt /> },
-  { to: '/admin/medium', label: 'Medium Ekle', icon: <FaFileAlt /> },
   { to: '/admin/profile', label: 'Profil Bilgileri', icon: <FaUser /> },
+  { to: '/admin/blog-management', label: 'Blog Yönetimi', icon: <FaBlog /> },
   { to: '/admin/contact', label: 'İletişim Bilgileri', icon: <FaEnvelope /> },
   { to: '/admin/working-hours', label: 'Çalışma Saatleri', icon: <FaClock /> },
 ];
@@ -44,6 +45,7 @@ const HamburgerIcon = ({ open }) => (
 const AdminLayout = () => {
   const { isDarkMode } = useTheme();
   const [open, setOpen] = useState(true);
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -66,22 +68,20 @@ const AdminLayout = () => {
         >
           <HamburgerIcon open={open} />
         </button>
+        {/* Menü kapalıyken logoyu hamburger ikonunun sağında, sabit göster */}
+        {!open && (
+          <Logo
+            className="fixed z-40"
+            style={{ top: 20, left: 72, position: 'fixed', height: 40, maxWidth: 200 }}
+          />
+        )}
         <div className={`flex items-center ${open ? 'mb-6 justify-center' : 'mb-6 justify-center'}`} style={{ minHeight: 48 }}>
-          {open && <span className="text-3xl font-mono font-bold text-gray-400">&gt;_</span>}
-          <AnimatePresence>
-            {open && (
-              <motion.span
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-                className="text-2xl font-bold ml-2 align-middle"
-                style={{ color: isDarkMode ? '#fff' : '#1a2233' }}
-              >
-                Sahil Rzayev
-              </motion.span>
-            )}
-          </AnimatePresence>
+          {open && (
+            <Logo
+              className="h-10 w-auto mx-auto"
+              style={{ maxHeight: 40, maxWidth: 200 }}
+            />
+          )}
         </div>
         <nav className={`flex flex-col gap-3 mt-4`}>
           {menuItems.map(item => (
@@ -113,7 +113,22 @@ const AdminLayout = () => {
             </NavLink>
           ))}
         </nav>
-        <button onClick={handleLogout} className="ml-4 px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white">Çıkış</button>
+        <button 
+          onClick={handleLogout}
+          className={open 
+            ? "px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white font-semibold transition w-full flex items-center justify-center"
+            : "p-0 w-10 h-10 min-w-0 rounded bg-red-600 hover:bg-red-700 text-white font-semibold transition flex items-center justify-center"
+          }
+        >
+          {open ? (
+            <>
+              <FaSignOutAlt className="mr-2" size={18} />
+              {t('common.logout')}
+            </>
+          ) : (
+            <FaSignOutAlt size={20} />
+          )}
+        </button>
       </motion.aside>
       {/* Main Content */}
       <main className="flex-1 p-8" style={{ marginTop: '64px' }}>

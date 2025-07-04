@@ -260,9 +260,9 @@ const ArticleDetail = () => {
                 <FaCalendar size={14} />
                 <span>
                   {currentArticle.tarih
-                    ? `${formatDate(currentArticle.tarih)} ${new Date(currentArticle.tarih).toLocaleTimeString(t('articleDetail.locale', { defaultValue: i18n.language }), { hour: '2-digit', minute: '2-digit' })}`
+                    ? `${formatDate(currentArticle.tarih)} ${new Date(currentArticle.tarih).toLocaleTimeString(t('articleDetail.locale', { defaultValue: i18n.language }), { hour: '2-digit', minute: '2-digit', hour12: false })}`
                     : currentArticle.date
-                      ? `${formatDate(currentArticle.date)} ${new Date(currentArticle.date).toLocaleTimeString(t('articleDetail.locale', { defaultValue: i18n.language }), { hour: '2-digit', minute: '2-digit' })}`
+                      ? `${formatDate(currentArticle.date)} ${new Date(currentArticle.date).toLocaleTimeString(t('articleDetail.locale', { defaultValue: i18n.language }), { hour: '2-digit', minute: '2-digit', hour12: false })}`
                       : t('articleDetail.noDate')}
                 </span>
               </div>

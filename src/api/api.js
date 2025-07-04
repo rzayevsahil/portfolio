@@ -1,4 +1,4 @@
-const BASE_URL = process.env.REACT_APP_API_URL;
+export const BASE_URL = process.env.REACT_APP_API_URL;
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -48,6 +48,7 @@ export const articleApi = {
       headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
       body: JSON.stringify(data),
     });
+    if (response.status === 204) return {};
     if (!response.ok) throw new Error('Makale güncellenemedi.');
     return response.json();
   },
@@ -114,4 +115,18 @@ export const profileApi = {
     if (!res.ok) throw new Error('Login failed');
     return await res.json();
   },
+};
+
+export const uploadApi = {
+  uploadImage: async (file) => {
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await fetch(`${apiUrl}/upload`, {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) throw new Error('Resim yüklenemedi.');
+    return response.json(); // { url: ... }
+  }
 }; 

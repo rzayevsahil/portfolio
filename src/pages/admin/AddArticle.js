@@ -7,7 +7,9 @@ import './AddArticle.css';
 import Quill from 'quill';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { articleApi } from '../../api/api';
+import { articleApi, uploadApi, BASE_URL } from '../../api/api';
+import { useNavigate } from 'react-router-dom';
+import { FaLink, FaUpload, FaImage } from 'react-icons/fa';
 
 
 const quillModules = {
@@ -44,12 +46,19 @@ const AddArticle = () => {
   const [icerikEn, setIcerikEn] = useState('');
   const [yazar, setYazar] = useState('');
   const [image, setImage] = useState('');
+  const [imageMode, setImageMode] = useState('url'); // 'url' or 'file'
+  const [selectedFile, setSelectedFile] = useState(null);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [translating, setTranslating] = useState(false);
   const quillRef = useRef();
+  const fileInputRef = useRef();
   const [form, setForm] = useState({ title: '', content: '' });
   const [loading, setLoading] = useState(false);
+  const [titleError, setTitleError] = useState(false);
+  const [contentError, setContentError] = useState(false);
+  const [authorError, setAuthorError] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (window.Quill) {
@@ -65,14 +74,76 @@ const AddArticle = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setTranslating(true);
     setError('');
     setSuccess(false);
+    setTitleError(false);
+    setContentError(false);
+    setAuthorError(false);
+    let imageUrl = image;
+    if (imageMode === 'file' && selectedFile) {
+      try {
+        const data = await uploadApi.uploadImage(selectedFile);
+        imageUrl = data.url;
+      } catch (err) {
+        setError('Resim yüklenemedi.');
+        setLoading(false);
+        setTranslating(false);
+        return;
+      }
+    }
+    if (!form.title.trim()) {
+      setError(t('addArticle.errors.title'));
+      setTitleError(true);
+      setLoading(false);
+      setTranslating(false);
+      return;
+    }
+    if (!form.content || form.content === '<p><br></p>' || !form.content.trim()) {
+      setError(t('addArticle.errors.content'));
+      setContentError(true);
+      setLoading(false);
+      setTranslating(false);
+      return;
+    }
+    if (!yazar.trim()) {
+      setError(t('addArticle.errors.author'));
+      setAuthorError(true);
+      setLoading(false);
+      setTranslating(false);
+      return;
+    }
+    let baslikEn = form.title;
+    let icerikEn = form.content;
     try {
-      await articleApi.add(form);
-      setSuccess(true);
+      baslikEn = await translateToEnglish(form.title);
+      icerikEn = await translateHtmlContent(form.content);
+    } catch (err) {
+      // Çeviri başarısızsa Türkçesini kullan
+      baslikEn = form.title;
+      icerikEn = form.content;
+    }
+    setTranslating(false);
+    const makaleData = {
+      BaslikTr: form.title,
+      BaslikEn: baslikEn,
+      IcerikTr: form.content,
+      IcerikEn: icerikEn,
+      Yazar: yazar,
+      Tarih: getLocalIsoString(),
+      Image: imageUrl,
+      Status: true
+    };
+    try {
+      await articleApi.add(makaleData);
+      setSuccess(t('addArticle.success') || 'Makale başarıyla eklendi!');
       setForm({ title: '', content: '' });
+      setYazar('');
+      setImage('');
+      setSelectedFile(null);
     } catch {
       setError('Makale eklenemedi.');
+      setTranslating(false);
     }
     setLoading(false);
   };
@@ -136,24 +207,118 @@ const AddArticle = () => {
     });
   }, [icerikTr]);
 
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess(''), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
+
+  // Component unmount olduğunda URL'leri temizle
+  useEffect(() => {
+    return () => {
+      if (selectedFile) {
+        URL.revokeObjectURL(URL.createObjectURL(selectedFile));
+      }
+    };
+  }, [selectedFile]);
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        setError('Dosya boyutu 5MB\'dan küçük olmalıdır.');
+        return;
+      }
+      setError('');
+      // Önceki dosya URL'sini temizle
+      if (selectedFile) {
+        URL.revokeObjectURL(URL.createObjectURL(selectedFile));
+      }
+      setSelectedFile(file);
+      // Artık burada upload yok, sadece dosya state'e alınıyor
+    }
+  };
+
+  const handleImageModeChange = (mode) => {
+    setImageMode(mode);
+    setImage('');
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    // URL.createObjectURL ile oluşturulan URL'leri temizle
+    if (selectedFile) {
+      URL.revokeObjectURL(URL.createObjectURL(selectedFile));
+    }
+  };
+
+  // Local saatle ISO 8601 formatında string üretir
+  function getLocalIsoString() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return d.getFullYear() + '-' +
+      pad(d.getMonth() + 1) + '-' +
+      pad(d.getDate()) + 'T' +
+      pad(d.getHours()) + ':' +
+      pad(d.getMinutes()) + ':' +
+      pad(d.getSeconds());
+  }
+
   return (
-    <div className={`max-w-xl mx-auto mt-12 p-8 rounded-xl shadow-lg transition-colors duration-300 ${isDarkMode ? 'bg-gray-900/50 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`w-full mt-12 p-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+      <button
+        onClick={() => navigate('/admin/blog-management')}
+        className="mb-6 btn btn-primary"
+      >
+        ← Geri Dön
+      </button>
       <h2 className="text-2xl font-bold mb-6 text-center">{t('addArticle.title')}</h2>
+      {/* Alert Messages */}
+      {error && (
+        <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg font-semibold text-base transition-all duration-300 bg-red-500 text-white" style={{ minWidth: 220, textAlign: 'center' }}>
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg font-semibold text-base transition-all duration-300 bg-green-500 text-white" style={{ minWidth: 220, textAlign: 'center' }}>
+          {success}
+        </div>
+      )}
+      {translating && (
+        <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg font-semibold text-base transition-all duration-300 bg-blue-500 text-white" style={{ minWidth: 220, textAlign: 'center' }}>
+          {t('addArticle.translating')}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="text"
           placeholder={t('addArticle.placeholders.title')}
           value={form.title}
-          onChange={handleChange}
+          onChange={e => {
+            handleChange(e);
+            if (error && titleError) {
+              setError('');
+              setTitleError(false);
+            }
+          }}
           name="title"
-          className={`border rounded-lg px-4 py-2 ${isDarkMode ? 'text-white bg-gray-900/80 placeholder-gray-400' : 'text-gray-900 bg-white placeholder-gray-500'}`}
+          className={`border rounded-lg px-4 py-2 transition-colors duration-200 ${titleError ? 'border-red-500 ring-2 ring-red-300' : ''} ${isDarkMode ? 'text-white bg-gray-900/80 placeholder-gray-400' : 'text-gray-900 bg-white placeholder-gray-500'}`}
         />
         <ReactQuill
           ref={quillRef}
+          key={i18n.language}
           value={form.content}
-          onChange={setIcerikTr}
+          onChange={val => {
+            setIcerikTr(val);
+            setForm(f => ({ ...f, content: val }));
+            if (error && contentError) {
+              setError('');
+              setContentError(false);
+            }
+          }}
           placeholder={t('addArticle.placeholders.content')}
-          className={`${isDarkMode ? 'bg-gray-900/80 text-white' : 'bg-white text-gray-900'} rounded-lg`}
+          className={`${isDarkMode ? 'bg-gray-900/80 text-white' : 'bg-white text-gray-900'} rounded-lg transition-colors duration-200 ${contentError ? 'border-2 border-red-500 ring-2 ring-red-300' : ''}`}
           theme="snow"
           modules={quillModules}
         />
@@ -161,16 +326,110 @@ const AddArticle = () => {
           type="text"
           placeholder={t('addArticle.placeholders.author')}
           value={yazar}
-          onChange={e => setYazar(e.target.value)}
-          className={`border rounded-lg px-4 py-2 ${isDarkMode ? 'text-white bg-gray-900/80 placeholder-gray-400' : 'text-gray-900 bg-white placeholder-gray-500'}`}
+          onChange={e => {
+            setYazar(e.target.value);
+            if (error && authorError) {
+              setError('');
+              setAuthorError(false);
+            }
+          }}
+          className={`border rounded-lg px-4 py-2 transition-colors duration-200 ${authorError ? 'border-red-500 ring-2 ring-red-300' : ''} ${isDarkMode ? 'text-white bg-gray-900/80 placeholder-gray-400' : 'text-gray-900 bg-white placeholder-gray-500'}`}
         />
-        <input
-          type="text"
-          placeholder={t('addArticle.placeholders.image')}
-          value={image}
-          onChange={e => setImage(e.target.value)}
-          className={`border rounded-lg px-4 py-2 ${isDarkMode ? 'text-white bg-gray-900/80 placeholder-gray-400' : 'text-gray-900 bg-white placeholder-gray-500'}`}
-        />
+        <div className="flex gap-2 mb-2">
+          <button
+            type="button"
+            onClick={() => handleImageModeChange('url')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
+              imageMode === 'url' 
+                ? 'bg-blue-500 text-white border-blue-500' 
+                : `${isDarkMode ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'}`
+            }`}
+          >
+            <FaLink size={14} />
+            {t('addArticle.imageMode.url') || 'URL'}
+          </button>
+          <button
+            type="button"
+            onClick={() => handleImageModeChange('file')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
+              imageMode === 'file' 
+                ? 'bg-blue-500 text-white border-blue-500' 
+                : `${isDarkMode ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'}`
+            }`}
+          >
+            <FaUpload size={14} />
+            {t('addArticle.imageMode.file') || 'Dosya Yükle'}
+          </button>
+        </div>
+        
+        {imageMode === 'url' && (
+          <input
+            type="text"
+            placeholder={t('addArticle.placeholders.image')}
+            value={image}
+            onChange={e => setImage(e.target.value)}
+            className={`border rounded-lg px-4 py-2 transition-colors duration-200 ${isDarkMode ? 'text-white bg-gray-900/80 placeholder-gray-400' : 'text-gray-900 bg-white placeholder-gray-500'}`}
+          />
+        )}
+        
+        {imageMode === 'file' && (
+          <div className="space-y-2">
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleFileUpload}
+              className={`border rounded-lg px-4 py-2 w-full transition-colors duration-200 ${isDarkMode ? 'text-white bg-gray-900/80 placeholder-gray-400' : 'text-gray-900 bg-white placeholder-gray-500'}`}
+            />
+            {selectedFile && (
+              <div className="flex items-center gap-2 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <FaImage className="text-green-500" />
+                <span className="text-sm text-green-700 dark:text-green-300">
+                  {selectedFile.name} seçildi
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+        {/* Resim önizleme */}
+        {(image || selectedFile) && (
+          <div className="flex items-center mt-2 gap-2">
+            <img
+              src={
+                selectedFile 
+                  ? URL.createObjectURL(selectedFile)
+                  : image.startsWith('http')
+                    ? image
+                    : `${BASE_URL}${image}`
+              }
+              alt="Önizleme"
+              className="max-h-32 rounded shadow border"
+              style={{ maxWidth: 200, objectFit: 'contain' }}
+            />
+            {selectedFile && (
+              <button
+                type="button"
+                onClick={() => { setSelectedFile(null); if (fileInputRef.current) fileInputRef.current.value = ''; }}
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ml-2
+                  ${isDarkMode
+                    ? 'bg-red-700/20 text-red-300 hover:bg-red-700 hover:text-white'
+                    : 'bg-red-100 text-red-600 hover:bg-red-500 hover:text-white'}
+                `}
+              >Kaldır</button>
+            )}
+            {imageMode === 'url' && image && (
+              <button
+                type="button"
+                onClick={() => setImage('')}
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ml-2
+                  ${isDarkMode
+                    ? 'bg-red-700/20 text-red-300 hover:bg-red-700 hover:text-white'
+                    : 'bg-red-100 text-red-600 hover:bg-red-500 hover:text-white'}
+                `}
+              >Kaldır</button>
+            )}
+          </div>
+        )}
         <button
           type="submit"
           className={`btn btn-primary mt-4 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -178,16 +437,9 @@ const AddArticle = () => {
         >
           {t('addArticle.button')}
         </button>
-        {loading && (
-          <div className="text-blue-500 text-center mt-2">
-            {t('addArticle.translating')}
-          </div>
-        )}
-        {success && <div className="text-green-500 text-center mt-2">{success}</div>}
-        {error && <div className="text-red-500 text-center mt-2">{error}</div>}
       </form>
     </div>
   );
 };
 
-export default AddArticle; 
+export default AddArticle;

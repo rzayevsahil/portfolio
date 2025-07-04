@@ -4,6 +4,7 @@ import { FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaHeart } from 'react-ico
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { contactApi } from '../api/api';
+import Logo from './Logo';
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
@@ -93,7 +94,7 @@ const Footer = () => {
             viewport={{ once: true }}
             className="lg:col-span-1"
           >
-            <h3 className="text-2xl font-bold mb-4 text-blue-400">Sahil Rzayev</h3>
+            <Logo className="h-10 w-auto mb-4" />
             <p className={`mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-300'}`}>
               {t('footer.description')}
             </p>

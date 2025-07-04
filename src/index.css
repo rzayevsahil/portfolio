@@ -1399,13 +1399,13 @@ body.dark {
 }
 
 /* Üst menüdeki nav butonları için modern focus efekti */
-nav button:focus, nav a:focus {
+nav button:focus:not(.theme-toggle-btn):not(.lang-toggle-btn), nav a:focus {
   outline: none !important;
   box-shadow: none !important;
   position: relative;
 }
 
-nav button:focus::after, nav a:focus::after {
+nav button:focus:not(.theme-toggle-btn):not(.lang-toggle-btn)::after, nav a:focus::after {
   content: '';
   display: block;
   position: absolute;
@@ -1554,4 +1554,9 @@ body.dark .hero-code-pink {
 .admin-menu-link-no-underline::after {
   display: none !important;
   content: none !important;
+}
+
+.theme-toggle-btn:focus, .lang-toggle-btn:focus {
+  outline: none !important;
+  box-shadow: none !important;
 } 

@@ -87,6 +87,27 @@
       "button": "GitHub Profilimi Görüntüle"
     }
   },
+  "workingHours": {
+    "title": "Çalışma Saatleri",
+    "noData": "Çalışma saatleri eklenmedi.",
+    "loadError": "Çalışma saatleri yüklenemedi.",
+    "updateError": "Çalışma saatleri güncellenemedi.",
+    "save": "Kaydet",
+    "success": "Çalışma saatleri başarıyla güncellendi!",
+    "weekdays": "Hafta İçi Günleri",
+    "weekend": "Hafta Sonu Günleri",
+    "start": "Başlangıç",
+    "end": "Bitiş",
+    "days": {
+      "monday": "Pazartesi",
+      "tuesday": "Salı",
+      "wednesday": "Çarşamba",
+      "thursday": "Perşembe",
+      "friday": "Cuma",
+      "saturday": "Cumartesi",
+      "sunday": "Pazar"
+    }
+  },
   "contact": {
     "title": "İletişim",
     "subtitle": "Projeleriniz için benimle iletişime geçin",
@@ -97,13 +118,6 @@
       "location": "Konum"
     },
     "social": "Sosyal Medya",
-    "workingHours": {
-      "title": "Çalışma Saatleri",
-      "weekdays": "Pazartesi - Cuma: 09:00 - 18:00",
-      "weekend": "Hafta Sonu: 10:00 - 16:00",
-      "weekdaysLabel": "Hafta İçi",
-      "weekendLabel": "Hafta Sonu"
-    },
     "form": {
       "title": "Mesaj Gönder",
       "name": "Ad Soyad",
@@ -115,7 +129,16 @@
       "message": "Mesaj",
       "messagePlaceholder": "Mesajınızı buraya yazın...",
       "send": "Mesaj Gönder",
-      "sending": "Gönderiliyor..."
+      "sending": "Gönderiliyor...",
+      "errors": {
+        "name": "Lütfen adınızı girin.",
+        "email": "Lütfen e-posta adresinizi girin.",
+        "subject": "Lütfen konu girin.",
+        "message": "Lütfen mesajınızı yazın.",
+        "fillAll": "Lütfen tüm alanları doldurun.",
+        "emailInvalid": "Geçerli bir e-posta adresi giriniz."
+      },
+      "success": "Mesajınız başarıyla gönderildi!"
     },
     "freelance": {
       "title": "Freelance Projeler",
@@ -148,7 +171,19 @@
       "descriptionPlaceholder": "Projenizin detaylarını, gereksinimlerini ve beklentilerinizi açıklayın...",
       "send": "Teklif Gönder",
       "sending": "Gönderiliyor...",
-      "cancel": "İptal"
+      "cancel": "İptal",
+      "errors": {
+        "projectName": "Lütfen proje adını girin.",
+        "clientName": "Lütfen müşteri adını girin.",
+        "email": "Lütfen e-posta adresinizi girin.",
+        "emailInvalid": "Geçerli bir e-posta adresi giriniz.",
+        "phone": "Lütfen telefon numaranızı girin.",
+        "projectType": "Lütfen proje türünü seçin.",
+        "budget": "Lütfen bütçenizi belirtin.",
+        "timeline": "Lütfen zaman çizelgesini girin.",
+        "description": "Lütfen proje açıklamasını girin."
+      },
+      "success": "Proje teklifiniz başarıyla gönderildi!"
     }
   },
   "footer": {
@@ -252,9 +287,81 @@
       "title": "Başlık alanı zorunludur.",
       "author": "Yazar alanı zorunludur.",
       "content": "İçerik alanı zorunludur."
-    }
+    },
+    "imageMode": {
+      "url": "Resim URL",
+      "file": "Dosya Yükle"
+    },
+    "upload": "Resim Yükle",
+    "remove": "Kaldır",
+    "loading": "Yükleniyor..."
   },
   "adminPanel": {
     "title": "Yönetici Paneli"
+  },
+  "blogManagement": {
+    "title": "Blog & Makale Yönetimi",
+    "subtitle": "Makalelerinizi yönetin, düzenleyin ve yayınlayın",
+    "searchPlaceholder": "Makalelerde ara...",
+    "newArticle": "Yeni Makale",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "publish": "Yayınla",
+    "hide": "Gizle",
+    "published": "Yayında",
+    "hidden": "Gizli",
+    "deleteConfirm": "Bu makaleyi silmek istediğinizden emin misiniz?",
+    "deleteSuccess": "Makale başarıyla silindi!",
+    "deleteError": "Makale silinemedi.",
+    "statusUpdateSuccess": "Makale durumu güncellendi!",
+    "statusUpdateError": "Makale durumu güncellenemedi.",
+    "loadError": "Makaleler yüklenemedi.",
+    "noArticles": "Henüz makale eklenmemiş.",
+    "noSearchResults": "Arama kriterlerinize uygun makale bulunamadı.",
+    "retry": "Tekrar Dene",
+    "cancel": "İptal"
+  },
+  "admin": {
+    "loginTitle": "Admin Giriş",
+    "loginButton": "Giriş Yap",
+    "loggingIn": "Giriş Yapılıyor...",
+    "email": "E-posta",
+    "password": "Şifre"
+  },
+  "profile": {
+    "title": "Profil Bilgileri",
+    "notAdded": "Profil bilgileri eklenmedi.",
+    "loadError": "Profil bilgileri yüklenemedi.",
+    "updateError": "Profil güncellenemedi.",
+    "photoAlt": "Profil Fotoğrafı",
+    "uploadPhoto": "Profil fotoğrafı yükle",
+    "uploadHint": "Profil fotoğrafı yüklemek için tıklayın",
+    "name": "Ad Soyad",
+    "email": "E-posta",
+    "currentPassword": "Mevcut Şifre",
+    "newPassword": "Yeni Şifre",
+    "newPasswordPlaceholder": "Şifreyi güncellemek için doldurun",
+    "save": "Kaydet",
+    "updateSuccess": "Profil başarıyla güncellendi!"
+  },
+  "contactEdit": {
+    "title": "İletişim Bilgileri",
+    "email": "E-posta",
+    "location": "Konum",
+    "loadError": "İletişim bilgileri yüklenemedi.",
+    "updateError": "Güncelleme sırasında hata oluştu.",
+    "save": "Kaydet",
+    "success": "İletişim bilgileri başarıyla güncellendi!"
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "scrollToTop": "Yukarı Çık",
+    "logout": "Çıkış"
+  },
+  "notFound": {
+    "title": "Sayfa Bulunamadı",
+    "description": "Aradığınız sayfa mevcut değil veya taşınmış olabilir.",
+    "adminButton": "Admin Profiline Dön",
+    "homeButton": "Anasayfaya Dön"
   }
 } 

@@ -15,5 +15,6 @@ namespace BlogApi.Models
         public string Image { get; set; }
         public List<Yorum> Yorumlar { get; set; } = new List<Yorum>();
         public bool Status { get; set; } = true;
+        public bool IsPublished { get; set; }
     }
 } 

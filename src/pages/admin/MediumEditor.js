@@ -3,6 +3,8 @@ import { FaPlus, FaTimes, FaImage, FaRegSquare, FaVideo, FaCode, FaQuoteRight, F
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../context/ThemeContext';
 import { articleApi } from '../../api/api';
+import { uploadApi } from '../../api/api';
+import { useNavigate } from 'react-router-dom';
 
 
 function BlockMenu({ onClose, onAction, ...props }) {
@@ -143,6 +145,18 @@ async function translateHtmlContent(html) {
   return doc.body.innerHTML;
 }
 
+// Local saatle ISO 8601 formatında string üretir
+function getLocalIsoString() {
+  const d = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' +
+    pad(d.getMonth() + 1) + '-' +
+    pad(d.getDate()) + 'T' +
+    pad(d.getHours()) + ':' +
+    pad(d.getMinutes()) + ':' +
+    pad(d.getSeconds());
+}
+
 export default function MediumEditor() {
   const { t, i18n } = useTranslation();
   const [blocks, setBlocks] = useState([{ type: 'text', value: '', id: generateId() }]);
@@ -164,6 +178,10 @@ export default function MediumEditor() {
   const [imageError, setImageError] = useState(false);
   const [contentError, setContentError] = useState(false);
   const [baslikTr, setBaslikTr] = useState('');
+  const navigate = useNavigate();
+  const [selectedFileName, setSelectedFileName] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
 
   useEffect(() => {
     const handleDeleteOrEnter = (e) => {
@@ -487,9 +505,9 @@ export default function MediumEditor() {
   const handleSave = async () => {
     const baslikTr = document.querySelector('input[placeholder="' + t('addArticle.placeholders.title') + '"]')?.value || '';
     const yazar = author || '';
-    const image = imageUrl || '';
+    let image = imageUrl || '';
     const icerikTr = blocksToHtml(blocks);
-    const tarih = new Date().toISOString();
+    const tarih = getLocalIsoString();
     console.log(icerikTr);
     // İçeriğin gerçekten boş olup olmadığını kontrol et
     const tempDiv = document.createElement('div');
@@ -539,6 +557,19 @@ export default function MediumEditor() {
       return;
     }
     setLoading(false);
+    // Eğer dosya seçildiyse şimdi upload et
+    if (imageFile) {
+      setLoading(true);
+      try {
+        const res = await uploadApi.uploadImage(imageFile);
+        image = res.url;
+      } catch {
+        setLoading(false);
+        showNotif('Resim yüklenemedi', 'error');
+        return;
+      }
+      setLoading(false);
+    }
     // API'ye gönderilecek makale nesnesi
     const makale = {
       baslikTr,
@@ -552,13 +583,28 @@ export default function MediumEditor() {
     try {
       await articleApi.add(makale);
       showNotif(t('addArticle.success'), 'success');
+      // Alanları sıfırla
+      setBaslikTr('');
+      setAuthor('');
+      setImageUrl('');
+      setImageFile(null);
+      setImagePreview('');
+      setSelectedFileName('');
+      setBlocks([{ type: 'text', value: '', id: generateId() }]);
     } catch (err) {
       showNotif(t('addArticle.errors.server'), 'error');
     }
   };
 
   return (
-    <div className={`max-w-2xl mx-auto rounded-xl shadow-lg mt-10 p-0 relative ${isDarkMode ? 'bg-gray-900/50 text-white' : 'bg-white text-gray-900'}`}>
+    <div className={`w-full p-6 mt-10 relative ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+      <button
+        onClick={() => navigate('/admin/blog-management', { replace: true })}
+        className="absolute left-6 z-20 btn btn-primary hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        style={{ minHeight: '44px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+      >
+        ← Geri Dön
+      </button>
       {/* Bildirim kutusu */}
       {notif.message && (
         <div className={`fixed top-8 left-1/2 z-50 -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg font-semibold text-base transition-all duration-300
@@ -570,7 +616,7 @@ export default function MediumEditor() {
       )}
       {loading && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg bg-blue-500 text-white font-semibold text-base transition-all duration-300" style={{ minWidth: 220, textAlign: 'center' }}>
-          {t('addArticle.errors.translating') || 'Çeviri yapılıyor...'}
+          {t('addArticle.errors.translating')}
         </div>
       )}
       {/* Üst bar: Yazar ve Kaydet */}
@@ -582,7 +628,7 @@ export default function MediumEditor() {
             value={author}
             onChange={e => { setAuthor(e.target.value); setAuthorError(false); }}
             required
-            className={`px-3 py-1 rounded-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all w-40 mr-2 shadow-sm pr-8 ${isDarkMode ? 'bg-gray-800/80 text-white placeholder-gray-400' : 'bg-white text-gray-700 placeholder-gray-500'} ${authorError ? 'border-2 border-red-500' : ''}`}
+            className={`h-10 px-4 rounded-full border border-gray-300 text-base focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all mr-2 shadow-sm pr-8 ${isDarkMode ? 'bg-gray-800/80 text-white placeholder-gray-400' : 'bg-white text-gray-700 placeholder-gray-500'} ${authorError ? 'border-2 border-red-500' : ''}`}
             style={{ fontFamily: 'inherit' }}
           />
           {author && (
@@ -612,22 +658,87 @@ export default function MediumEditor() {
       <input
         type="text"
         placeholder={t('addArticle.placeholders.title')}
+        value={baslikTr}
         required
         className={`w-full text-4xl font-bold border-0 outline-none focus:ring-0 focus:border-green-300 focus:shadow-[0_0_0_2px_#bbf7d0] px-8 pt-16 pb-4 bg-transparent placeholder-gray-400 transition-all duration-150 rounded-lg ${isDarkMode ? 'text-white' : ''} ${titleError ? 'border-2 border-red-500' : ''}`}
         style={{ fontFamily: 'Georgia, serif' }}
         onChange={e => { setTitleError(false); setContentError(false); setBaslikTr(e.target.value); }}
       />
       {/* Makale resmi alanı */}
-      <div className="px-8 pb-2 mt-2">
-        <input
-          type="text"
-          placeholder={t('addArticle.placeholders.image')}
-          value={imageUrl}
-          onChange={e => { setImageUrl(e.target.value); setImageError(false); }}
-          required
-          className={`w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all text-base shadow-sm ${isDarkMode ? 'bg-gray-800/80 text-white placeholder-gray-400' : 'bg-gray-50 text-gray-700 placeholder-gray-500'} ${imageError ? 'border-2 border-red-500' : ''}`}
-          style={{ fontFamily: 'inherit' }}
-        />
+      <div className="px-8 pb-2 mt-2 flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder={t('addArticle.placeholders.image')}
+            value={imageUrl}
+            onChange={e => {
+              setImageUrl(e.target.value);
+              setImageError(false);
+              setImageFile(null);
+              setImagePreview('');
+              setSelectedFileName('');
+            }}
+            required
+            className={`flex-1 px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all text-base shadow-sm ${isDarkMode ? 'bg-gray-800/80 text-white placeholder-gray-400' : 'bg-gray-50 text-gray-700 placeholder-gray-500'} ${imageError ? 'border-2 border-red-500' : ''}`}
+            style={{ fontFamily: 'inherit' }}
+          />
+          {/* Modern dosya yükleme butonu */}
+          <input
+            id="image-upload-input"
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={e => {
+              const file = e.target.files[0];
+              if (!file) return;
+              setImageError(false);
+              setImageFile(file);
+              setSelectedFileName(file.name);
+              const previewUrl = URL.createObjectURL(file);
+              setImagePreview(previewUrl);
+              setImageUrl('');
+            }}
+            disabled={loading}
+          />
+          <button
+            type="button"
+            onClick={() => document.getElementById('image-upload-input').click()}
+            className={`px-4 py-2 rounded-lg font-medium shadow-sm transition-all border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 ${isDarkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}`}
+            disabled={loading}
+          >
+            {loading ? t('addArticle.loading') : t('addArticle.upload')}
+          </button>
+        </div>
+        {imageUrl && (
+          <div className="flex items-center mt-2 w-full gap-2">
+            <img src={imageUrl} alt="Önizleme" className="max-h-32 rounded shadow border" style={{ maxWidth: 200, objectFit: 'contain' }} />
+            {selectedFileName && (
+              <span className={`text-xs truncate max-w-[120px] ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{selectedFileName}</span>
+            )}
+            <button onClick={() => { setImageUrl(''); setSelectedFileName(''); }}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ml-2
+                ${isDarkMode
+                  ? 'bg-red-700/20 text-red-300 hover:bg-red-700 hover:text-white'
+                  : 'bg-red-100 text-red-600 hover:bg-red-500 hover:text-white'}
+              `}
+            >{t('addArticle.remove')}</button>
+          </div>
+        )}
+        {imagePreview && !imageUrl && (
+          <div className="flex items-center mt-2 w-full gap-2">
+            <img src={imagePreview} alt="Önizleme" className="max-h-32 rounded shadow border" style={{ maxWidth: 200, objectFit: 'contain' }} />
+            {selectedFileName && (
+              <span className={`text-xs truncate max-w-[120px] ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{selectedFileName}</span>
+            )}
+            <button onClick={() => { setImageFile(null); setImagePreview(''); setSelectedFileName(''); }}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ml-2
+                ${isDarkMode
+                  ? 'bg-red-700/20 text-red-300 hover:bg-red-700 hover:text-white'
+                  : 'bg-red-100 text-red-600 hover:bg-red-500 hover:text-white'}
+              `}
+            >{t('addArticle.remove')}</button>
+          </div>
+        )}
       </div>
       <div className="p-8">
         {blocks.map((block, i) => {

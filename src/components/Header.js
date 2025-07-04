@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
-import logoImgWhite from '../assets/default-monochrome-white.svg';
-import logoImgDark from '../assets/default-monochrome-black.svg';
+import Logo from './Logo';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,6 +52,25 @@ const Header = () => {
       if (observerRef.current) observerRef.current.disconnect();
     };
   }, [isNavLocked]);
+
+  useEffect(() => {
+    const validSections = ['#home', '#about', '#skills', '#projects', '#blog', '#contact'];
+    let lockTimeout;
+    const setActiveFromHash = () => {
+      if (validSections.includes(window.location.hash)) {
+        setActiveNav(window.location.hash);
+        setIsNavLocked(true);
+        clearTimeout(lockTimeout);
+        lockTimeout = setTimeout(() => setIsNavLocked(false), 1200);
+      }
+    };
+    setActiveFromHash();
+    window.addEventListener('hashchange', setActiveFromHash);
+    return () => {
+      window.removeEventListener('hashchange', setActiveFromHash);
+      clearTimeout(lockTimeout);
+    };
+  }, []);
 
   const navItems = [
     { name: t('nav.home'), href: '#home', path: '/' },
@@ -100,7 +119,7 @@ const Header = () => {
           {/* Sadece admin panelinde: sadece ThemeToggle ve dil seçici */}
           {isAdmin ? (
             <div className="flex items-center space-x-4">
-              <ThemeToggle />
+              <ThemeToggle className="focus:outline-none focus:ring-0 active:outline-none active:ring-0 shadow-none border-none" />
               {/* Dil seçici ThemeToggle içinde */}
             </div>
           ) : (
@@ -110,11 +129,9 @@ const Header = () => {
                   whileHover={{ scale: 1.05 }}
                   className="flex items-center"
                 >
-                  {isDarkMode ? (
-                    <img src={logoImgWhite} alt="Logo" className="h-10 w-auto" />
-                  ) : (
-                    <img src={logoImgDark} alt="Logo" className="h-10 w-auto" />
-                  )}
+                  <Link to="/" className="flex items-center gap-2">
+                    <Logo className="h-10 w-auto" />
+                  </Link>
                 </motion.div>
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center space-x-8">
@@ -138,12 +155,12 @@ const Header = () => {
                     );
                   })}
                   {/* Theme Toggle */}
-                  <ThemeToggle />
+                  <ThemeToggle className="focus:outline-none focus:ring-0 active:outline-none active:ring-0 shadow-none border-none" />
                 </nav>
               </div>
               {/* Mobile Menu Button */}
               <div className="md:hidden flex items-center space-x-2">
-                <ThemeToggle />
+                <ThemeToggle className="focus:outline-none focus:ring-0 active:outline-none active:ring-0 shadow-none border-none" />
                 <button
                   className={`p-2 rounded-lg transition-colors duration-300 ${
                     isDarkMode 

@@ -4,6 +4,8 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import logoDark from '../../assets/logo-dark.svg';
 import emptyProfilePhoto from '../../assets/empty-profile-photo.png';
 import { useLoading } from '../../context/LoadingContext';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../context/ThemeContext';
 
 const EditProfile = () => {
   const [profile, setProfile] = useState({});
@@ -14,6 +16,8 @@ const EditProfile = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [newPhotoFile, setNewPhotoFile] = useState(null);
   const { setGlobalLoading } = useLoading();
+  const { t } = useTranslation();
+  const { isDarkMode } = useTheme();
 
   const apiUrl = process.env.REACT_APP_API_URL;
   const getPhotoUrl = (url) => {
@@ -39,7 +43,7 @@ const EditProfile = () => {
     profileApi.get()
       .then(data => {
         if (!data) {
-          setError('Profil bilgileri eklenmedi.');
+          setError(t('profile.notAdded'));
           setProfile({});
         } else {
           setProfile({
@@ -55,11 +59,11 @@ const EditProfile = () => {
         setGlobalLoading(false);
       })
       .catch(() => {
-        setError('Profil bilgileri yüklenemedi.');
+        setError(t('profile.loadError'));
         setLoading(false);
         setGlobalLoading(false);
       });
-  }, [setGlobalLoading]);
+  }, [setGlobalLoading, t]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -83,7 +87,6 @@ const EditProfile = () => {
     let photoUrlToUpdate = profile.photoUrl || '';
     try {
       if (newPhotoFile) {
-        // Sadece kaydet butonuna basınca upload et
         const result = await profileApi.uploadPhoto(newPhotoFile);
         photoUrlToUpdate = result.url;
       }
@@ -106,7 +109,7 @@ const EditProfile = () => {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 2000);
     } catch {
-      setError('Profil güncellenemedi.');
+      setError(t('profile.updateError'));
     }
   };
 
@@ -117,14 +120,24 @@ const EditProfile = () => {
 
   return (
     <div className="p-6 max-w-xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6">Profil Bilgileri</h2>
-      {error && <div className="text-red-400 text-center mb-2">{error}</div>}
-      <form onSubmit={handleSubmit} className="space-y-6 bg-gray-800 rounded-lg p-6 shadow-lg">
+      {/* Alert Messages */}
+      {error && (
+        <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg font-semibold text-base transition-all duration-300 bg-red-500 text-white" style={{ minWidth: 220, textAlign: 'center' }}>
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg font-semibold text-base transition-all duration-300 bg-green-500 text-white" style={{ minWidth: 220, textAlign: 'center' }}>
+          {t('profile.updateSuccess')}
+        </div>
+      )}
+      <h2 className="text-2xl font-bold mb-6">{t('profile.title')}</h2>
+      <form onSubmit={handleSubmit} className={`space-y-6 rounded-lg p-6 shadow-lg transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="flex flex-col items-center gap-4">
           <div className="relative w-24 h-24">
             <img
               src={getPhotoUrl(photoPreview || profile.photoUrl || emptyProfilePhoto)}
-              alt="Profil Fotoğrafı"
+              alt={t('profile.photoAlt')}
               className="w-24 h-24 rounded-full object-cover border-2 border-gray-600 shadow"
             />
             <input
@@ -132,47 +145,52 @@ const EditProfile = () => {
               accept="image/*"
               onChange={handlePhotoChange}
               className="absolute inset-0 opacity-0 cursor-pointer"
-              title="Profil fotoğrafı yükle"
+              title={t('profile.uploadPhoto')}
             />
           </div>
-          <span className="text-gray-400 text-sm">Profil fotoğrafı yüklemek için tıklayın</span>
+          <span className="text-gray-400 text-sm">{t('profile.uploadHint')}</span>
         </div>
         <div>
-          <label className="block text-gray-300 mb-1">Ad Soyad</label>
+          <label className={`block mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{t('profile.name')}</label>
           <input
             type="text"
             name="name"
             value={profile.name}
             onChange={handleChange}
-            className="w-full px-4 py-2 rounded bg-gray-900 text-gray-100 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900 text-gray-100 border-gray-700' : 'bg-gray-100 text-gray-900 border-gray-300'}`}
             required
           />
         </div>
         <div>
-          <label className="block text-gray-300 mb-1">E-posta</label>
+          <label className={`block mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{t('profile.email')}</label>
           <input
             type="email"
             name="email"
             value={profile.email}
             onChange={handleChange}
-            className="w-full px-4 py-2 rounded bg-gray-900 text-gray-100 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900 text-gray-100 border-gray-700' : 'bg-gray-100 text-gray-900 border-gray-300'}`}
             required
           />
         </div>
         <div>
-          <label className="block text-gray-300 mb-1">Mevcut Şifre</label>
+          <label className={`block mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{t('profile.currentPassword')}</label>
           <div className="relative">
             <input
               type={showCurrentPassword ? "text" : "password"}
               name="currentPassword"
               value={profile.currentPassword || ''}
               readOnly
-              className="w-full px-4 py-2 rounded bg-gray-900 text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 opacity-60 cursor-not-allowed pr-10"
+              className={`w-full px-4 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10 transition-colors duration-300
+                ${isDarkMode
+                  ? 'bg-gray-900 text-gray-200 placeholder-gray-400 border-gray-700 opacity-80'
+                  : 'bg-gray-200 text-gray-700 placeholder-gray-500 border-gray-300 opacity-100'
+                } cursor-not-allowed`}
+              placeholder={t('profile.currentPasswordPlaceholder')}
             />
             <button
               type="button"
               tabIndex={-1}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 focus:outline-none"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
               onClick={() => setShowCurrentPassword(v => !v)}
             >
               {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
@@ -180,28 +198,25 @@ const EditProfile = () => {
           </div>
         </div>
         <div>
-          <label className="block text-gray-300 mb-1">Yeni Şifre</label>
+          <label className={`block mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{t('profile.newPassword')}</label>
           <input
             type="password"
             name="password"
             value={profile.password}
             onChange={handleChange}
-            className="w-full px-4 py-2 rounded bg-gray-900 text-gray-100 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Şifreyi güncellemek için doldurun"
+            className={`w-full px-4 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900 text-gray-100 border-gray-700' : 'bg-gray-100 text-gray-900 border-gray-300'}`}
+            placeholder={t('profile.newPasswordPlaceholder')}
           />
         </div>
         <button
           type="submit"
-          className="w-full py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold transition"
+          className={`w-full py-2 rounded font-semibold transition ${isDarkMode ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
         >
-          Kaydet
+          {t('profile.save')}
         </button>
-        {success && (
-          <div className="text-green-400 text-center font-medium mt-2">Profil başarıyla güncellendi!</div>
-        )}
       </form>
-  </div>
-);
+    </div>
+  );
 };
 
 export default EditProfile; 

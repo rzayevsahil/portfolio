@@ -23,7 +23,7 @@ const ThemeToggle = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={toggleTheme}
-        className={`p-2 rounded-lg transition-all duration-300 ${
+        className={`theme-toggle-btn p-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-0 active:outline-none active:ring-0 shadow-none border-none ${
           isDarkMode 
             ? 'bg-gray-800/50 text-yellow-400 hover:bg-gray-700/50' 
             : 'bg-gray-200/50 text-gray-700 hover:bg-gray-300/50'
@@ -39,7 +39,7 @@ const ThemeToggle = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-          className={`flex items-center space-x-2 p-2 rounded-lg transition-all duration-300 ${
+          className={`lang-toggle-btn flex items-center space-x-2 p-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-0 active:outline-none active:ring-0 shadow-none border-none ${
             isDarkMode 
               ? 'bg-gray-800/50 text-white hover:bg-gray-700/50' 
               : 'bg-gray-200/50 text-gray-700 hover:bg-gray-300/50'

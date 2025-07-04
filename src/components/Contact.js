@@ -55,6 +55,11 @@ const Contact = () => {
   const [workingHours, setWorkingHours] = useState(null);
   const [whLoading, setWhLoading] = useState(true);
   const [whError, setWhError] = useState('');
+  const [formErrors, setFormErrors] = useState({});
+  const [alert, setAlert] = useState({ message: '', type: '' });
+  const [proposalFormErrors, setProposalFormErrors] = useState({});
+  const [proposalAlert, setProposalAlert] = useState({ message: '', type: '' });
+  const [proposalAlertProgress, setProposalAlertProgress] = useState(0);
 
   // Handle escape key to close modal
   useEffect(() => {
@@ -103,10 +108,45 @@ const Contact = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (isProposalSubmitting) {
+      setProposalAlertProgress(0);
+      const duration = 2000;
+      const interval = 20;
+      let elapsed = 0;
+      const timer = setInterval(() => {
+        elapsed += interval;
+        setProposalAlertProgress(Math.min((elapsed / duration) * 100, 100));
+        if (elapsed >= duration) {
+          clearInterval(timer);
+        }
+      }, interval);
+      return () => clearInterval(timer);
+    } else {
+      setProposalAlertProgress(0);
+    }
+  }, [isProposalSubmitting]);
+
+  const validate = () => {
+    if (!formData.name.trim()) return { name: t('contact.form.errors.name') };
+    if (!formData.email.trim()) return { email: t('contact.form.errors.email') };
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (formData.email && !emailRegex.test(formData.email)) {
+      return { email: t('contact.form.errors.emailInvalid') };
+    }
+    if (!formData.subject.trim()) return { subject: t('contact.form.errors.subject') };
+    if (!formData.message.trim()) return { message: t('contact.form.errors.message') };
+    return {};
+  };
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
+    });
+    setFormErrors({
+      ...formErrors,
+      [e.target.name]: ''
     });
   };
 
@@ -115,25 +155,59 @@ const Contact = () => {
       ...proposalFormData,
       [e.target.name]: e.target.value
     });
+    setProposalFormErrors({
+      ...proposalFormErrors,
+      [e.target.name]: ''
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const errors = validate();
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      setAlert({ message: Object.values(errors)[0], type: 'error' });
+      setTimeout(() => setAlert({ message: '', type: '' }), 2000);
+      return;
+    }
+    setAlert({ message: '', type: '' });
     setIsSubmitting(true);
-    
     // Simulate form submission
     setTimeout(() => {
       setIsSubmitting(false);
       setFormData({ name: '', email: '', subject: '', message: '' });
-      alert('Mesajınız başarıyla gönderildi!');
+      setAlert({ message: t('contact.form.success'), type: 'success' });
+      setTimeout(() => setAlert({ message: '', type: '' }), 2500);
     }, 2000);
+  };
+
+  const validateProposal = () => {
+    if (!proposalFormData.projectName.trim()) return { projectName: t('contact.proposal.errors.projectName') };
+    if (!proposalFormData.clientName.trim()) return { clientName: t('contact.proposal.errors.clientName') };
+    if (!proposalFormData.email.trim()) return { email: t('contact.proposal.errors.email') };
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (proposalFormData.email && !emailRegex.test(proposalFormData.email)) {
+      return { email: t('contact.proposal.errors.emailInvalid') };
+    }
+    if (!proposalFormData.phone.trim()) return { phone: t('contact.proposal.errors.phone') };
+    if (!proposalFormData.projectType.trim()) return { projectType: t('contact.proposal.errors.projectType') };
+    if (!proposalFormData.budget.trim()) return { budget: t('contact.proposal.errors.budget') };
+    if (!proposalFormData.timeline.trim()) return { timeline: t('contact.proposal.errors.timeline') };
+    if (!proposalFormData.description.trim()) return { description: t('contact.proposal.errors.description') };
+    return {};
   };
 
   const handleProposalSubmit = async (e) => {
     e.preventDefault();
+    const errors = validateProposal();
+    setProposalFormErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      setProposalAlert({ message: Object.values(errors)[0], type: 'error' });
+      setTimeout(() => setProposalAlert({ message: '', type: '' }), 2000);
+      return;
+    }
+    setProposalAlert({ message: '', type: '' });
     setIsProposalSubmitting(true);
-    
-    // Simulate form submission
     setTimeout(() => {
       setIsProposalSubmitting(false);
       setProposalFormData({
@@ -146,8 +220,7 @@ const Contact = () => {
         timeline: '',
         description: ''
       });
-      setShowProposalModal(false);
-      alert('Proje teklifiniz başarıyla gönderildi! En kısa sürede size dönüş yapacağız.');
+      setProposalAlert({ message: t('contact.proposal.success'), type: 'success' });
     }, 2000);
   };
 
@@ -230,6 +303,16 @@ const Contact = () => {
             {t('contact.subtitle')}
           </p>
         </motion.div>
+
+        {/* Alert Message */}
+        {alert.message && (
+          <div className={`fixed top-8 left-1/2 z-50 -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg font-semibold text-base transition-all duration-300
+            ${alert.type === 'error' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}
+            style={{ minWidth: 220, textAlign: 'center', opacity: alert.message ? 1 : 0 }}
+          >
+            {alert.message}
+          </div>
+        )}
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Information */}
@@ -328,7 +411,7 @@ const Contact = () => {
               }`}
             >
               <h4 className={`text-lg font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                {t('contact.workingHours.title')}
+                {t('workingHours.title')}
               </h4>
               {whLoading ? (
                 <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Yükleniyor...</p>
@@ -338,13 +421,13 @@ const Contact = () => {
                 <>
                   {workingHours.weekdays && (
                     <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      <span className="font-semibold mr-2">{t('contact.workingHours.weekdaysLabel')}:</span>
+                      <span className="font-semibold mr-2">{t('workingHours.weekdays')}:</span>
                       {translateDays(workingHours.weekdays, i18n.language, WEEKDAYS)} {workingHours.weekdayStart} - {workingHours.weekdayEnd}
                     </p>
                   )}
                   {workingHours.weekend && (
                     <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      <span className="font-semibold mr-2">{t('contact.workingHours.weekendLabel')}:</span>
+                      <span className="font-semibold mr-2">{t('workingHours.weekend')}:</span>
                       {translateDays(workingHours.weekend, i18n.language, WEEKEND)} {workingHours.weekendStart} - {workingHours.weekendEnd}
                     </p>
                   )}
@@ -381,14 +464,14 @@ const Contact = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
                     className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 ${
                       isDarkMode 
                         ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                         : 'bg-white/80 border border-gray-200/50 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 shadow-md'
-                    }`}
+                    }${formErrors.name ? ' border-2 border-red-500' : ''}`}
                     placeholder={t('contact.form.namePlaceholder')}
                   />
+                  {formErrors.name && <div className="text-red-500 text-xs mt-1">{formErrors.name}</div>}
                 </motion.div>
 
                 <motion.div
@@ -401,19 +484,19 @@ const Contact = () => {
                     {t('contact.form.email')} *
                   </label>
                   <input
-                    type="email"
+                    type="text"
                     id="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    required
                     className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 ${
                       isDarkMode 
                         ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                         : 'bg-white/80 border border-gray-200/50 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 shadow-md'
-                    }`}
+                    }${formErrors.email ? ' border-2 border-red-500' : ''}`}
                     placeholder={t('contact.form.emailPlaceholder')}
                   />
+                  {formErrors.email && <div className="text-red-500 text-xs mt-1">{formErrors.email}</div>}
                 </motion.div>
               </div>
 
@@ -432,14 +515,14 @@ const Contact = () => {
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  required
                   className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 ${
                     isDarkMode 
                       ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                       : 'bg-white/80 border border-gray-200/50 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 shadow-md'
-                  }`}
+                  }${formErrors.subject ? ' border-2 border-red-500' : ''}`}
                   placeholder={t('contact.form.subjectPlaceholder')}
                 />
+                {formErrors.subject && <div className="text-red-500 text-xs mt-1">{formErrors.subject}</div>}
               </motion.div>
 
               <motion.div
@@ -456,15 +539,15 @@ const Contact = () => {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  required
                   rows="6"
                   className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 resize-none ${
                     isDarkMode 
                       ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                       : 'bg-white/80 border border-gray-200/50 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 shadow-md'
-                  }`}
+                  }${formErrors.message ? ' border-2 border-red-500' : ''}`}
                   placeholder={t('contact.form.messagePlaceholder')}
                 />
+                {formErrors.message && <div className="text-red-500 text-xs mt-1">{formErrors.message}</div>}
               </motion.div>
 
               <motion.button
@@ -556,6 +639,27 @@ const Contact = () => {
 
               {/* Modal Content */}
               <div className="p-6">
+                {/* Proposal Alert Message (inside modal, above form) */}
+                {proposalAlert.message && (
+                  <div className={`fixed top-8 left-1/2 z-50 -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg font-semibold text-base transition-all duration-300
+                    ${proposalAlert.type === 'error' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}
+                    style={{ minWidth: 220, textAlign: 'center', opacity: proposalAlert.message ? 1 : 0 }}
+                  >
+                    {proposalAlert.message}
+                  </div>
+                )}
+                {isProposalSubmitting && (
+                  <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg font-semibold text-base transition-all duration-300 bg-blue-500 text-white"
+                    style={{ minWidth: 220, textAlign: 'center' }}>
+                    {t('contact.proposal.sending')}
+                    <div className="w-full h-1 mt-2 bg-white/30 rounded overflow-hidden">
+                      <div
+                        className="h-full bg-white/80"
+                        style={{ width: `${proposalAlertProgress}%`, transition: 'width 0.2s linear' }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
                 <form onSubmit={handleProposalSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <motion.div
@@ -572,14 +676,14 @@ const Contact = () => {
                         name="projectName"
                         value={proposalFormData.projectName}
                         onChange={handleProposalChange}
-                        required
                         className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 ${
                           isDarkMode 
                             ? 'bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                             : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500'
-                        }`}
+                        }${proposalFormErrors.projectName ? ' border-2 border-red-500' : ''}`}
                         placeholder={t('contact.proposal.projectNamePlaceholder')}
                       />
+                      {proposalFormErrors.projectName && <div className="text-red-500 text-xs mt-1">{proposalFormErrors.projectName}</div>}
                     </motion.div>
 
                     <motion.div
@@ -596,14 +700,14 @@ const Contact = () => {
                         name="clientName"
                         value={proposalFormData.clientName}
                         onChange={handleProposalChange}
-                        required
                         className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 ${
                           isDarkMode 
                             ? 'bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                             : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500'
-                        }`}
+                        }${proposalFormErrors.clientName ? ' border-2 border-red-500' : ''}`}
                         placeholder={t('contact.proposal.clientNamePlaceholder')}
                       />
+                      {proposalFormErrors.clientName && <div className="text-red-500 text-xs mt-1">{proposalFormErrors.clientName}</div>}
                     </motion.div>
                   </div>
 
@@ -617,19 +721,19 @@ const Contact = () => {
                         {t('contact.proposal.email')} *
                       </label>
                       <input
-                        type="email"
+                        type="text"
                         id="email"
                         name="email"
                         value={proposalFormData.email}
                         onChange={handleProposalChange}
-                        required
                         className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 ${
                           isDarkMode 
                             ? 'bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                             : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500'
-                        }`}
+                        }${proposalFormErrors.email ? ' border-2 border-red-500' : ''}`}
                         placeholder={t('contact.proposal.emailPlaceholder')}
                       />
+                      {proposalFormErrors.email && <div className="text-red-500 text-xs mt-1">{proposalFormErrors.email}</div>}
                     </motion.div>
 
                     <motion.div
@@ -641,19 +745,19 @@ const Contact = () => {
                         {t('contact.proposal.phone')} *
                       </label>
                       <input
-                        type="tel"
+                        type="text"
                         id="phone"
                         name="phone"
                         value={proposalFormData.phone}
                         onChange={handleProposalChange}
-                        required
                         className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 ${
                           isDarkMode 
                             ? 'bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                             : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500'
-                        }`}
+                        }${proposalFormErrors.phone ? ' border-2 border-red-500' : ''}`}
                         placeholder={t('contact.proposal.phonePlaceholder')}
                       />
+                      {proposalFormErrors.phone && <div className="text-red-500 text-xs mt-1">{proposalFormErrors.phone}</div>}
                     </motion.div>
                   </div>
 
@@ -671,12 +775,11 @@ const Contact = () => {
                         name="projectType"
                         value={proposalFormData.projectType}
                         onChange={handleProposalChange}
-                        required
                         className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 ${
                           isDarkMode 
                             ? 'bg-gray-800 border border-gray-600 text-white focus:outline-none focus:border-blue-500' 
                             : 'bg-gray-50 border border-gray-300 text-gray-900 focus:outline-none focus:border-blue-500'
-                        }`}
+                        }${proposalFormErrors.projectType ? ' border-2 border-red-500' : ''}`}
                       >
                         <option value="">{t('contact.proposal.selectProjectType')}</option>
                         <option value="web-development">{t('contact.proposal.webDevelopment')}</option>
@@ -686,6 +789,7 @@ const Contact = () => {
                         <option value="api-development">{t('contact.proposal.apiDevelopment')}</option>
                         <option value="other">{t('contact.proposal.other')}</option>
                       </select>
+                      {proposalFormErrors.projectType && <div className="text-red-500 text-xs mt-1">{proposalFormErrors.projectType}</div>}
                     </motion.div>
 
                     <motion.div
@@ -702,14 +806,14 @@ const Contact = () => {
                         name="budget"
                         value={proposalFormData.budget}
                         onChange={handleProposalChange}
-                        required
                         className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 ${
                           isDarkMode 
                             ? 'bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                             : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500'
-                        }`}
+                        }${proposalFormErrors.budget ? ' border-2 border-red-500' : ''}`}
                         placeholder={t('contact.proposal.budgetPlaceholder')}
                       />
+                      {proposalFormErrors.budget && <div className="text-red-500 text-xs mt-1">{proposalFormErrors.budget}</div>}
                     </motion.div>
                   </div>
 
@@ -727,14 +831,14 @@ const Contact = () => {
                       name="timeline"
                       value={proposalFormData.timeline}
                       onChange={handleProposalChange}
-                      required
                       className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 ${
                         isDarkMode 
                           ? 'bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                           : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500'
-                      }`}
+                      }${proposalFormErrors.timeline ? ' border-2 border-red-500' : ''}`}
                       placeholder={t('contact.proposal.timelinePlaceholder')}
                     />
+                    {proposalFormErrors.timeline && <div className="text-red-500 text-xs mt-1">{proposalFormErrors.timeline}</div>}
                   </motion.div>
 
                   <motion.div
@@ -750,15 +854,15 @@ const Contact = () => {
                       name="description"
                       value={proposalFormData.description}
                       onChange={handleProposalChange}
-                      required
                       rows="6"
                       className={`w-full px-4 py-3 rounded-lg transition-colors duration-300 resize-none ${
                         isDarkMode 
                           ? 'bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500' 
                           : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500'
-                      }`}
+                      }${proposalFormErrors.description ? ' border-2 border-red-500' : ''}`}
                       placeholder={t('contact.proposal.descriptionPlaceholder')}
                     />
+                    {proposalFormErrors.description && <div className="text-red-500 text-xs mt-1">{proposalFormErrors.description}</div>}
                   </motion.div>
 
                   <div className="flex gap-4 pt-4">
@@ -776,7 +880,7 @@ const Contact = () => {
                         transition: 'transform 0.2s ease-in-out'
                       }}
                     >
-                      {isProposalSubmitting ? t('contact.proposal.sending') : t('contact.proposal.send')}
+                      {t('contact.proposal.send')}
                     </motion.button>
                     
                     <motion.button

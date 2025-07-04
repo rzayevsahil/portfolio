@@ -20,9 +20,11 @@ import EditContact from './pages/admin/EditContact';
 import AddArticle from './pages/admin/AddArticle';
 import MediumEditor from './pages/admin/MediumEditor';
 import EditWorkingHours from './pages/admin/EditWorkingHours';
+import BlogManagement from './pages/admin/BlogManagement';
 import Login from './pages/admin/Login';
 import { LoadingProvider, useLoading } from './context/LoadingContext';
 import GlobalLoader from './components/GlobalLoader';
+import NotFound from './components/NotFound';
 import './i18n';
 
 function HomePage() {
@@ -109,8 +111,8 @@ function App() {
 
   return (
     <LoadingProvider>
-      <GlobalLoaderWrapper />
       <ThemeProvider>
+        <GlobalLoaderWrapper />
         <LanguageProvider>
           <Router>
             <div className="App">
@@ -124,12 +126,14 @@ function App() {
                   <PrivateRoute>
                     <Routes>
                       <Route path="" element={<AdminLayout />}>
-                        <Route index element={<AdminPanel />} />
+                        <Route index element={<Navigate to="profile" replace />} />
                         <Route path="add-article" element={<AddArticle />} />
+                        <Route path="blog-management" element={<BlogManagement />} />
                         <Route path="profile" element={<EditProfile />} />
                         <Route path="contact" element={<EditContact />} />
                         <Route path="medium" element={<MediumEditor />} />
                         <Route path="working-hours" element={<EditWorkingHours />} />
+                        <Route path="*" element={<NotFound />} />
                       </Route>
                     </Routes>
                   </PrivateRoute>

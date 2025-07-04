@@ -40,11 +40,17 @@ const Blog = () => {
     const date = new Date(dateString);
     if (isNaN(date)) return "";
     const locale = i18n.language === 'en' ? 'en-US' : 'tr-TR';
-    return date.toLocaleDateString(locale, {
+    const datePart = date.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
+    const timePart = date.toLocaleTimeString(locale, {
+      hour: '2-digit',
+      minute: '2-digit',      
+      hour12: false
+    });
+    return `${datePart} ${timePart}`;
   };
 
   // En son eklenen 3 makaleyi tarihe göre azalan sırala

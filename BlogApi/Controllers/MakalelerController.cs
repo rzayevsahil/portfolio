@@ -28,6 +28,7 @@ namespace BlogApi.Controllers
             public string Tarih { get; set; }
             public string Image { get; set; }
             public bool Status { get; set; }
+            public bool IsPublished { get; set; }
         }
 
         // Tüm makaleleri getir
@@ -45,7 +46,8 @@ namespace BlogApi.Controllers
                 Yazar = m.Yazar,
                 Tarih = m.Tarih.ToString("yyyy-MM-ddTHH:mm:ss"),
                 Image = m.Image,
-                Status = m.Status
+                Status = m.Status,
+                IsPublished = m.IsPublished
             }).ToList();
             return result;
         }
@@ -69,7 +71,8 @@ namespace BlogApi.Controllers
                 Yazar = makale.Yazar,
                 Tarih = makale.Tarih.ToString("yyyy-MM-ddTHH:mm:ss"),
                 Image = makale.Image,
-                Status = makale.Status
+                Status = makale.Status,
+                IsPublished = makale.IsPublished
             };
             return result;
         }
