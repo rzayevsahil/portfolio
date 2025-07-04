@@ -37,8 +37,8 @@ dotnet restore
 dotnet ef database update
 dotnet run
 ```
-- API varsayılan olarak `https://localhost:7001` adresinde çalışır.
-- Swagger dokümantasyonu: `https://localhost:7001/swagger`
+- API varsayılan olarak `https://localhost:5000` adresinde çalışır.
+- Swagger dokümantasyonu: `https://localhost:5000/swagger`
 
 ### 2. Frontend (React)
 ```bash
