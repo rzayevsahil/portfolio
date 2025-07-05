@@ -17,47 +17,42 @@ namespace BlogApi.Controllers
 
         // GET: api/contact
         [HttpGet]
-        public ActionResult<ContactInfo> Get()
+        public ActionResult<Contact> Get()
         {
-            var contact = _context.ContactInfos.FirstOrDefault();
-            /*if (contact == null)
+            var contact = _context.Contacts.FirstOrDefault();
+            if (contact == null)
             {
-                // Varsayılan değerlerle ilk kayıt oluştur
-                contact = new ContactInfo
-                {
-                    Email = "sahilrzayev200d@gmail.com",
-                    Location = "Istanbul, Turkey",
-                    Github = "https://github.com/rzayevsahil",
-                    Linkedin = "https://linkedin.com/in/sahil-rzayev",
-                    Twitter = "https://twitter.com/sahilrzayev",
-                    Instagram = "https://instagram.com/sahilrzayev"
-                };
-                _context.ContactInfos.Add(contact);
-                _context.SaveChanges();
-            }*/
+                return NotFound(new { message = "İletişim bilgileri bulunamadı." });
+            }
             return Ok(contact);
         }
 
-        // PUT: api/contact
-        [HttpPut]
-        public ActionResult<ContactInfo> Update(ContactInfo updated)
+        // POST: api/contact
+        [HttpPost]
+        public ActionResult<Contact> Create(Contact contact)
         {
-            var contact = _context.ContactInfos.FirstOrDefault();
             if (contact == null)
-            {
-                _context.ContactInfos.Add(updated);
-            }
-            else
-            {
-                contact.Email = updated.Email;
-                contact.Location = updated.Location;
-                contact.Github = updated.Github;
-                contact.Linkedin = updated.Linkedin;
-                contact.Twitter = updated.Twitter;
-                contact.Instagram = updated.Instagram;
-            }
+                return BadRequest();
+            _context.Contacts.Add(contact);
             _context.SaveChanges();
-            return Ok(updated);
+            return CreatedAtAction(nameof(Get), new { id = contact.Id }, contact);
+        }
+
+        // PUT: api/contact/{id}
+        [HttpPut("{id}")]
+        public ActionResult<Contact> Update(int id, Contact contact)
+        {
+            var _contact = _context.Contacts.FirstOrDefault(c => c.Id == id);
+            if (_contact == null)
+                return NotFound();
+            _contact.Email = contact.Email;
+            _contact.Location = contact.Location;
+            _contact.Github = contact.Github;
+            _contact.Linkedin = contact.Linkedin;
+            _contact.Twitter = contact.Twitter;
+            _contact.Instagram = contact.Instagram;
+            _context.SaveChanges();
+            return Ok(_contact);
         }
     }
 } 

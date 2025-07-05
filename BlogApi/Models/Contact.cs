@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlogApi.Models
 {
-    public class ContactInfo
+    public class Contact
     {
         [Key]
         public int Id { get; set; }

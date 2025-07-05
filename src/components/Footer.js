@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { contactApi } from '../api/api';
 import Logo from './Logo';
+import { getTranslatedErrorMessage } from '../utils/errorHelpers';
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
@@ -21,11 +22,17 @@ const Footer = () => {
         setContactData(data);
         setLoading(false);
       })
-      .catch(() => {
-        setError('İletişim bilgileri yüklenemedi.');
+      .catch((error) => {
+        setError(getTranslatedErrorMessage(error.message, t, i18n, 'contactEdit.noData'));
         setLoading(false);
       });
-  }, []);
+  }, [t]);
+
+  useEffect(() => {
+    if (error) {
+      setError(getTranslatedErrorMessage(error, t, i18n, 'contactEdit.noData'));
+    }
+  }, [error, t, i18n.language]);
 
   const socialLinks = contactData ? [
     { 
@@ -199,7 +206,7 @@ const Footer = () => {
               {loading ? (
                 <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-300'}`}>Yükleniyor...</div>
               ) : error ? (
-                <div className="text-red-400">{error}</div>
+                <div className="text-gray-400">{error}</div>
               ) : contactData ? (
                 <>
                   <div className="flex items-center text-gray-300 text-base">{contactData.email}</div>

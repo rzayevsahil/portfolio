@@ -157,8 +157,8 @@ const ArticleDetail = () => {
   // Eğer API'den makale geldiyse onu göster, yoksa örnek makaleyi göster
   const currentArticle = apiArticle || article;
   const lang = i18n.language;
-  const baslik = lang === 'en' ? currentArticle.baslikEn || currentArticle.title : currentArticle.baslikTr || currentArticle.title;
-  const icerik = lang === 'en' ? currentArticle.icerikEn || currentArticle.content : currentArticle.icerikTr || currentArticle.content;
+  const title = lang === 'en' ? currentArticle.titleEn || currentArticle.title : currentArticle.titleTr || currentArticle.title;
+  const content = lang === 'en' ? currentArticle.contentEn || currentArticle.content : currentArticle.contentTr || currentArticle.content;
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -238,7 +238,7 @@ const ArticleDetail = () => {
               className="mb-6"
             >
               <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                {baslik}
+                {title}
               </h1>
               
               <p className={`text-xl mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -254,7 +254,7 @@ const ArticleDetail = () => {
             >
               <div className="flex items-center space-x-2">
                 <FaUser size={14} />
-                <span>{currentArticle.yazar || currentArticle.author || t('articleDetail.unknownAuthor')}</span>
+                <span>{currentArticle.author || t('articleDetail.unknownAuthor')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <FaCalendar size={14} />
@@ -310,7 +310,7 @@ const ArticleDetail = () => {
           </motion.div>
 
           <div className="blog-content text-lg leading-relaxed mt-6 mb-8" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <div dangerouslySetInnerHTML={{ __html: icerik }} />
+            <div dangerouslySetInnerHTML={{ __html: content }} />
           </div>
           <style>{`
             .blog-content > * {

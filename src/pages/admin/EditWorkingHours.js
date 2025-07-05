@@ -3,6 +3,8 @@ import { workingHoursApi } from '../../api/api';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../context/ThemeContext';
 import GlobalLoader from '../../components/GlobalLoader';
+import i18n from 'i18next';
+import { getTranslatedErrorMessage } from '../../utils/errorHelpers';
 
 const WEEKDAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 const WEEKEND = ['saturday', 'sunday'];
@@ -62,12 +64,20 @@ const EditWorkingHours = () => {
         }
         setLoading(false);
       })
-      .catch(() => {
-        setError(t('workingHours.loadError'));
+      .catch((error) => {
+        setError(getTranslatedErrorMessage(error.message, t, i18n, 'workingHours.noData'));
         setLoading(false);
         setNoData(true);
       });
   }, [t]);
+
+  useEffect(() => {
+    if (error) {
+      setError(getTranslatedErrorMessage(error, t, i18n, 'workingHours.noData'));
+      const timer = setTimeout(() => setError(''), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, t, i18n.language]);
 
   const handleCheckbox = (day, group) => {
     if (group === 'weekdays') {

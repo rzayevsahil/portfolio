@@ -89,7 +89,7 @@
   },
   "workingHours": {
     "title": "Çalışma Saatleri",
-    "noData": "Çalışma saatleri eklenmedi.",
+    "noData": "Çalışma saatleri bulunamadı.",
     "loadError": "Çalışma saatleri yüklenemedi.",
     "updateError": "Çalışma saatleri güncellenemedi.",
     "save": "Kaydet",
@@ -98,6 +98,7 @@
     "weekend": "Hafta Sonu Günleri",
     "start": "Başlangıç",
     "end": "Bitiş",
+    "notAdded": "Çalışma saatleri eklenmedi.",
     "days": {
       "monday": "Pazartesi",
       "tuesday": "Salı",
@@ -164,7 +165,7 @@
       "apiDevelopment": "API Geliştirme",
       "other": "Diğer",
       "budget": "Bütçe",
-      "budgetPlaceholder": "Proje bütçenizi belirtin (örn: 5000-10000 TL)",
+      "budgetPlaceholder": "Proje bütçenizi belirtin",
       "timeline": "Zaman Çizelgesi",
       "timelinePlaceholder": "Proje süresini belirtin (örn: 2-3 ay)",
       "description": "Proje Açıklaması",
@@ -216,6 +217,7 @@
     "featured": "Öne Çıkan",
     "readMore": "Devamını Oku",
     "noResults": "Arama kriterlerinize uygun makale bulunamadı.",
+    "noPublished": "Henüz yayınlanmış makale yok.",
     "showMore": "Daha Fazla Göster",
     "articles": {
       "article1": {
@@ -314,6 +316,8 @@
     "deleteSuccess": "Makale başarıyla silindi!",
     "deleteError": "Makale silinemedi.",
     "statusUpdateSuccess": "Makale durumu güncellendi!",
+    "publishSuccess": "Makale yayınlandı!",
+    "hideSuccess": "Makale yayından kaldırıldı!",
     "statusUpdateError": "Makale durumu güncellenemedi.",
     "loadError": "Makaleler yüklenemedi.",
     "noArticles": "Henüz makale eklenmemiş.",
@@ -330,6 +334,7 @@
   },
   "profile": {
     "title": "Profil Bilgileri",
+    "noData": "Profil bilgileri bulunamadı.",
     "notAdded": "Profil bilgileri eklenmedi.",
     "loadError": "Profil bilgileri yüklenemedi.",
     "updateError": "Profil güncellenemedi.",
@@ -351,7 +356,10 @@
     "loadError": "İletişim bilgileri yüklenemedi.",
     "updateError": "Güncelleme sırasında hata oluştu.",
     "save": "Kaydet",
-    "success": "İletişim bilgileri başarıyla güncellendi!"
+    "success": "İletişim bilgileri başarıyla güncellendi!",
+    "emailRequired": "E-posta zorunludur.",
+    "emailInvalid": "Geçerli bir e-posta adresi giriniz.",
+    "noData": "İletişim bilgileri bulunamadı."
   },
   "common": {
     "loading": "Yükleniyor...",

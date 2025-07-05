@@ -7,10 +7,10 @@ namespace BlogApi.Data
     {
         public BlogContext(DbContextOptions<BlogContext> options) : base(options) { }
 
-        public DbSet<Makale> Makaleler { get; set; }
-        public DbSet<Yorum> Yorumlar { get; set; }
-        public DbSet<ContactInfo> ContactInfos { get; set; }
-        public DbSet<WorkingHours> WorkingHours { get; set; }
+        public DbSet<Article> Articles { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<WorkingHour> WorkingHours { get; set; }
         public DbSet<Profile> Profiles { get; set; }
     }
 } 

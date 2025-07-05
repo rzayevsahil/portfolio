@@ -6,6 +6,8 @@ import emptyProfilePhoto from '../../assets/empty-profile-photo.png';
 import { useLoading } from '../../context/LoadingContext';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../context/ThemeContext';
+import i18n from 'i18next';
+import { getTranslatedErrorMessage } from '../../utils/errorHelpers';
 
 const EditProfile = () => {
   const [profile, setProfile] = useState({});
@@ -58,12 +60,20 @@ const EditProfile = () => {
         setLoading(false);
         setGlobalLoading(false);
       })
-      .catch(() => {
-        setError(t('profile.loadError'));
+      .catch((error) => {
+        setError(getTranslatedErrorMessage(error.message, t, i18n, 'profile.noData'));
         setLoading(false);
         setGlobalLoading(false);
       });
   }, [setGlobalLoading, t]);
+
+  useEffect(() => {
+    if (error) {
+      setError(getTranslatedErrorMessage(error, t, i18n, 'profile.noData'));
+      const timer = setTimeout(() => setError(''), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, t, i18n.language]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -185,7 +195,7 @@ const EditProfile = () => {
                   ? 'bg-gray-900 text-gray-200 placeholder-gray-400 border-gray-700 opacity-80'
                   : 'bg-gray-200 text-gray-700 placeholder-gray-500 border-gray-300 opacity-100'
                 } cursor-not-allowed`}
-              placeholder={t('profile.currentPasswordPlaceholder')}
+              placeholder={t('profile.currentPassword')}
             />
             <button
               type="button"

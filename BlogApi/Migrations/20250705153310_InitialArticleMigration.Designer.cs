@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogApi.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    [Migration("20250703200210_AddProfileModel")]
-    partial class AddProfileModel
+    [Migration("20250705153310_InitialArticleMigration")]
+    partial class InitialArticleMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,7 +20,78 @@ namespace BlogApi.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
 
-            modelBuilder.Entity("BlogApi.Models.ContactInfo", b =>
+            modelBuilder.Entity("BlogApi.Models.Article", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ContentEn")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ContentTr")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TitleEn")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TitleTr")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Articles");
+                });
+
+            modelBuilder.Entity("BlogApi.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AdSoyad")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Icerik")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Tarih")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("BlogApi.Models.Contact", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,48 +123,7 @@ namespace BlogApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ContactInfos");
-                });
-
-            modelBuilder.Entity("BlogApi.Models.Makale", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("BaslikEn")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("BaslikTr")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("IcerikEn")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("IcerikTr")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Tarih")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Yazar")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Makaleler");
+                    b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("BlogApi.Models.Profile", b =>
@@ -123,7 +153,7 @@ namespace BlogApi.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("BlogApi.Models.WorkingHours", b =>
+            modelBuilder.Entity("BlogApi.Models.WorkingHour", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -158,45 +188,20 @@ namespace BlogApi.Migrations
                     b.ToTable("WorkingHours");
                 });
 
-            modelBuilder.Entity("BlogApi.Models.Yorum", b =>
+            modelBuilder.Entity("BlogApi.Models.Comment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AdSoyad")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Icerik")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MakaleId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Tarih")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MakaleId");
-
-                    b.ToTable("Yorumlar");
-                });
-
-            modelBuilder.Entity("BlogApi.Models.Yorum", b =>
-                {
-                    b.HasOne("BlogApi.Models.Makale", null)
-                        .WithMany("Yorumlar")
-                        .HasForeignKey("MakaleId")
+                    b.HasOne("BlogApi.Models.Article", "Article")
+                        .WithMany("Comments")
+                        .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Article");
                 });
 
-            modelBuilder.Entity("BlogApi.Models.Makale", b =>
+            modelBuilder.Entity("BlogApi.Models.Article", b =>
                 {
-                    b.Navigation("Yorumlar");
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

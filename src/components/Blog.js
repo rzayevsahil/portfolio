@@ -25,7 +25,7 @@ const Blog = () => {
   useEffect(() => {
     setLoading(true);
     setError('');
-    articleApi.getAll()
+    articleApi.getPublished()
       .then(data => {
         setArticles(data);
         setLoading(false);
@@ -54,7 +54,7 @@ const Blog = () => {
   };
 
   // En son eklenen 3 makaleyi tarihe göre azalan sırala
-  const sortedArticles = [...articles].sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
+  const sortedArticles = [...articles].sort((a, b) => new Date(b.date) - new Date(a.date));
 
   if (loading) {
     return <div className="text-center py-12">Yükleniyor...</div>;
@@ -87,8 +87,8 @@ const Blog = () => {
           >
             {sortedArticles.slice(0, 3).map((article, index) => {
               const lang = i18n.language;
-              const baslik = lang === 'en' ? article.baslikEn : article.baslikTr;
-              const icerik = lang === 'en' ? article.icerikEn : article.icerikTr;
+              const title = lang === 'en' ? article.titleEn : article.titleTr;
+              const content = lang === 'en' ? article.contentEn : article.contentTr;
               return (
                 <motion.article
                   key={article.id}
@@ -105,7 +105,7 @@ const Blog = () => {
                   <div className="relative h-48 overflow-hidden mb-4 rounded-t-lg">
                     <img
                       src={article.image && article.image.trim() !== '' ? article.image : emptyBlogImg}
-                      alt={baslik}
+                      alt={title}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -113,16 +113,16 @@ const Blog = () => {
                     <div className="flex items-center space-x-4 text-xs text-gray-500 mb-3 h-6">
                       <div className="flex items-center space-x-1">
                         <FaUser size={12} />
-                        <span>{article.yazar}</span>
+                        <span>{article.author}</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <FaCalendar size={12} />
-                        <span>{formatDate(article.tarih)}</span>
+                        <span>{formatDate(article.date)}</span>
                       </div>
                     </div>
-                    <h3 className={`text-xl font-bold mb-3 line-clamp-2 min-h-[56px] ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{baslik}</h3>
+                    <h3 className={`text-xl font-bold mb-3 line-clamp-2 min-h-[56px] ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{title}</h3>
                     <div className={`text-sm mb-4 line-clamp-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} overflow-hidden`}>
-                      {getExcerpt(icerik)}
+                      {getExcerpt(content)}
                     </div>
                   </div>
                   <motion.button
@@ -140,7 +140,7 @@ const Blog = () => {
           </motion.div>
         </AnimatePresence>
 
-        {articles.length > 3 && (
+        {articles.length > 0 && (
           <div className="flex justify-center mt-8">
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -159,7 +159,7 @@ const Blog = () => {
             animate={{ opacity: 1 }}
             className="text-center py-12"
           >
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('blog.noResults')}</p>
+            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('blog.noPublished')}</p>
           </motion.div>
         )}
       </div>

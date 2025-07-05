@@ -23,6 +23,7 @@ const BlogManagement = () => {
   const navigate = useNavigate();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'published', 'hidden'
 
   useEffect(() => {
     loadArticles();
@@ -76,13 +77,13 @@ const BlogManagement = () => {
     if (!articleToDelete) return;
     try {
       setGlobalLoading(true);
-      const makaleId = articleToDelete.id ?? articleToDelete.Id;
+      const articleId = articleToDelete.id ?? articleToDelete.Id;
       const updatedArticle = {
         ...articleToDelete,
         status: false,
         isPublished: false
       };
-      await articleApi.update(makaleId, updatedArticle);
+      await articleApi.update(articleId, updatedArticle);
       await loadArticles();
       setAlert({ message: t('blogManagement.deleteSuccess'), type: 'success' });
       setTimeout(() => setAlert({ message: '', type: '' }), 3000);
@@ -104,22 +105,26 @@ const BlogManagement = () => {
   const handleStatusToggle = async (article) => {
     try {
       setGlobalLoading(true);
-      const makaleId = article.id ?? article.Id;
+      const articleId = article.id ?? article.Id;
       const updatedArticle = {
-        id: makaleId,
-        baslikTr: article.baslikTr,
-        baslikEn: article.baslikEn,
-        icerikTr: article.icerikTr,
-        icerikEn: article.icerikEn,
-        yazar: article.yazar,
-        tarih: article.tarih,
+        id: articleId,
+        titleTr: article.titleTr,
+        titleEn: article.titleEn,
+        contentTr: article.contentTr,
+        contentEn: article.contentEn,
+        author: article.author,
+        date: article.date,
         image: article.image,
         status: article.status,
         isPublished: !article.isPublished
       };
       console.log('Makale güncelleme isteği:', updatedArticle);
-      await articleApi.update(makaleId, updatedArticle);
-      setAlert({ message: t('blogManagement.statusUpdateSuccess'), type: 'success' });
+      await articleApi.update(articleId, updatedArticle);
+      if (!article.isPublished) {
+        setAlert({ message: t('blogManagement.publishSuccess'), type: 'success' });
+      } else {
+        setAlert({ message: t('blogManagement.hideSuccess'), type: 'success' });
+      }
       setTimeout(() => setAlert({ message: '', type: '' }), 3000);
       loadArticles();
     } catch (err) {
@@ -134,10 +139,18 @@ const BlogManagement = () => {
     navigate('/admin/edit-article', { state: { article } });
   };
 
+  // Sayaçlar
+  const totalCount = articles.length;
+  const publishedCount = articles.filter(a => a.isPublished).length;
+  const hiddenCount = articles.filter(a => !a.isPublished).length;
+
   const filteredArticles = articles.filter(article => {
-    const baslik = i18n.language === 'en' ? article.baslikEn : article.baslikTr;
-    const searchLower = searchTerm.toLowerCase();
-    return baslik.toLowerCase().includes(searchLower) || article.yazar.toLowerCase().includes(searchLower);
+    // Filtreye göre yayında/gizli seçimi
+    if (statusFilter === 'published' && !article.isPublished) return false;
+    if (statusFilter === 'hidden' && article.isPublished) return false;
+    const title = i18n.language === 'en' ? article.titleEn : article.titleTr;
+    const searchLower = (searchTerm || '').toLowerCase();
+    return title.toLowerCase().includes(searchLower) || (article.author || '').toLowerCase().includes(searchLower);
   });
 
   // Sayfalama hesaplamaları
@@ -155,24 +168,6 @@ const BlogManagement = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, i18n.language]);
-
-  if (loading) {
-    return null;
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-12">
-        <div className="text-red-500 text-lg mb-4">{error}</div>
-        <button
-          onClick={loadArticles}
-          className="btn btn-primary"
-        >
-          {t('blogManagement.retry')}
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div className="p-6">
@@ -222,9 +217,23 @@ const BlogManagement = () => {
         </motion.div>
       )}
 
-      {/* Filters */}
-      <div className="grid md:grid-cols-2 gap-4 mb-8">
-        <div className="relative">
+      {/* Filtreler ve sayaçlar */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div className="flex gap-2 flex-wrap">
+          <button
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${statusFilter === 'all' ? 'bg-blue-500 text-white' : isDarkMode ? 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50' : 'bg-white text-gray-700 hover:bg-gray-100 shadow-md'}`}
+            onClick={() => setStatusFilter('all')}
+          >Tümü ({totalCount})</button>
+          <button
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${statusFilter === 'published' ? 'bg-green-600 text-white' : isDarkMode ? 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50' : 'bg-white text-gray-700 hover:bg-gray-100 shadow-md'}`}
+            onClick={() => setStatusFilter('published')}
+          >Yayınlananlar ({publishedCount})</button>
+          <button
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${statusFilter === 'hidden' ? 'bg-red-500 text-white' : isDarkMode ? 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50' : 'bg-white text-gray-700 hover:bg-gray-100 shadow-md'}`}
+            onClick={() => setStatusFilter('hidden')}
+          >Gizli ({hiddenCount})</button>
+        </div>
+        <div className="relative max-w-md w-full md:w-auto">
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
           <input
             type="text"
@@ -278,105 +287,119 @@ const BlogManagement = () => {
 
       {/* Articles List */}
       <div className="space-y-6">
-        <AnimatePresence>
-          {currentArticles.map((article, index) => {
-            const baslik = i18n.language === 'en' ? article.baslikEn : article.baslikTr;
-            const icerik = i18n.language === 'en' ? article.icerikEn : article.icerikTr;
-            
-            return (
-              <motion.div
-                key={article.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                className={`p-6 rounded-lg border transition-all duration-300 ${
-                  isDarkMode 
-                    ? 'bg-gray-800/50 border-gray-700 hover:border-blue-500/50' 
-                    : 'bg-white border-gray-200 hover:border-blue-500/50 shadow-lg'
-                }`}
-              >
-                <div className="flex flex-col lg:flex-row gap-6">
-                  {/* Article Image */}
-                  <div className="w-full lg:w-48 h-32 lg:h-24 rounded-lg overflow-hidden flex-shrink-0">
-                    <img
-                      src={article.image ? article.image : emptyBlogImg}
-                      alt={baslik}
-                      className="w-full h-full object-cover"
-                    />
+        {loading ? (
+          <div className="text-center py-12 text-lg text-gray-400">Yükleniyor...</div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <div className="text-red-500 text-lg mb-4">{error}</div>
+            <button
+              onClick={loadArticles}
+              className="btn btn-primary"
+            >
+              {t('blogManagement.retry')}
+            </button>
+          </div>
+        ) : (
+          <AnimatePresence>
+            {currentArticles.map((article, index) => {
+              const title = i18n.language === 'en' ? article.titleEn : article.titleTr;
+              const content = i18n.language === 'en' ? article.contentEn : article.contentTr;
+              
+              return (
+                <motion.div
+                  key={article.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  className={`p-6 rounded-lg border transition-all duration-300 ${
+                    isDarkMode 
+                      ? 'bg-gray-800/50 border-gray-700 hover:border-blue-500/50' 
+                      : 'bg-white border-gray-200 hover:border-blue-500/50 shadow-lg'
+                  }`}
+                >
+                  <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Article Image */}
+                    <div className="w-full lg:w-48 h-32 lg:h-24 rounded-lg overflow-hidden flex-shrink-0">
+                      <img
+                        src={article.image ? article.image : emptyBlogImg}
+                        alt={title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    {/* Article Content */}
+                    <div className="flex-1">
+                      <div className="flex flex-col lg:flex-row lg:items-center gap-4 mb-3">
+                        <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {title}
+                        </h3>
+                        <div className="flex items-center gap-2">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            article.isPublished 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-gray-100 text-gray-800'
+                          }`}>
+                            {article.isPublished ? t('blogManagement.published') : t('blogManagement.hidden')}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                        <div className="flex items-center gap-1">
+                          <FaUser size={12} />
+                          <span>{article.author}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <FaCalendar size={12} />
+                          <span>{formatDate(article.date)}</span>
+                        </div>
+                      </div>
+
+                      <p className={`text-sm mb-4 line-clamp-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        {getExcerpt(content, 150)}
+                      </p>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-wrap gap-2">
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleEdit(article)}
+                          className="btn btn-secondary btn-sm flex items-center gap-2"
+                        >
+                          <FaEdit size={14} />
+                          {t('blogManagement.edit')}
+                        </motion.button>
+
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleStatusToggle(article)}
+                          className={`btn btn-sm flex items-center gap-2 ${
+                            article.isPublished ? 'btn-warning' : 'btn-success'
+                          }`}
+                        >
+                          {article.isPublished ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                          {article.isPublished ? t('blogManagement.hide') : t('blogManagement.publish')}
+                        </motion.button>
+
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleDelete(article)}
+                          className="btn btn-danger btn-sm flex items-center gap-2"
+                        >
+                          <FaTrash size={14} />
+                          {t('blogManagement.delete')}
+                        </motion.button>
+                      </div>
+                    </div>
                   </div>
-
-                  {/* Article Content */}
-                  <div className="flex-1">
-                    <div className="flex flex-col lg:flex-row lg:items-center gap-4 mb-3">
-                      <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {baslik}
-                      </h3>
-                      <div className="flex items-center gap-2">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          article.isPublished 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {article.isPublished ? t('blogManagement.published') : t('blogManagement.hidden')}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                      <div className="flex items-center gap-1">
-                        <FaUser size={12} />
-                        <span>{article.yazar}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <FaCalendar size={12} />
-                        <span>{formatDate(article.tarih)}</span>
-                      </div>
-                    </div>
-
-                    <p className={`text-sm mb-4 line-clamp-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      {getExcerpt(icerik, 150)}
-                    </p>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-2">
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleEdit(article)}
-                        className="btn btn-secondary btn-sm flex items-center gap-2"
-                      >
-                        <FaEdit size={14} />
-                        {t('blogManagement.edit')}
-                      </motion.button>
-
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleStatusToggle(article)}
-                        className={`btn btn-sm flex items-center gap-2 ${
-                          article.isPublished ? 'btn-warning' : 'btn-success'
-                        }`}
-                      >
-                        {article.isPublished ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
-                        {article.isPublished ? t('blogManagement.hide') : t('blogManagement.publish')}
-                      </motion.button>
-
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleDelete(article)}
-                        className="btn btn-danger btn-sm flex items-center gap-2"
-                      >
-                        <FaTrash size={14} />
-                        {t('blogManagement.delete')}
-                      </motion.button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        )}
 
         {filteredArticles.length === 0 && (
           <motion.div

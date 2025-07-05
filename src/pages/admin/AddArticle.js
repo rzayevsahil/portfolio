@@ -40,11 +40,11 @@ const quillModules = {
 const AddArticle = () => {
   const { t, i18n } = useTranslation();
   const { isDarkMode } = useTheme();
-  const [baslikTr, setBaslikTr] = useState('');
-  const [baslikEn, setBaslikEn] = useState('');
-  const [icerikTr, setIcerikTr] = useState('');
-  const [icerikEn, setIcerikEn] = useState('');
-  const [yazar, setYazar] = useState('');
+  const [titleTr, setTitleTr] = useState('');
+  const [titleEn, setTitleEn] = useState('');
+  const [contentTr, setContentTr] = useState('');
+  const [contentEn, setContentEn] = useState('');
+  const [author, setAuthor] = useState('');
   const [image, setImage] = useState('');
   const [imageMode, setImageMode] = useState('url'); // 'url' or 'file'
   const [selectedFile, setSelectedFile] = useState(null);
@@ -106,39 +106,39 @@ const AddArticle = () => {
       setTranslating(false);
       return;
     }
-    if (!yazar.trim()) {
+    if (!author.trim()) {
       setError(t('addArticle.errors.author'));
       setAuthorError(true);
       setLoading(false);
       setTranslating(false);
       return;
     }
-    let baslikEn = form.title;
-    let icerikEn = form.content;
+    let titleEn = form.title;
+    let contentEn = form.content;
     try {
-      baslikEn = await translateToEnglish(form.title);
-      icerikEn = await translateHtmlContent(form.content);
+      titleEn = await translateToEnglish(form.title);
+      contentEn = await translateHtmlContent(form.content);
     } catch (err) {
       // Çeviri başarısızsa Türkçesini kullan
-      baslikEn = form.title;
-      icerikEn = form.content;
+      titleEn = form.title;
+      contentEn = form.content;
     }
     setTranslating(false);
-    const makaleData = {
-      BaslikTr: form.title,
-      BaslikEn: baslikEn,
-      IcerikTr: form.content,
-      IcerikEn: icerikEn,
-      Yazar: yazar,
-      Tarih: getLocalIsoString(),
+    const articleData = {
+      TitleTr: form.title,
+      TitleEn: titleEn,
+      ContentTr: form.content,
+      ContentEn: contentEn,
+      Author: author,
+      Date: getLocalIsoString(),
       Image: imageUrl,
       Status: true
     };
     try {
-      await articleApi.add(makaleData);
-      setSuccess(t('addArticle.success') || 'Makale başarıyla eklendi!');
+      await articleApi.add(articleData);
+      setSuccess(t('addArticle.success'));
       setForm({ title: '', content: '' });
-      setYazar('');
+      setAuthor('');
       setImage('');
       setSelectedFile(null);
     } catch {
@@ -205,7 +205,7 @@ const AddArticle = () => {
       // Wrapper'ı relative yap
       wrapper.style.position = 'relative';
     });
-  }, [icerikTr]);
+  }, [contentTr]);
 
   useEffect(() => {
     if (success) {
@@ -310,7 +310,7 @@ const AddArticle = () => {
           key={i18n.language}
           value={form.content}
           onChange={val => {
-            setIcerikTr(val);
+            setContentTr(val);
             setForm(f => ({ ...f, content: val }));
             if (error && contentError) {
               setError('');
@@ -325,9 +325,9 @@ const AddArticle = () => {
         <input
           type="text"
           placeholder={t('addArticle.placeholders.author')}
-          value={yazar}
+          value={author}
           onChange={e => {
-            setYazar(e.target.value);
+            setAuthor(e.target.value);
             if (error && authorError) {
               setError('');
               setAuthorError(false);

@@ -177,7 +177,7 @@ export default function MediumEditor() {
   const [authorError, setAuthorError] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [contentError, setContentError] = useState(false);
-  const [baslikTr, setBaslikTr] = useState('');
+  const [titleTr, setTitleTr] = useState('');
   const navigate = useNavigate();
   const [selectedFileName, setSelectedFileName] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -503,23 +503,22 @@ export default function MediumEditor() {
   };
 
   const handleSave = async () => {
-    const baslikTr = document.querySelector('input[placeholder="' + t('addArticle.placeholders.title') + '"]')?.value || '';
-    const yazar = author || '';
+    const titleTr = document.querySelector('input[placeholder="' + t('addArticle.placeholders.title') + '"]')?.value || '';
     let image = imageUrl || '';
-    const icerikTr = blocksToHtml(blocks);
-    const tarih = getLocalIsoString();
-    console.log(icerikTr);
+    const contentTr = blocksToHtml(blocks);
+    const date = getLocalIsoString();
+    console.log(contentTr);
     // İçeriğin gerçekten boş olup olmadığını kontrol et
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = icerikTr;
+    tempDiv.innerHTML = contentTr;
     const plainContent = tempDiv.textContent || tempDiv.innerText || '';
     // Zorunlu alan kontrolü
-    if (!baslikTr.trim()) {
+    if (!titleTr.trim()) {
       setTitleError(true);
       showNotif(t('addArticle.errors.title'), 'error');
       return;
     }
-    if (!yazar.trim()) {
+    if (!author.trim()) {
       setAuthorError(true);
       showNotif(t('addArticle.errors.author'), 'error');
       return;
@@ -543,13 +542,13 @@ export default function MediumEditor() {
       return;
     }
     setLoading(true);
-    let baslikEn = baslikTr;
-    let icerikEn = icerikTr;
+    let titleEn = titleTr;
+    let contentEn = contentTr;
     try {
       // Sadece Türkçe ise çeviri yap
       //if (i18n.language === 'tr') {
-        baslikEn = await translateToEnglish(baslikTr);
-        icerikEn = await translateHtmlContent(icerikTr);
+        titleEn = await translateToEnglish(titleTr);
+        contentEn = await translateHtmlContent(contentTr);
       //}
     } catch (err) {
       setLoading(false);
@@ -570,21 +569,21 @@ export default function MediumEditor() {
       }
       setLoading(false);
     }
-    // API'ye gönderilecek makale nesnesi
-    const makale = {
-      baslikTr,
-      baslikEn,
-      icerikTr,
-      icerikEn,
-      yazar,
-      image,
-      tarih
+    // API'ye gönderilecek article nesnesi
+    const article = {
+      TitleTr: titleTr,
+      TitleEn: titleEn,
+      ContentTr: contentTr,
+      ContentEn: contentEn,
+      Author: author,
+      Image: image,
+      Date: date
     };
     try {
-      await articleApi.add(makale);
+      await articleApi.add(article);
       showNotif(t('addArticle.success'), 'success');
       // Alanları sıfırla
-      setBaslikTr('');
+      setTitleTr('');
       setAuthor('');
       setImageUrl('');
       setImageFile(null);
@@ -658,13 +657,13 @@ export default function MediumEditor() {
       <input
         type="text"
         placeholder={t('addArticle.placeholders.title')}
-        value={baslikTr}
+        value={titleTr}
         required
         className={`w-full text-4xl font-bold border-0 outline-none focus:ring-0 focus:border-green-300 focus:shadow-[0_0_0_2px_#bbf7d0] px-8 pt-16 pb-4 bg-transparent placeholder-gray-400 transition-all duration-150 rounded-lg ${isDarkMode ? 'text-white' : ''} ${titleError ? 'border-2 border-red-500' : ''}`}
         style={{ fontFamily: 'Georgia, serif' }}
-        onChange={e => { setTitleError(false); setContentError(false); setBaslikTr(e.target.value); }}
+        onChange={e => { setTitleError(false); setContentError(false); setTitleTr(e.target.value); }}
       />
-      {/* Makale resmi alanı */}
+      {/* Article resmi alanı */}
       <div className="px-8 pb-2 mt-2 flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <input

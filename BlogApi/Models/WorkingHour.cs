@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlogApi.Models
 {
-    public class WorkingHours
+    public class WorkingHour
     {
         [Key]
         public int Id { get; set; }

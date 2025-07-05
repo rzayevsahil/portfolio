@@ -23,7 +23,7 @@ const BlogList = () => {
   useEffect(() => {
     setLoading(true);
     setError('');
-    articleApi.getAll()
+    articleApi.getPublished()
       .then(data => {
         setArticles(data);
         setLoading(false);
@@ -75,8 +75,8 @@ const BlogList = () => {
   const filteredArticles = articles.filter(article => {
     const matchesCategory = activeCategory === 'all' || article.kategori === activeCategory;
     const lang = i18n.language;
-    const baslik = lang === 'en' ? article.baslikEn : article.baslikTr;
-    const matchesSearch = baslik.toLowerCase().includes(searchTerm.toLowerCase());
+    const title = lang === 'en' ? article.titleEn : article.titleTr;
+    const matchesSearch = title.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -188,8 +188,8 @@ const BlogList = () => {
           >
             {currentBlogs.map((article, index) => {
               const lang = i18n.language;
-              const baslik = lang === 'en' ? article.baslikEn : article.baslikTr;
-              const icerik = lang === 'en' ? article.icerikEn : article.icerikTr;
+              const title = lang === 'en' ? article.titleEn : article.titleTr;
+              const content = lang === 'en' ? article.contentEn : article.contentTr;
               return (
                 <motion.article
                   key={article.id}
@@ -202,7 +202,7 @@ const BlogList = () => {
                   <div className="relative h-48 overflow-hidden mb-4 rounded-t-lg">
                     <img
                       src={article.image && article.image.trim() !== '' ? article.image : emptyBlogImg}
-                      alt={baslik}
+                      alt={title}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -210,16 +210,16 @@ const BlogList = () => {
                     <div className="flex items-center space-x-4 text-xs text-gray-500 mb-3 h-6">
                       <div className="flex items-center space-x-1">
                         <FaUser size={12} />
-                        <span>{article.yazar}</span>
+                        <span>{article.author}</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <FaCalendar size={12} />
-                        <span>{formatDate(article.tarih)}</span>
+                        <span>{formatDate(article.date)}</span>
                       </div>
                     </div>
-                    <h3 className={`text-xl font-bold mb-3 line-clamp-2 min-h-[56px] ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{baslik}</h3>
+                    <h3 className={`text-xl font-bold mb-3 line-clamp-2 min-h-[56px] ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{title}</h3>
                     <div className={`text-sm mb-4 line-clamp-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} overflow-hidden`}>
-                      {getExcerpt(icerik)}
+                      {getExcerpt(content)}
                     </div>
                   </div>
                   <motion.button
@@ -242,105 +242,154 @@ const BlogList = () => {
 
         {/* Sayfalama butonları */}
         {totalPages > 1 && (
-          <div className="flex justify-center mt-10 gap-2 items-center">
-            <div className="flex gap-2 items-center">
-              {/* Önceki butonu */}
+          <div className="flex justify-center items-center gap-4 mt-8 flex-wrap">
+            {/* Sayfa butonları */}
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className={`px-3 py-2 rounded-lg font-semibold border transition-colors duration-200 flex items-center justify-center ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
-                aria-label="Previous"
+                className={`px-3 py-2 rounded-lg border transition-all duration-200 ${
+                  currentPage === 1
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'hover:bg-blue-500 hover:text-white'
+                } ${
+                  isDarkMode
+                    ? 'bg-gray-800 border-gray-600 text-gray-300'
+                    : 'bg-white border-gray-300 text-gray-700'
+                }`}
               >
-                &#8249;
+                ←
               </button>
-              {/* Akıllı sayfa numaraları */}
               {(() => {
                 const pages = [];
-                const pageWindow = 1; // aktif sayfanın sağında/solunda kaç sayfa gösterilsin
+                const pageWindow = 1;
                 let start = Math.max(2, currentPage - pageWindow);
                 let end = Math.min(totalPages - 1, currentPage + pageWindow);
-                // İlk sayfa
                 pages.push(
                   <button
                     key={1}
                     onClick={() => setCurrentPage(1)}
-                    className={`px-4 py-2 rounded-lg font-semibold border transition-colors duration-200 ${currentPage === 1 ? 'bg-blue-600 text-white border-blue-600' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
-                  >1</button>
+                    className={`px-4 py-2 rounded-lg border transition-all duration-200 ${
+                      currentPage === 1
+                        ? 'bg-blue-500 text-white border-blue-500'
+                        : `hover:bg-blue-500 hover:text-white ${
+                            isDarkMode
+                              ? 'bg-gray-800 border-gray-600 text-gray-300'
+                              : 'bg-white border-gray-300 text-gray-700'
+                          }`
+                    }`}
+                  >
+                    1
+                  </button>
                 );
-                // ... (ilk ile start arasında)
                 if (start > 2) {
-                  pages.push(<span key="start-ellipsis" className="px-2 text-gray-400 select-none">...</span>);
+                  pages.push(
+                    <span
+                      key="start-ellipsis"
+                      className={`px-3 py-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
+                    >
+                      ...
+                    </span>
+                  );
                 }
-                // Ortadaki sayfalar
                 for (let i = start; i <= end; i++) {
                   pages.push(
                     <button
                       key={i}
                       onClick={() => setCurrentPage(i)}
-                      className={`px-4 py-2 rounded-lg font-semibold border transition-colors duration-200 ${currentPage === i ? 'bg-blue-600 text-white border-blue-600' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
-                    >{i}</button>
+                      className={`px-4 py-2 rounded-lg border transition-all duration-200 ${
+                        currentPage === i
+                          ? 'bg-blue-500 text-white border-blue-500'
+                          : `hover:bg-blue-500 hover:text-white ${
+                              isDarkMode
+                                ? 'bg-gray-800 border-gray-600 text-gray-300'
+                                : 'bg-white border-gray-300 text-gray-700'
+                            }`
+                      }`}
+                    >
+                      {i}
+                    </button>
                   );
                 }
-                // ... (end ile son arasında)
                 if (end < totalPages - 1) {
-                  pages.push(<span key="end-ellipsis" className="px-2 text-gray-400 select-none">...</span>);
+                  pages.push(
+                    <span
+                      key="end-ellipsis"
+                      className={`px-3 py-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
+                    >
+                      ...
+                    </span>
+                  );
                 }
-                // Son sayfa
                 if (totalPages > 1) {
                   pages.push(
                     <button
                       key={totalPages}
                       onClick={() => setCurrentPage(totalPages)}
-                      className={`px-4 py-2 rounded-lg font-semibold border transition-colors duration-200 ${currentPage === totalPages ? 'bg-blue-600 text-white border-blue-600' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
-                    >{totalPages}</button>
+                      className={`px-4 py-2 rounded-lg border transition-all duration-200 ${
+                        currentPage === totalPages
+                          ? 'bg-blue-500 text-white border-blue-500'
+                          : `hover:bg-blue-500 hover:text-white ${
+                              isDarkMode
+                                ? 'bg-gray-800 border-gray-600 text-gray-300'
+                                : 'bg-white border-gray-300 text-gray-700'
+                            }`
+                      }`}
+                    >
+                      {totalPages}
+                    </button>
                   );
                 }
                 return pages;
               })()}
-              {/* Sonraki butonu */}
               <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className={`px-3 py-2 rounded-lg font-semibold border transition-colors duration-200 flex items-center justify-center ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
-                aria-label="Next"
+                className={`px-3 py-2 rounded-lg border transition-all duration-200 ${
+                  currentPage === totalPages
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'hover:bg-blue-500 hover:text-white'
+                } ${
+                  isDarkMode
+                    ? 'bg-gray-800 border-gray-600 text-gray-300'
+                    : 'bg-white border-gray-300 text-gray-700'
+                }`}
               >
-                &#8250;
+                →
               </button>
             </div>
-            {/* Sayfa numarası inputu */}
-            <input
-              type="number"
-              min={1}
-              max={totalPages}
-              placeholder={t('blog.gotoPage') || 'Sayfa numarası...'}
-              value={pageInput}
-              onChange={e => setPageInput(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  let val = parseInt(e.target.value, 10);
-                  if (isNaN(val)) {
-                    setPageInput(currentPage);
-                    return;
+            {/* Sayfa inputu ve toplam sayfa bilgisi */}
+            <div className="flex items-center gap-2">
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Sayfa:</span>
+              <input
+                type="number"
+                min="1"
+                max={totalPages}
+                value={pageInput}
+                onChange={e => setPageInput(e.target.value)}
+                onKeyPress={e => {
+                  if (e.key === 'Enter') {
+                    const value = parseInt(e.target.value);
+                    if (value >= 1 && value <= totalPages) {
+                      setCurrentPage(value);
+                    }
                   }
-                  val = Math.max(1, Math.min(totalPages, val));
-                  setCurrentPage(val);
-                  setPageInput(val);
-                }
-              }}
-              onBlur={e => {
-                let val = parseInt(e.target.value, 10);
-                if (isNaN(val)) {
-                  setPageInput(currentPage);
-                  return;
-                }
-                val = Math.max(1, Math.min(totalPages, val));
-                setCurrentPage(val);
-                setPageInput(val);
-              }}
-              className={`w-48 ml-4 px-3 py-2 rounded-lg border font-semibold text-center outline-none focus:ring-2 focus:ring-blue-400 transition-all ${isDarkMode ? 'bg-gray-800 text-gray-200 border-gray-700 placeholder-gray-500' : 'bg-white text-gray-700 border-gray-300 placeholder-gray-400'}`}
-              style={{ minWidth: 80 }}
-              aria-label="Sayfa numarası"
-            />
+                }}
+                className={`w-16 px-2 py-1 text-center rounded border text-sm transition-colors duration-200 ${
+                  isDarkMode
+                    ? 'bg-gray-800 border-gray-600 text-white focus:border-blue-500'
+                    : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                } focus:outline-none`}
+              />
+              <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>/ {totalPages}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Sayfa aralığı bilgisi altta */}
+        {filteredArticles.length > 0 && (
+          <div className={`text-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} style={{ marginTop: 8 }}>
+            {indexOfFirstBlog + 1}-{Math.min(indexOfLastBlog, filteredArticles.length)} / {filteredArticles.length} makale
           </div>
         )}
 
@@ -350,7 +399,11 @@ const BlogList = () => {
             animate={{ opacity: 1 }}
             className="text-center py-12"
           >
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('blog.noResults')}</p>
+            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {searchTerm
+                ? t('blog.noResults')
+                : t('blog.noPublished')}
+            </p>
           </motion.div>
         )}
       </div>

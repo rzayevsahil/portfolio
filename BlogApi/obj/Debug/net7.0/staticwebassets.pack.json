@@ -5,8 +5,48 @@
       "PackagePath": "staticwebassets\\profile_photos\\903d402c-6c2c-45d2-b79d-7faf7d1df2a7.png"
     },
     {
-      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\9a835166-2da1-472f-9534-500436f899e3.png",
-      "PackagePath": "staticwebassets\\uploads\\9a835166-2da1-472f-9534-500436f899e3.png"
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\profile_photos\\b0f60e84-d9ff-47dc-8728-75de275cd61f.webp",
+      "PackagePath": "staticwebassets\\profile_photos\\b0f60e84-d9ff-47dc-8728-75de275cd61f.webp"
+    },
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\08e254db-4989-4122-86e9-ebcc774b62bd.png",
+      "PackagePath": "staticwebassets\\uploads\\08e254db-4989-4122-86e9-ebcc774b62bd.png"
+    },
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\125fd049-c081-4ba5-9bec-977a522bf321.png",
+      "PackagePath": "staticwebassets\\uploads\\125fd049-c081-4ba5-9bec-977a522bf321.png"
+    },
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\27ebb68f-f63b-484c-8aaf-2446b242aac2.png",
+      "PackagePath": "staticwebassets\\uploads\\27ebb68f-f63b-484c-8aaf-2446b242aac2.png"
+    },
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\451e7dd3-bc13-4ea6-a10f-00eb00a78f1d.png",
+      "PackagePath": "staticwebassets\\uploads\\451e7dd3-bc13-4ea6-a10f-00eb00a78f1d.png"
+    },
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\55807230-33ce-413d-bd1c-09b62d1ea57c.png",
+      "PackagePath": "staticwebassets\\uploads\\55807230-33ce-413d-bd1c-09b62d1ea57c.png"
+    },
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\5e20f4ab-3b88-4e76-845b-eb99104117e9.png",
+      "PackagePath": "staticwebassets\\uploads\\5e20f4ab-3b88-4e76-845b-eb99104117e9.png"
+    },
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\5febc481-dd98-41cd-ae14-8c89fe9e6049.png",
+      "PackagePath": "staticwebassets\\uploads\\5febc481-dd98-41cd-ae14-8c89fe9e6049.png"
+    },
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\8c776f29-6995-4673-a31a-798abb0b8392.png",
+      "PackagePath": "staticwebassets\\uploads\\8c776f29-6995-4673-a31a-798abb0b8392.png"
+    },
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\99cf879c-0405-49f2-9b39-5335aa949424.png",
+      "PackagePath": "staticwebassets\\uploads\\99cf879c-0405-49f2-9b39-5335aa949424.png"
+    },
+    {
+      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\b8b077e7-3e90-4e90-b2d5-8ea119a20d92.jpg",
+      "PackagePath": "staticwebassets\\uploads\\b8b077e7-3e90-4e90-b2d5-8ea119a20d92.jpg"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.BlogApi.Microsoft.AspNetCore.StaticWebAssets.props",

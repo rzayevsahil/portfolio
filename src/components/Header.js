@@ -20,38 +20,22 @@ const Header = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const sectionIds = ['#home', '#about', '#skills', '#projects', '#blog', '#contact'];
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      const scrollY = window.scrollY + window.innerHeight / 3;
+      let currentSection = '#home';
+      for (let i = 0; i < sectionIds.length; i++) {
+        const section = document.querySelector(sectionIds[i]);
+        if (section && section.offsetTop <= scrollY) {
+          currentSection = sectionIds[i];
+        }
+      }
+      setActiveNav(currentSection);
     };
     window.addEventListener('scroll', handleScroll);
-    // Intersection Observer ile section takibi
-    const sectionIds = ['#home', '#about', '#skills', '#projects', '#blog', '#contact'];
-    const sections = sectionIds.map(id => document.querySelector(id));
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
-    observerRef.current = new window.IntersectionObserver(
-      (entries) => {
-        if (isNavLocked) return;
-        const visible = entries.filter(e => e.isIntersecting);
-        if (visible.length > 0) {
-          // En üstteki görünür section'ı seç
-          const topMost = visible.reduce((prev, curr) =>
-            prev.boundingClientRect.top < curr.boundingClientRect.top ? prev : curr
-          );
-          setActiveNav(`#${topMost.target.id}`);
-        }
-      },
-      { threshold: 0.2 }
-    );
-    sections.forEach(section => {
-      if (section) observerRef.current.observe(section);
-    });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (observerRef.current) observerRef.current.disconnect();
-    };
-  }, [isNavLocked]);
+    handleScroll(); // ilk yüklemede de çalışsın
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const validSections = ['#home', '#about', '#skills', '#projects', '#blog', '#contact'];
@@ -70,6 +54,15 @@ const Header = () => {
       window.removeEventListener('hashchange', setActiveFromHash);
       clearTimeout(lockTimeout);
     };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 30);
+    };
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navItems = [
@@ -108,11 +101,16 @@ const Header = () => {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? (isDarkMode ? 'bg-black/80 backdrop-blur-md' : 'bg-white/80 backdrop-blur-md')
-          : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300
+        ${scrolled
+          ? (isDarkMode
+              ? 'bg-[#181e29]/40 shadow-lg backdrop-blur-xl'
+              : 'bg-white/40 shadow-lg backdrop-blur-xl')
+          : (isDarkMode
+              ? 'bg-transparent'
+              : 'bg-transparent')
+        }`
+      }
     >
       <div className="container mx-auto px-4">
         <div className={`flex items-center h-16 ${isAdmin ? 'justify-end' : 'justify-between'}`}>

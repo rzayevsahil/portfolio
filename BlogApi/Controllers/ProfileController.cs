@@ -27,6 +27,10 @@ namespace BlogApi.Controllers
         public ActionResult<Profile> Get()
         {
             var profile = _context.Set<Profile>().FirstOrDefault();
+            if (profile == null)
+            {
+                return NotFound(new { message = "Profil bilgileri bulunamadı." });
+            }
             return Ok(profile);
         }
 

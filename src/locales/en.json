@@ -89,7 +89,8 @@
   },
   "workingHours": {
     "title": "Working Hours",
-    "noData": "No working hours added.",
+    "notAdded": "Working hours not added.",
+    "noData": "Working hours not found.",
     "loadError": "Failed to load working hours.",
     "updateError": "Failed to update working hours.",
     "save": "Save",
@@ -164,7 +165,7 @@
       "apiDevelopment": "API Development",
       "other": "Other",
       "budget": "Budget",
-      "budgetPlaceholder": "Specify your project budget (e.g., $5000-$10000)",
+      "budgetPlaceholder": "Specify your project budget",
       "timeline": "Timeline",
       "timelinePlaceholder": "Specify project duration (e.g., 2-3 months)",
       "description": "Project Description",
@@ -221,6 +222,7 @@
     "featured": "Featured",
     "readMore": "Read More",
     "noResults": "No articles found matching your search criteria.",
+    "noPublished": "No published articles yet.",
     "articles": {
       "article1": {
         "title": "Modern Web API Development with ASP.NET Core",
@@ -348,7 +350,8 @@
     "newPassword": "New Password",
     "newPasswordPlaceholder": "Fill to update password",
     "save": "Save",
-    "updateSuccess": "Profile updated successfully!"
+    "updateSuccess": "Profile updated successfully!",
+    "noData": "Profile information not found."
   },
   "contactEdit": {
     "title": "Contact Information",
@@ -357,7 +360,10 @@
     "loadError": "Failed to load contact information.",
     "updateError": "An error occurred while updating.",
     "save": "Save",
-    "success": "Contact information updated successfully!"
+    "success": "Contact information updated successfully!",
+    "emailRequired": "Email is required.",
+    "emailInvalid": "Please enter a valid email address.",
+    "noData": "Contact information not found."
   },
   "notFound": {
     "title": "Page Not Found",
