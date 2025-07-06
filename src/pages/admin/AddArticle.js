@@ -132,7 +132,8 @@ const AddArticle = () => {
       Author: author,
       Date: getLocalIsoString(),
       Image: imageUrl,
-      Status: true
+      Status: true,
+      IsPublished: false
     };
     try {
       await articleApi.add(articleData);

@@ -4,9 +4,10 @@ import { FaEdit, FaTrash, FaEye, FaEyeSlash, FaPlus, FaSearch, FaCalendar, FaUse
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../context/ThemeContext';
 import { useLoading } from '../../context/LoadingContext';
-import { articleApi } from '../../api/api';
+import { articleApi, BASE_URL } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 import emptyBlogImg from '../../assets/empty-blog.png';
+import { getImageUrl } from '../../utils/imageHelpers';
 
 const BlogManagement = () => {
   const [articles, setArticles] = useState([]);
@@ -321,7 +322,7 @@ const BlogManagement = () => {
                     {/* Article Image */}
                     <div className="w-full lg:w-48 h-32 lg:h-24 rounded-lg overflow-hidden flex-shrink-0">
                       <img
-                        src={article.image ? article.image : emptyBlogImg}
+                        src={getImageUrl(article.Image || article.image, BASE_URL, emptyBlogImg)}
                         alt={title}
                         className="w-full h-full object-cover"
                       />

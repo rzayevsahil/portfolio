@@ -16,4 +16,4 @@ export function getTranslatedErrorMessage(error, t, i18n, translationKey) {
     return trMsg;
   }
   return error;
-} 
+}

@@ -577,7 +577,9 @@ export default function MediumEditor() {
       ContentEn: contentEn,
       Author: author,
       Image: image,
-      Date: date
+      Date: date,
+      Status: true,
+      IsPublished: false
     };
     try {
       await articleApi.add(article);

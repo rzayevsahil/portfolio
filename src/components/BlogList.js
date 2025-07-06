@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import emptyBlogImg from '../assets/empty-blog.png';
-import { articleApi } from '../api/api';
+import { articleApi, BASE_URL } from '../api/api';
+import { getImageUrl } from '../utils/imageHelpers';
 
 const BlogList = () => {
   const [articles, setArticles] = useState([]);
@@ -201,7 +202,7 @@ const BlogList = () => {
                 >
                   <div className="relative h-48 overflow-hidden mb-4 rounded-t-lg">
                     <img
-                      src={article.image && article.image.trim() !== '' ? article.image : emptyBlogImg}
+                      src={getImageUrl(article.Image || article.image, BASE_URL, emptyBlogImg)}
                       alt={title}
                       className="w-full h-full object-cover"
                     />

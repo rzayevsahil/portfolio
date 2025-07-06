@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import i18n from '../i18n';
 import emptyBlogImg from '../assets/empty-blog.png';
-import { articleApi } from '../api/api';
+import { articleApi, BASE_URL } from '../api/api';
+import { getImageUrl } from '../utils/imageHelpers';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -303,8 +304,8 @@ const ArticleDetail = () => {
             className="mb-8 rounded-lg overflow-hidden"
           >
             <img
-              src={currentArticle.image && currentArticle.image.trim() !== '' ? currentArticle.image : emptyBlogImg}
-              alt={currentArticle.title}
+              src={getImageUrl(currentArticle.Image || currentArticle.image, BASE_URL, emptyBlogImg)}
+              alt={title}
               className="w-full h-64 md:h-96 object-cover"
             />
           </motion.div>

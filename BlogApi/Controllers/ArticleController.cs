@@ -89,7 +89,7 @@ namespace BlogApi.Controllers
                 article.Date = DateTime.SpecifyKind(article.Date, DateTimeKind.Utc);
             }
             article.Status = true;
-            article.IsPublished = true;
+            article.IsPublished = false;
             _context.Articles.Add(article);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetArticle), new { id = article.Id }, article);
