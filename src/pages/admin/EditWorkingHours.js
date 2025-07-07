@@ -43,6 +43,7 @@ const EditWorkingHours = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [noData, setNoData] = useState(false);
+  const [existingData, setExistingData] = useState(null);
   const { t } = useTranslation();
   const { isDarkMode } = useTheme();
 
@@ -53,6 +54,7 @@ const EditWorkingHours = () => {
       .then(data => {
         if (!data || (!data.weekdays && !data.weekend)) {
           setNoData(true);
+          setExistingData(null);
         } else {
           setWeekdays(data.weekdays ? data.weekdays.split(',').map(day => trToEn[day] || day) : []);
           setWeekdayStart(data.weekdayStart || '09:00');
@@ -60,6 +62,7 @@ const EditWorkingHours = () => {
           setWeekend(data.weekend ? data.weekend.split(',').map(day => trToEn[day] || day) : []);
           setWeekendStart(data.weekendStart || '10:00');
           setWeekendEnd(data.weekendEnd || '16:00');
+          setExistingData(data);
           setNoData(false);
         }
         setLoading(false);
@@ -68,6 +71,7 @@ const EditWorkingHours = () => {
         setError(getTranslatedErrorMessage(error.message, t, i18n, 'workingHours.noData'));
         setLoading(false);
         setNoData(true);
+        setExistingData(null);
       });
   }, [t]);
 
@@ -91,21 +95,46 @@ const EditWorkingHours = () => {
     e.preventDefault();
     setError('');
     setSuccess(false);
-    workingHoursApi.update({
+    
+    const workingHoursData = {
       weekdays: sortDays(weekdays, WEEKDAYS).map(day => enToTr[day] || day).join(','),
       weekdayStart,
       weekdayEnd,
       weekend: sortDays(weekend, WEEKEND).map(day => enToTr[day] || day).join(','),
       weekendStart,
       weekendEnd
-    })
-      .then(data => {
-        setSuccess(true);
-        setTimeout(() => setSuccess(false), 2000);
-      })
-      .catch(() => {
-        setError(t('workingHours.updateError'));
-      });
+    };
+
+    if (existingData && existingData.id) {
+      // Güncelleme - mevcut veri varsa ve ID'si varsa
+      workingHoursApi.update(existingData.id, workingHoursData)
+        .then(data => {
+          setSuccess(true);
+          setTimeout(() => setSuccess(false), 2000);
+        })
+        .catch(() => {
+          setError(t('workingHours.updateError'));
+        });      
+    } else {
+      // Ekleme - mevcut veri yoksa veya ID'si yoksa
+      workingHoursApi.add(workingHoursData)
+        .then(data => {
+          setSuccess(true);
+          setTimeout(() => setSuccess(false), 2000);
+          // Başarılı ekleme sonrası veriyi yeniden yükle
+          workingHoursApi.get()
+            .then(data => {
+              if (data) {
+                setExistingData(data);
+                setNoData(false);
+              }
+            })
+            .catch(() => {});
+        })
+        .catch(() => {
+          setError(t('workingHours.updateError'));
+        });   
+    }    
   };
 
   if (loading) return <GlobalLoader show={true} />;

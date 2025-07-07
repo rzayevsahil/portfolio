@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BlogApi.Data;
 using BlogApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.IO;
 
 namespace BlogApi.Controllers
 {
@@ -29,8 +31,10 @@ namespace BlogApi.Controllers
             public string Image { get; set; }
             public bool Status { get; set; }
             public bool IsPublished { get; set; }
+            public string Type { get; set; }
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ArticleDto>>> GetArticles()
         {
@@ -46,7 +50,8 @@ namespace BlogApi.Controllers
                 Date = m.Date.ToString("yyyy-MM-ddTHH:mm:ss"),
                 Image = m.Image,
                 Status = m.Status,
-                IsPublished = m.IsPublished
+                IsPublished = m.IsPublished,
+                Type = m.Type
             }).ToList();
             return result;
         }
@@ -70,11 +75,13 @@ namespace BlogApi.Controllers
                 Date = article.Date.ToString("yyyy-MM-ddTHH:mm:ss"),
                 Image = article.Image,
                 Status = article.Status,
-                IsPublished = article.IsPublished
+                IsPublished = article.IsPublished,
+                Type = article.Type
             };
             return result;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Article>> PostArticle(Article article)
         {
@@ -90,28 +97,68 @@ namespace BlogApi.Controllers
             }
             article.Status = true;
             article.IsPublished = false;
+            article.Type = string.IsNullOrEmpty(article.Type) ? "classic" : article.Type;
             _context.Articles.Add(article);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetArticle), new { id = article.Id }, article);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutArticle(int id, Article article)
         {
             if (id != article.Id)
-                return BadRequest();
+                return BadRequest("ID'ler eşleşmiyor.");
 
-            _context.Entry(article).State = EntityState.Modified;
+            var existingArticle = await _context.Articles.FindAsync(id);
+            if (existingArticle == null)
+                return NotFound("Makale bulunamadı.");
+
+            // Eski resim dosyasını sil (eğer yeni resim farklıysa ve uploads klasöründeyse)
+            if (!string.IsNullOrEmpty(existingArticle.Image) &&
+                existingArticle.Image != article.Image &&
+                existingArticle.Image.StartsWith("/uploads/"))
+            {
+                var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var oldImagePath = Path.Combine(wwwrootPath, existingArticle.Image.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+
+            existingArticle.TitleTr = article.TitleTr;
+            existingArticle.TitleEn = article.TitleEn;
+            existingArticle.ContentTr = article.ContentTr;
+            existingArticle.ContentEn = article.ContentEn;
+            existingArticle.Author = article.Author;
+            existingArticle.Date = DateTime.UtcNow;
+            existingArticle.Image = article.Image;
+            existingArticle.Status = article.Status;
+            existingArticle.IsPublished = article.IsPublished;
+            existingArticle.Type = string.IsNullOrEmpty(article.Type) ? "classic" : article.Type;
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteArticle(int id)
         {
             var article = await _context.Articles.FindAsync(id);
             if (article == null)
                 return NotFound();
+
+            // Resim dosyasını sil
+            if (!string.IsNullOrEmpty(article.Image) && article.Image.StartsWith("/uploads/"))
+            {
+                var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var imagePath = Path.Combine(wwwrootPath, article.Image.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
 
             article.Status = false;
             article.IsPublished = false;
@@ -135,7 +182,8 @@ namespace BlogApi.Controllers
                 Date = m.Date.ToString("yyyy-MM-ddTHH:mm:ss"),
                 Image = m.Image,
                 Status = m.Status,
-                IsPublished = m.IsPublished
+                IsPublished = m.IsPublished,
+                Type = m.Type
             }).ToList();
             return result;
         }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using BlogApi.Models;
 using BlogApi.Data;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlogApi.Controllers
 {
@@ -17,7 +18,7 @@ namespace BlogApi.Controllers
 
         // GET: api/workinghours
         [HttpGet]
-        public ActionResult<WorkingHour> Get()
+        public async Task<ActionResult<WorkingHour>> Get()
         {
             var wh = _context.WorkingHours.FirstOrDefault();
             if (wh == null)
@@ -27,20 +28,30 @@ namespace BlogApi.Controllers
             return Ok(wh);
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<WorkingHour>> Create(WorkingHour workingHour)
+        {
+            if (workingHour == null)
+                return BadRequest();
+            _context.WorkingHours.Add(workingHour);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(Get), new { id = workingHour.Id }, workingHour);
+        }
+
         // PUT: api/workinghours
+        [Authorize]
         [HttpPut]
-        public ActionResult<WorkingHour> Update(WorkingHour workingHour)
+        public async Task<ActionResult<WorkingHour>> Update(WorkingHour workingHour)
         {
             var wh = _context.WorkingHours.FirstOrDefault();
             if (wh == null)
             {
-                _context.WorkingHours.Add(workingHour);
-            }
-            else
-            {
-                wh.Weekdays = workingHour.Weekdays;
-                wh.Weekend = workingHour.Weekend;
-            }
+                return NotFound(new { message = "Çalışma saatleri bulunamadı." });
+            }            
+            
+            wh.Weekdays = workingHour.Weekdays;
+            wh.Weekend = workingHour.Weekend;            
             _context.SaveChanges();
             return Ok(workingHour);
         }

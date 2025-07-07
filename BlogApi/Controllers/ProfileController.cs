@@ -24,7 +24,7 @@ namespace BlogApi.Controllers
 
         // GET: api/profile
         [HttpGet]
-        public ActionResult<Profile> Get()
+        public async Task<ActionResult<Profile>> Get()
         {
             var profile = _context.Set<Profile>().FirstOrDefault();
             if (profile == null)
@@ -34,35 +34,46 @@ namespace BlogApi.Controllers
             return Ok(profile);
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<Profile>> Create(Profile profile)
+        {
+            if (profile == null)
+                return BadRequest();
+            _context.Set<Profile>().Add(profile);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(Get), new { id = profile.Id }, profile);
+        }
+
         // PUT: api/profile
         [Authorize]
         [HttpPut]
-        public ActionResult<Profile> Update(Profile updated)
+        public async Task<ActionResult<Profile>> Update(int id, Profile updated)
         {
-            var profile = _context.Set<Profile>().FirstOrDefault();
-            if (profile == null)
+            if (id != updated.Id)
+                return BadRequest(new { message = "ID'ler eşleşmiyor." });
+
+            var existingProfile = await _context.Profiles.FindAsync(id);
+            if (existingProfile == null)
             {
-                _context.Set<Profile>().Add(updated);
+                return NotFound(new { message = "Profil bilgileri bulunamadı." });
             }
-            else
-            {
-                profile.Name = updated.Name;
-                profile.Email = updated.Email;
-                profile.PhotoUrl = updated.PhotoUrl;
-                if (!string.IsNullOrEmpty(updated.Password))
-                    profile.Password = updated.Password;
-            }
+            existingProfile.Name = updated.Name;
+            existingProfile.Email = updated.Email;
+            existingProfile.PhotoUrl = updated.PhotoUrl;
+            if (!string.IsNullOrEmpty(updated.Password))
+                existingProfile.Password = updated.Password;            
             _context.SaveChanges();
-            return Ok(updated);
+            return Ok(existingProfile);
         }
 
         // POST: api/profile/photo
         [Authorize]
         [HttpPost("photo")]
-        public IActionResult UploadPhoto([FromForm] IFormFile file)
+        public async Task<IActionResult> UploadPhoto([FromForm] IFormFile file)
         {
             if (file == null || file.Length == 0)
-                return BadRequest("Dosya seçilmedi.");
+                return BadRequest(new { message = "Dosya seçilmedi." });
 
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "profile_photos");
             if (!Directory.Exists(uploadsFolder))
@@ -101,7 +112,7 @@ namespace BlogApi.Controllers
 
         // POST: api/profile/login
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
                 return BadRequest("E-posta ve şifre gereklidir.");

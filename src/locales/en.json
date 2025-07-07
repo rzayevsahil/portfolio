@@ -327,14 +327,23 @@
     "noArticles": "No articles added yet.",
     "noSearchResults": "No articles found matching your search criteria.",
     "retry": "Try Again",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "publishSuccess": "Article published successfully!",
+    "hideSuccess": "Article hidden successfully!",
+    "publishError": "Article could not be published.",
+    "hideError": "Article could not be hidden."
   },
   "admin": {
     "loginTitle": "Admin Login",
     "loginButton": "Login",
     "loggingIn": "Logging in...",
     "email": "Email",
-    "password": "Password"
+    "password": "Password",
+    "invalidCredentials": "Invalid email or password!",
+    "profile": "Profile Info",
+    "blogManagement": "Blog Management",
+    "contact": "Contact Info",
+    "workingHours": "Working Hours"
   },
   "profile": {
     "title": "Profile Information",

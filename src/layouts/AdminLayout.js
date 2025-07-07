@@ -6,13 +6,6 @@ import { FaUser, FaFileAlt, FaEnvelope, FaClock, FaSignOutAlt, FaBlog } from 're
 import { useTranslation } from 'react-i18next';
 import Logo from '../components/Logo';
 
-const menuItems = [
-  { to: '/admin/profile', label: 'Profil Bilgileri', icon: <FaUser /> },
-  { to: '/admin/blog-management', label: 'Blog Yönetimi', icon: <FaBlog /> },
-  { to: '/admin/contact', label: 'İletişim Bilgileri', icon: <FaEnvelope /> },
-  { to: '/admin/working-hours', label: 'Çalışma Saatleri', icon: <FaClock /> },
-];
-
 const HamburgerIcon = ({ open }) => (
   <motion.div className="relative w-6 h-6 flex flex-col items-center justify-center" initial={false} animate={open ? 'open' : 'closed'}>
     <motion.span
@@ -46,6 +39,13 @@ const AdminLayout = () => {
   const { isDarkMode } = useTheme();
   const [open, setOpen] = useState(true);
   const { t } = useTranslation();
+
+  const menuItems = [
+    { to: '/admin/profile', label: t('admin.profile'), icon: <FaUser /> },
+    { to: '/admin/blog-management', label: t('admin.blogManagement'), icon: <FaBlog /> },
+    { to: '/admin/contact', label: t('admin.contact'), icon: <FaEnvelope /> },
+    { to: '/admin/working-hours', label: t('admin.workingHours'), icon: <FaClock /> },
+  ];
 
   const handleLogout = () => {
     localStorage.removeItem('token');

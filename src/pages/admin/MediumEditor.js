@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../context/ThemeContext';
 import { articleApi } from '../../api/api';
 import { uploadApi } from '../../api/api';
-import { useNavigate } from 'react-router-dom';
+import { FILE_BASE_URL } from '../../api/api';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 
 function BlockMenu({ onClose, onAction, ...props }) {
@@ -98,9 +99,16 @@ function LinkTooltip({ x, y, href, visible }) {
 // Blokları HTML'e dönüştüren fonksiyon
 function blocksToHtml(blocks) {
   return blocks.map(block => {
-    if (block.type === 'text') return `<div>${block.value}</div>`;
-    if (block.type === 'image') return `<img src="${block.src}" alt="" />`;
-    if (block.type === 'video') return `<video src="${block.src}" controls />`;
+    if (block.type === 'text') {
+      // Eğer değer zaten HTML içeriyorsa (div ile başlıyorsa), doğrudan kullan
+      if (block.value.trim().startsWith('<div>')) {
+        return block.value;
+      }
+      // Değilse div ile sarmala
+      return `<div>${block.value}</div>`;
+    }
+    if (block.type === 'image') return `<img src="${block.src}" alt="" style="max-width:100%;height:auto;display:block;margin:0 auto;" />`;
+    if (block.type === 'video') return `<video src="${block.src}" controls style="max-width:100%;height:auto;display:block;margin:0 auto;" />`;
     if (block.type === 'embed') return `<iframe src="${block.src}" frameborder="0" allowfullscreen style="aspect-ratio:16/9;width:100%;max-width:800px;min-height:350px;display:block;margin:0 auto;border-radius:12px;"></iframe>`;
     if (block.type === 'code') return `<pre><code>${block.value}</code></pre>`;
     if (block.type === 'quote') return `<blockquote>${block.value}</blockquote>`;
@@ -159,6 +167,8 @@ function getLocalIsoString() {
 
 export default function MediumEditor() {
   const { t, i18n } = useTranslation();
+  const location = useLocation();
+  const editingArticle = location.state?.article;
   const [blocks, setBlocks] = useState([{ type: 'text', value: '', id: generateId() }]);
   const inputRefs = useRef([]);
   const [menuIdx, setMenuIdx] = useState(null);
@@ -182,6 +192,72 @@ export default function MediumEditor() {
   const [selectedFileName, setSelectedFileName] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
+
+  useEffect(() => {
+    // Edit modunda makale varsa formları doldur
+    if (editingArticle) {
+      setTitleTr(editingArticle.titleTr || editingArticle.TitleTr || '');
+      setAuthor(editingArticle.author || editingArticle.Author || '');
+      setImageUrl(editingArticle.image || editingArticle.Image || '');
+      // İçeriği bloklara çevir
+      if (editingArticle.contentTr || editingArticle.ContentTr) {
+        const html = editingArticle.contentTr || editingArticle.ContentTr;
+        // HTML'i parse edip her bir üst seviye elementi ayrı blok olarak ayarla
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+        const topLevelElements = Array.from(doc.body.firstChild.children);
+        
+        if (topLevelElements.length > 0) {
+          // Her bir üst seviye elementi ayrı bir blok olarak ayarla
+          const parsedBlocks = topLevelElements.map(element => {
+            // Eğer element img, video, iframe, pre, blockquote ise özel blok tipi olarak ayarla
+            if (element.tagName === 'IMG') {
+              return {
+                type: 'image',
+                src: element.src,
+                id: generateId()
+              };
+            } else if (element.tagName === 'VIDEO') {
+              return {
+                type: 'video',
+                src: element.src,
+                id: generateId()
+              };
+            } else if (element.tagName === 'IFRAME') {
+              return {
+                type: 'embed',
+                src: element.src,
+                id: generateId()
+              };
+            } else if (element.tagName === 'PRE') {
+              return {
+                type: 'code',
+                value: element.textContent,
+                id: generateId()
+              };
+            } else if (element.tagName === 'BLOCKQUOTE') {
+              return {
+                type: 'quote',
+                value: element.innerHTML,
+                id: generateId()
+              };
+            } else {
+              // Diğer elementler text bloğu olarak
+              return {
+                type: 'text',
+                value: element.outerHTML,
+                id: generateId()
+              };
+            }
+          });
+          setBlocks(parsedBlocks);
+        } else {
+          // Eğer üst seviye element yoksa, içeriği tek blok olarak ayarla
+          setBlocks([{ type: 'text', value: html, id: generateId() }]);
+        }
+      }
+    }
+  }, [editingArticle]);
 
   useEffect(() => {
     const handleDeleteOrEnter = (e) => {
@@ -545,18 +621,14 @@ export default function MediumEditor() {
     let titleEn = titleTr;
     let contentEn = contentTr;
     try {
-      // Sadece Türkçe ise çeviri yap
-      //if (i18n.language === 'tr') {
-        titleEn = await translateToEnglish(titleTr);
-        contentEn = await translateHtmlContent(contentTr);
-      //}
+      titleEn = await translateToEnglish(titleTr);
+      contentEn = await translateHtmlContent(contentTr);
     } catch (err) {
       setLoading(false);
       showNotif(t('addArticle.errors.general'), 'error');
       return;
     }
     setLoading(false);
-    // Eğer dosya seçildiyse şimdi upload et
     if (imageFile) {
       setLoading(true);
       try {
@@ -577,21 +649,33 @@ export default function MediumEditor() {
       ContentEn: contentEn,
       Author: author,
       Image: image,
-      Date: date,
+      Date: editingArticle ? (editingArticle.date || editingArticle.Date) : date,
       Status: true,
-      IsPublished: false
+      IsPublished: editingArticle ? (editingArticle.isPublished ?? editingArticle.IsPublished ?? false) : false,
+      Type: 'medium',
     };
     try {
-      await articleApi.add(article);
-      showNotif(t('addArticle.success'), 'success');
-      // Alanları sıfırla
-      setTitleTr('');
-      setAuthor('');
-      setImageUrl('');
-      setImageFile(null);
-      setImagePreview('');
-      setSelectedFileName('');
-      setBlocks([{ type: 'text', value: '', id: generateId() }]);
+      if (editingArticle) {
+        // Güncelleme
+        await articleApi.update(editingArticle.id || editingArticle.Id, {
+          ...article,
+          Id: editingArticle.id || editingArticle.Id,
+        });
+        showNotif(t('addArticle.success'), 'success');
+        setTimeout(() => navigate('/admin/blog-management', { replace: true }), 1000);
+      } else {
+        // Yeni ekleme
+        await articleApi.add(article);
+        showNotif(t('addArticle.success'), 'success');
+        setTitleTr('');
+        setAuthor('');
+        setImageUrl('');
+        setImageFile(null);
+        setImagePreview('');
+        setSelectedFileName('');
+        setBlocks([{ type: 'text', value: '', id: generateId() }]);        
+        setTimeout(() => navigate('/admin/blog-management', { replace: true }), 1000);
+      }
     } catch (err) {
       showNotif(t('addArticle.errors.server'), 'error');
     }
@@ -712,7 +796,16 @@ export default function MediumEditor() {
         </div>
         {imageUrl && (
           <div className="flex items-center mt-2 w-full gap-2">
-            <img src={imageUrl} alt="Önizleme" className="max-h-32 rounded shadow border" style={{ maxWidth: 200, objectFit: 'contain' }} />
+            <img
+              src={
+                imageUrl.startsWith('http')
+                  ? imageUrl
+                  : `${FILE_BASE_URL}${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`
+              }
+              alt="Önizleme"
+              className="max-h-32 rounded shadow border"
+              style={{ maxWidth: 200, objectFit: 'contain' }}
+            />
             {selectedFileName && (
               <span className={`text-xs truncate max-w-[120px] ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{selectedFileName}</span>
             )}
@@ -956,31 +1049,4 @@ export default function MediumEditor() {
       />
     </div>
   );
-}
-
-// CSS for underline links in contentEditable
-<style>{`
-.richtext-block a {
-  text-decoration: underline !important;
-  color: #222 !important;
-}
-.dark .richtext-block a {
-  color: #8ddc97 !important;
-}
-.richtext-block blockquote {
-  border-left: 8px solid #8ddc97;
-  background: #f8fafc;
-  color: #444;
-  font-style: italic;
-  padding: 16px 24px;
-  margin: 24px 0;
-  border-radius: 8px;
-  font-size: 1.1em;
-}
-.richtext-block h1, .richtext-block h2, .richtext-block h3 {
-  font-weight: bold;
-  font-size: 2rem;
-  margin: 24px 0 12px 0;
-  line-height: 1.2;
-}
-`}</style> 
+} 

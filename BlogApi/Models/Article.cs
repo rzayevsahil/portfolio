@@ -16,5 +16,6 @@ namespace BlogApi.Models
         public List<Comment> Comments { get; set; } = new List<Comment>();
         public bool Status { get; set; }
         public bool IsPublished { get; set; }
+        public string Type { get; set; } // 'classic' veya 'medium'
     }
 } 

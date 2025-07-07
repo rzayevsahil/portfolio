@@ -330,7 +330,12 @@
     "loginButton": "Giriş Yap",
     "loggingIn": "Giriş Yapılıyor...",
     "email": "E-posta",
-    "password": "Şifre"
+    "password": "Şifre",
+    "invalidCredentials": "E-posta veya şifre hatalı!",
+    "profile": "Profil Bilgileri",
+    "blogManagement": "Blog Yönetimi",
+    "contact": "İletişim Bilgileri",
+    "workingHours": "Çalışma Saatleri"
   },
   "profile": {
     "title": "Profil Bilgileri",

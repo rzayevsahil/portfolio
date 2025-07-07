@@ -4,6 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import Logo from '../../components/Logo';
+import { getTranslatedErrorMessage } from '../../utils/errorHelpers';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { isDarkMode } = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,11 +22,18 @@ const Login = () => {
     try {
       const result = await profileApi.login({ email, password });
       localStorage.setItem('token', result.token); // Token'ı kaydet
-      window.location.href = '/admin';
+      // Loading mesajını 2 saniye göster
+      setTimeout(() => {
+        window.location.href = '/admin';
+      }, 1500);
     } catch (err) {
-      setError('E-posta veya şifre hatalı!');
+      // Backend'den gelen Türkçe mesajı çeviri sistemi ile çevir
+      console.log("erorrrr");
+      console.log(err.message);
+      
+      setError(getTranslatedErrorMessage(err.message, t, i18n, 'admin.invalidCredentials'));
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

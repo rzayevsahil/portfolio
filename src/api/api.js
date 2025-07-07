@@ -1,4 +1,5 @@
 export const BASE_URL = process.env.REACT_APP_API_URL;
+export const FILE_BASE_URL = process.env.REACT_APP_FILE_BASE_URL;
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -17,6 +18,7 @@ const handleErrorResponse = async (response) => {
     }
   } catch (parseError) {
     // JSON parse edilemezse varsayılan mesajları kullan
+    console.log('JSON parse error:', parseError);
   }
   
   // HTTP status code'a göre varsayılan mesajlar
@@ -45,6 +47,15 @@ export const contactApi = {
       await handleErrorResponse(response); // başka hataları ele al
     }
     return response.json();
+  },  
+  create: async (data) => {
+    const response = await fetch(`${BASE_URL}/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) await handleErrorResponse(response);
+    return response.json();
   },
   update: async (id, data) => {
     const response = await fetch(`${BASE_URL}/contact/${id}`, {
@@ -55,20 +66,13 @@ export const contactApi = {
     if (!response.ok) await handleErrorResponse(response);
     return response.json();
   },
-  create: async (data) => {
-    const response = await fetch(`${BASE_URL}/contact`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) await handleErrorResponse(response);
-    return response.json();
-  },
 };
 
 export const articleApi = {
   getAll: async () => {
-    const response = await fetch(`${BASE_URL}/article`);
+    const response = await fetch(`${BASE_URL}/article`, {
+      headers: { ...getAuthHeaders() }
+    });
     if (!response.ok) await handleErrorResponse(response);
     return response.json();
   },
@@ -98,7 +102,10 @@ export const articleApi = {
   },
   delete: async (id) => {
     const response = await fetch(`${BASE_URL}/article/${id}`, {
-      method: 'DELETE' });
+      method: 'DELETE',
+      headers: { ...getAuthHeaders() }
+    });
+    if (response.status === 204) return {};
     if (!response.ok) await handleErrorResponse(response);
     return response.json();
   },
@@ -121,8 +128,17 @@ export const workingHoursApi = {
     }
     return response.json();
   },
-  update: async (data) => {
+  add: async (data) => {
     const response = await fetch(`${BASE_URL}/workinghour`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) await handleErrorResponse(response);
+    return response.json();
+  },
+  update: async (id, data) => {
+    const response = await fetch(`${BASE_URL}/workinghour/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
       body: JSON.stringify(data),
@@ -144,9 +160,17 @@ export const profileApi = {
     }
     return response.json();
   },
-  update: async (data) => {
-    const apiUrl = process.env.REACT_APP_API_URL;
-    const res = await fetch(`${apiUrl}/Profile`, {
+  add: async (data) => {
+    const response = await fetch(`${BASE_URL}/profile`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) await handleErrorResponse(response);
+    return response.json();
+  },
+  update: async (id, data) => {
+    const res = await fetch(`${BASE_URL}/profile/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
       body: JSON.stringify(data)
@@ -155,10 +179,9 @@ export const profileApi = {
     return await res.json();
   },
   uploadPhoto: async (file) => {
-    const apiUrl = process.env.REACT_APP_API_URL;
     const formData = new FormData();
     formData.append('file', file);
-    const res = await fetch(`${apiUrl}/Profile/photo`, {
+    const res = await fetch(`${BASE_URL}/Profile/photo`, {
       method: 'POST',
       headers: { ...getAuthHeaders() },
       body: formData
@@ -167,23 +190,27 @@ export const profileApi = {
     return await res.json();
   },
   login: async ({ email, password }) => {
-    const apiUrl = process.env.REACT_APP_API_URL;
-    const res = await fetch(`${apiUrl}/auth/login`, {
+    const res = await fetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
-    if (!res.ok) await handleErrorResponse(res);
+    if (!res.ok) {
+      if (res.status === 401) {
+        const error = await res.json();
+        throw new Error(error.message); // ya da özel mesaj döndür
+      }
+      await handleErrorResponse(res); // başka hataları ele al
+    }
     return await res.json();
   },
 };
 
 export const uploadApi = {
   uploadImage: async (file) => {
-    const apiUrl = process.env.REACT_APP_API_URL;
     const formData = new FormData();
     formData.append('file', file);
-    const response = await fetch(`${apiUrl}/upload`, {
+    const response = await fetch(`${BASE_URL}/upload`, {
       method: 'POST',
       body: formData
     });

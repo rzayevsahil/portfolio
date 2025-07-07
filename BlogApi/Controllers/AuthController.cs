@@ -24,7 +24,7 @@ namespace BlogApi.Controllers
         {
             var user = _context.Set<Profile>().FirstOrDefault(p => p.Email == model.Email && p.Password == model.Password);
             if (user == null)
-                return Unauthorized("E-posta veya şifre hatalı.");
+                return Unauthorized(new { message = "E-posta veya şifre hatalı!" });
 
             var token = _jwtService.GenerateToken(user.Email, user.Name);
             return Ok(new { token });

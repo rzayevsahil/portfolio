@@ -17,6 +17,7 @@ const EditProfile = () => {
   const [error, setError] = useState('');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [newPhotoFile, setNewPhotoFile] = useState(null);
+  const [existingProfile, setExistingProfile] = useState(null);
   const { setGlobalLoading } = useLoading();
   const { t } = useTranslation();
   const { isDarkMode } = useTheme();
@@ -47,6 +48,7 @@ const EditProfile = () => {
         if (!data) {
           setError(t('profile.notAdded'));
           setProfile({});
+          setExistingProfile(null);
         } else {
           setProfile({
             name: data.name || '',
@@ -56,6 +58,7 @@ const EditProfile = () => {
             password: ''
           });
           setPhotoPreview(data.photoUrl || '');
+          setExistingProfile(data);
         }
         setLoading(false);
         setGlobalLoading(false);
@@ -64,6 +67,7 @@ const EditProfile = () => {
         setError(getTranslatedErrorMessage(error.message, t, i18n, 'profile.noData'));
         setLoading(false);
         setGlobalLoading(false);
+        setExistingProfile(null);
       });
   }, [setGlobalLoading, t]);
 
@@ -95,17 +99,29 @@ const EditProfile = () => {
     setError('');
     setSuccess(false);
     let photoUrlToUpdate = profile.photoUrl || '';
+    
     try {
       if (newPhotoFile) {
         const result = await profileApi.uploadPhoto(newPhotoFile);
         photoUrlToUpdate = result.url;
       }
-      await profileApi.update({
+
+      const profileData = {
         name: profile.name,
         email: profile.email,
         photoUrl: photoUrlToUpdate,
         password: profile.password
-      });
+      };
+
+      if (existingProfile && existingProfile.id) {
+        // Güncelleme - mevcut profil varsa ve ID'si varsa
+        await profileApi.update(existingProfile.id, profileData);
+      } else {
+        // Ekleme - mevcut profil yoksa veya ID'si yoksa
+        await profileApi.add(profileData);
+      }
+
+      // Başarılı işlem sonrası veriyi yeniden yükle
       const data = await profileApi.get();
       setProfile({
         name: data.name || '',
@@ -115,6 +131,7 @@ const EditProfile = () => {
         password: ''
       });
       setPhotoPreview(data.photoUrl || '');
+      setExistingProfile(data);
       setNewPhotoFile(null);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 2000);

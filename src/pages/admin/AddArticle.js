@@ -7,8 +7,8 @@ import './AddArticle.css';
 import Quill from 'quill';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { articleApi, uploadApi, BASE_URL } from '../../api/api';
-import { useNavigate } from 'react-router-dom';
+import { articleApi, uploadApi, BASE_URL, FILE_BASE_URL } from '../../api/api';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaLink, FaUpload, FaImage } from 'react-icons/fa';
 
 
@@ -37,15 +37,19 @@ const quillModules = {
   }
 };
 
+
 const AddArticle = () => {
+  const location = useLocation();
+  const editingArticle = location.state?.article;
   const { t, i18n } = useTranslation();
   const { isDarkMode } = useTheme();
-  const [titleTr, setTitleTr] = useState('');
-  const [titleEn, setTitleEn] = useState('');
-  const [contentTr, setContentTr] = useState('');
-  const [contentEn, setContentEn] = useState('');
-  const [author, setAuthor] = useState('');
-  const [image, setImage] = useState('');
+  const [titleTr, setTitleTr] = useState(editingArticle?.titleTr || '');
+  const [titleEn, setTitleEn] = useState(editingArticle?.titleEn || '');
+  const [contentTr, setContentTr] = useState(editingArticle?.contentTr || '');
+  const [contentEn, setContentEn] = useState(editingArticle?.contentEn || '');
+  const [author, setAuthor] = useState(editingArticle?.author || '');
+  const [image, setImage] = useState(editingArticle?.image || '');
+  const [type, setType] = useState(editingArticle?.type || editingArticle?.Type || 'classic');
   const [imageMode, setImageMode] = useState('url'); // 'url' or 'file'
   const [selectedFile, setSelectedFile] = useState(null);
   const [success, setSuccess] = useState('');
@@ -53,7 +57,10 @@ const AddArticle = () => {
   const [translating, setTranslating] = useState(false);
   const quillRef = useRef();
   const fileInputRef = useRef();
-  const [form, setForm] = useState({ title: '', content: '' });
+  const [form, setForm] = useState({
+    title: editingArticle?.titleTr || '',
+    content: editingArticle?.contentTr || ''
+  });
   const [loading, setLoading] = useState(false);
   const [titleError, setTitleError] = useState(false);
   const [contentError, setContentError] = useState(false);
@@ -125,25 +132,35 @@ const AddArticle = () => {
     }
     setTranslating(false);
     const articleData = {
+      Id: editingArticle?.id || editingArticle?.Id,
       TitleTr: form.title,
       TitleEn: titleEn,
       ContentTr: form.content,
       ContentEn: contentEn,
       Author: author,
-      Date: getLocalIsoString(),
+      Date: editingArticle ? editingArticle.date : getLocalIsoString(),
       Image: imageUrl,
       Status: true,
-      IsPublished: false
+      IsPublished: editingArticle ? editingArticle.isPublished : false,
+      Type: editingArticle ? (editingArticle.type || editingArticle.Type || 'classic') : 'classic'
     };
     try {
-      await articleApi.add(articleData);
-      setSuccess(t('addArticle.success'));
-      setForm({ title: '', content: '' });
-      setAuthor('');
-      setImage('');
-      setSelectedFile(null);
+      if (editingArticle) {
+        await articleApi.update(editingArticle.id, articleData);
+        setSuccess('Makale başarıyla güncellendi!');
+        setTimeout(() => {
+          navigate('/admin/blog-management');
+        }, 1000);
+      } else {
+        await articleApi.add(articleData);
+        setSuccess(t('addArticle.success'));
+        setForm({ title: '', content: '' });
+        setAuthor('');
+        setImage('');
+        setSelectedFile(null);
+      }
     } catch {
-      setError('Makale eklenemedi.');
+      setError('Makale kaydedilemedi.');
       setTranslating(false);
     }
     setLoading(false);
@@ -397,11 +414,11 @@ const AddArticle = () => {
           <div className="flex items-center mt-2 gap-2">
             <img
               src={
-                selectedFile 
+                selectedFile
                   ? URL.createObjectURL(selectedFile)
                   : image.startsWith('http')
                     ? image
-                    : `${BASE_URL}${image}`
+                    : `${FILE_BASE_URL}${image.startsWith('/') ? image : '/' + image}`
               }
               alt="Önizleme"
               className="max-h-32 rounded shadow border"

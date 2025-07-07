@@ -79,12 +79,7 @@ const BlogManagement = () => {
     try {
       setGlobalLoading(true);
       const articleId = articleToDelete.id ?? articleToDelete.Id;
-      const updatedArticle = {
-        ...articleToDelete,
-        status: false,
-        isPublished: false
-      };
-      await articleApi.update(articleId, updatedArticle);
+      await articleApi.delete(articleId);
       await loadArticles();
       setAlert({ message: t('blogManagement.deleteSuccess'), type: 'success' });
       setTimeout(() => setAlert({ message: '', type: '' }), 3000);
@@ -108,18 +103,18 @@ const BlogManagement = () => {
       setGlobalLoading(true);
       const articleId = article.id ?? article.Id;
       const updatedArticle = {
-        id: articleId,
-        titleTr: article.titleTr,
-        titleEn: article.titleEn,
-        contentTr: article.contentTr,
-        contentEn: article.contentEn,
-        author: article.author,
-        date: article.date,
-        image: article.image,
-        status: article.status,
-        isPublished: !article.isPublished
+        Id: articleId,
+        TitleTr: article.titleTr,
+        TitleEn: article.titleEn,
+        ContentTr: article.contentTr,
+        ContentEn: article.contentEn,
+        Author: article.author,
+        Date: article.date,
+        Image: article.image,
+        Status: article.status,
+        IsPublished: !article.isPublished,
+        Type: article.type || article.Type || 'classic'
       };
-      console.log('Makale güncelleme isteği:', updatedArticle);
       await articleApi.update(articleId, updatedArticle);
       if (!article.isPublished) {
         setAlert({ message: t('blogManagement.publishSuccess'), type: 'success' });
@@ -137,7 +132,12 @@ const BlogManagement = () => {
   };
 
   const handleEdit = (article) => {
-    navigate('/admin/edit-article', { state: { article } });
+    const type = article.type || article.Type || 'classic';
+    if (type === 'medium') {
+      navigate('/admin/medium', { state: { article } });
+    } else {
+      navigate('/admin/add-article', { state: { article } });
+    }
   };
 
   // Sayaçlar
@@ -165,10 +165,9 @@ const BlogManagement = () => {
     setCurrentPage(pageNumber);
   };
 
-  // Arama veya dil değiştiğinde sayfa 1'e dön
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, i18n.language]);
+  }, [searchTerm, statusFilter]);
 
   return (
     <div className="p-6">

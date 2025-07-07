@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogApi.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    [Migration("20250705153310_InitialArticleMigration")]
-    partial class InitialArticleMigration
+    [Migration("20250706180801_AddArticleType")]
+    partial class AddArticleType
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,6 +56,10 @@ namespace BlogApi.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TitleTr")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using BlogApi.Models;
 using BlogApi.Data;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlogApi.Controllers
 {
@@ -17,7 +18,7 @@ namespace BlogApi.Controllers
 
         // GET: api/contact
         [HttpGet]
-        public ActionResult<Contact> Get()
+        public async Task<ActionResult<Contact>> Get()
         {
             var contact = _context.Contacts.FirstOrDefault();
             if (contact == null)
@@ -28,8 +29,9 @@ namespace BlogApi.Controllers
         }
 
         // POST: api/contact
+        [Authorize]
         [HttpPost]
-        public ActionResult<Contact> Create(Contact contact)
+        public async Task<ActionResult<Contact>> Create(Contact contact)
         {
             if (contact == null)
                 return BadRequest();
@@ -39,20 +41,25 @@ namespace BlogApi.Controllers
         }
 
         // PUT: api/contact/{id}
+        [Authorize]
         [HttpPut("{id}")]
-        public ActionResult<Contact> Update(int id, Contact contact)
-        {
-            var _contact = _context.Contacts.FirstOrDefault(c => c.Id == id);
-            if (_contact == null)
-                return NotFound();
-            _contact.Email = contact.Email;
-            _contact.Location = contact.Location;
-            _contact.Github = contact.Github;
-            _contact.Linkedin = contact.Linkedin;
-            _contact.Twitter = contact.Twitter;
-            _contact.Instagram = contact.Instagram;
+        public async Task<ActionResult<Contact>> Update(int id, Contact contact)
+        {            
+            if (id != contact.Id)
+                return BadRequest("ID'ler eşleşmiyor.");
+
+            var existingContact = await _context.Contacts.FindAsync(id);
+            if (existingContact == null)
+                return NotFound(new { message = "İletişim bilgileri bulunamadı." });
+
+            existingContact.Email = contact.Email;
+            existingContact.Location = contact.Location;
+            existingContact.Github = contact.Github;
+            existingContact.Linkedin = contact.Linkedin;
+            existingContact.Twitter = contact.Twitter;
+            existingContact.Instagram = contact.Instagram;
             _context.SaveChanges();
-            return Ok(_contact);
+            return Ok(existingContact);
         }
     }
 } 
