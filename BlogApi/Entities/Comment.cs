@@ -1,6 +1,6 @@
 using System;
 
-namespace BlogApi.Models
+namespace BlogApi.Entities
 {
     public class Comment
     {

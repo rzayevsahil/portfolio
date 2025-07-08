@@ -119,7 +119,7 @@ function App() {
               <Header />
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/article/:id" element={<ArticleDetail />} />
+                <Route path="/blog/:idAndSlug" element={<ArticleDetail />} />
                 <Route path="/blog" element={<BlogList />} />
                 <Route path="/admin/login" element={<Login />} />
                 <Route path="/admin/*" element={

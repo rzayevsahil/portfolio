@@ -32,21 +32,5 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\profile_photos\b0f60e84-d9ff-47dc-8728-75de275cd61f.webp))</OriginalItemSpec>
     </StaticWebAsset>
-    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\230bc2f2-8ca8-4178-93d5-2e1de0c3581b.webp))">
-      <SourceType>Package</SourceType>
-      <SourceId>BlogApi</SourceId>
-      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
-      <BasePath>_content/BlogApi</BasePath>
-      <RelativePath>uploads/230bc2f2-8ca8-4178-93d5-2e1de0c3581b.webp</RelativePath>
-      <AssetKind>All</AssetKind>
-      <AssetMode>All</AssetMode>
-      <AssetRole>Primary</AssetRole>
-      <RelatedAsset></RelatedAsset>
-      <AssetTraitName></AssetTraitName>
-      <AssetTraitValue></AssetTraitValue>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\230bc2f2-8ca8-4178-93d5-2e1de0c3581b.webp))</OriginalItemSpec>
-    </StaticWebAsset>
   </ItemGroup>
 </Project>

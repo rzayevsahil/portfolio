@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using BlogApi.Models;
+using BlogApi.Entities;
 using BlogApi.Services;
 using BlogApi.Data;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace BlogApi.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest model)
+        public IActionResult Login([FromBody] Login model)
         {
             var user = _context.Set<Profile>().FirstOrDefault(p => p.Email == model.Email && p.Password == model.Password);
             if (user == null)

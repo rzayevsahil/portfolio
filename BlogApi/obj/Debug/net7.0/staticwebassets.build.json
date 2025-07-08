@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "R2dzPPleozOhj7iU5GYoiVULEAjRP7Hu+OMtebrNuTY=",
+  "Hash": "54x3zK3/8iVAIegHpyj9eNlNuu1XVljhFRQ2h0tvRpM=",
   "Source": "BlogApi",
   "BasePath": "_content/BlogApi",
   "Mode": "Default",
@@ -49,23 +49,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\profile_photos\\b0f60e84-d9ff-47dc-8728-75de275cd61f.webp"
-    },
-    {
-      "Identity": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\230bc2f2-8ca8-4178-93d5-2e1de0c3581b.webp",
-      "SourceId": "BlogApi",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\",
-      "BasePath": "_content/BlogApi",
-      "RelativePath": "uploads/230bc2f2-8ca8-4178-93d5-2e1de0c3581b.webp",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\230bc2f2-8ca8-4178-93d5-2e1de0c3581b.webp"
     }
   ]
 }

@@ -142,15 +142,13 @@ const AddArticle = () => {
       Image: imageUrl,
       Status: true,
       IsPublished: editingArticle ? editingArticle.isPublished : false,
-      Type: editingArticle ? (editingArticle.type || editingArticle.Type || 'classic') : 'classic'
+      Type: editingArticle ? (editingArticle.type || editingArticle.Type || 'classic') : 'classic',
+      Slug: ''
     };
     try {
       if (editingArticle) {
         await articleApi.update(editingArticle.id, articleData);
         setSuccess('Makale başarıyla güncellendi!');
-        setTimeout(() => {
-          navigate('/admin/blog-management');
-        }, 1000);
       } else {
         await articleApi.add(articleData);
         setSuccess(t('addArticle.success'));
@@ -159,6 +157,7 @@ const AddArticle = () => {
         setImage('');
         setSelectedFile(null);
       }
+      setTimeout(() => navigate('/admin/blog-management', { replace: true }), 1000);
     } catch {
       setError('Makale kaydedilemedi.');
       setTranslating(false);

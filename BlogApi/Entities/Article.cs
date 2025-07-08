@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BlogApi.Models
+namespace BlogApi.Entities
 {
     public class Article
     {
@@ -13,6 +13,7 @@ namespace BlogApi.Models
         public string Author { get; set; }
         public DateTime Date { get; set; }
         public string Image { get; set; }
+        public string Slug { get; set; }
         public List<Comment> Comments { get; set; } = new List<Comment>();
         public bool Status { get; set; }
         public bool IsPublished { get; set; }

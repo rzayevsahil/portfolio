@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using BlogApi.Models;
+using BlogApi.Entities;
 using BlogApi.Data;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
@@ -112,7 +112,7 @@ namespace BlogApi.Controllers
 
         // POST: api/profile/login
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] Login request)
         {
             if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
                 return BadRequest("E-posta ve şifre gereklidir.");

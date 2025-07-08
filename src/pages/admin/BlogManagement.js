@@ -113,7 +113,8 @@ const BlogManagement = () => {
         Image: article.image,
         Status: article.status,
         IsPublished: !article.isPublished,
-        Type: article.type || article.Type || 'classic'
+        Type: article.type || article.Type || 'classic',
+        Slug: article.slug || article.Slug || ''
       };
       await articleApi.update(articleId, updatedArticle);
       if (!article.isPublished) {

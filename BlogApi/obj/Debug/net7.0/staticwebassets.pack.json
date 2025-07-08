@@ -9,10 +9,6 @@
       "PackagePath": "staticwebassets\\profile_photos\\b0f60e84-d9ff-47dc-8728-75de275cd61f.webp"
     },
     {
-      "Id": "C:\\Users\\Sahil Rzayev\\Desktop\\CursorAI Projects\\portfolio\\BlogApi\\wwwroot\\uploads\\230bc2f2-8ca8-4178-93d5-2e1de0c3581b.webp",
-      "PackagePath": "staticwebassets\\uploads\\230bc2f2-8ca8-4178-93d5-2e1de0c3581b.webp"
-    },
-    {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.BlogApi.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

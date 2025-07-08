@@ -264,7 +264,7 @@ export default function MediumEditor() {
       if (selectedIdx !== null) {
         const block = blocks[selectedIdx];
         // Silme (görsel, video, embed, kod, alıntı blokları)
-        if ((e.key === "Delete" || e.key === "Backspace") && (block.type === "image" || block.type === "video" || block.type === "embed" || block.type === "code" || block.type === "quote")) {
+        if ((e.key === "Delete" || e.key === "Backspace") && (block.type === "image" || block.type === "video" || block.type === "embed" || block.type === "quote")) {
           e.preventDefault();
           let newBlocks = blocks.filter((_, idx) => idx !== selectedIdx);
           if (newBlocks.length === 0) {
@@ -272,6 +272,74 @@ export default function MediumEditor() {
           }
           setBlocks(newBlocks);
           setSelectedIdx(null);
+        }
+        // Kod bloğu için özel silme davranışı
+        else if ((e.key === "Delete" || e.key === "Backspace") && block.type === "code") {
+          if (!block.value || block.value.length === 0) {
+            // Zaten boşsa bloğu sil
+            e.preventDefault();
+            let newBlocks = blocks.filter((_, idx) => idx !== selectedIdx);
+            if (newBlocks.length === 0) {
+              newBlocks.push({ type: 'text', value: '', id: generateId() });
+            }
+            setBlocks(newBlocks);
+            setSelectedIdx(null);
+          }
+          // value doluysa hiçbir şey yapma, silme işlemini tarayıcıya bırak
+        }
+        // Alıntı (quote) bloğu için özel silme davranışı
+        else if ((e.key === "Delete" || e.key === "Backspace") && block.type === "quote") {
+          if (!block.value || block.value.length === 0) {
+            // Zaten boşsa bloğu sil
+            e.preventDefault();
+            let newBlocks = blocks.filter((_, idx) => idx !== selectedIdx);
+            if (newBlocks.length === 0) {
+              newBlocks.push({ type: 'text', value: '', id: generateId() });
+            }
+            setBlocks(newBlocks);
+            setSelectedIdx(null);
+          }
+          // value doluysa hiçbir şey yapma, silme işlemini tarayıcıya bırak
+        }
+        // Blockquote (type: 'text' ve value'su <blockquote> ile başlayan) için manuel silme davranışı
+        else if (
+          (e.key === "Delete" || e.key === "Backspace") &&
+          block.type === "text" &&
+          block.value &&
+          block.value.trim().startsWith("<blockquote>")
+        ) {
+          const match = block.value.match(/^<blockquote>([\s\S]*?)<\/blockquote>([\s\S]*)$/);
+          if (match) {
+            let inner = match[1];
+            const after = match[2];
+            if (inner.length > 0) {
+              e.preventDefault();
+              // Son karakteri sil (backspace gibi)
+              inner = inner.slice(0, -1);
+              const newValue = `<blockquote>${inner}</blockquote>${after}`;
+              const newBlocks = [...blocks];
+              newBlocks[selectedIdx] = { ...block, value: newValue };
+              setBlocks(newBlocks);
+              // Eğer inner tamamen boşaldıysa, bloğu sil
+              if (inner.replace(/<br\s*\/?>/gi, '').replace(/&nbsp;/gi, '').replace(/\s+/g, '').trim() === "" && (!after || after.replace(/<br\s*\/?>/gi, '').replace(/&nbsp;/gi, '').replace(/\s+/g, '').trim() === "")) {
+                let filteredBlocks = blocks.filter((_, idx) => idx !== selectedIdx);
+                if (filteredBlocks.length === 0) {
+                  filteredBlocks.push({ type: 'text', value: '', id: generateId() });
+                }
+                setBlocks(filteredBlocks);
+                setSelectedIdx(null);
+              }
+            } else {
+              // Zaten boşsa, bloğu sil
+              e.preventDefault();
+              let newBlocks = blocks.filter((_, idx) => idx !== selectedIdx);
+              if (newBlocks.length === 0) {
+                newBlocks.push({ type: 'text', value: '', id: generateId() });
+              }
+              setBlocks(newBlocks);
+              setSelectedIdx(null);
+            }
+          }
         }
         // Enter ile altına yeni blok ekleme
         if (e.key === "Enter" && (block.type === "image" || block.type === "video" || block.type === "embed")) {
@@ -653,6 +721,7 @@ export default function MediumEditor() {
       Status: true,
       IsPublished: editingArticle ? (editingArticle.isPublished ?? editingArticle.IsPublished ?? false) : false,
       Type: 'medium',
+      Slug: ''
     };
     try {
       if (editingArticle) {
@@ -662,7 +731,6 @@ export default function MediumEditor() {
           Id: editingArticle.id || editingArticle.Id,
         });
         showNotif(t('addArticle.success'), 'success');
-        setTimeout(() => navigate('/admin/blog-management', { replace: true }), 1000);
       } else {
         // Yeni ekleme
         await articleApi.add(article);
@@ -674,8 +742,8 @@ export default function MediumEditor() {
         setImagePreview('');
         setSelectedFileName('');
         setBlocks([{ type: 'text', value: '', id: generateId() }]);        
-        setTimeout(() => navigate('/admin/blog-management', { replace: true }), 1000);
       }
+      setTimeout(() => navigate('/admin/blog-management', { replace: true }), 1000);
     } catch (err) {
       showNotif(t('addArticle.errors.server'), 'error');
     }
@@ -837,6 +905,39 @@ export default function MediumEditor() {
       <div className="p-8">
         {blocks.map((block, i) => {
           const isBlockEmpty = !block.value || block.value === '<br>' || block.value.trim() === '';
+          // Blockquote (type: 'text' ve value'su <blockquote> ile başlayan) için özel textarea
+          if (block.type === 'text' && block.value && block.value.trim().startsWith('<blockquote>')) {
+            return (
+              <div key={block.id} className="relative flex items-center group mb-6" style={{ pointerEvents: 'auto' }}>
+                <textarea
+                  value={block.value.replace(/^<blockquote>/, '').replace(/<\/blockquote>$/, '')}
+                  onChange={e => {
+                    const newBlocks = [...blocks];
+                    newBlocks[i] = { ...block, value: `<blockquote>${e.target.value}</blockquote>` };
+                    setBlocks(newBlocks);
+                  }}
+                  onKeyDown={e => {
+                    if (
+                      (e.key === 'Backspace' || e.key === 'Delete') &&
+                      e.target.value.length === 0
+                    ) {
+                      e.preventDefault();
+                      let newBlocks = blocks.filter((_, idx) => idx !== i);
+                      if (newBlocks.length === 0) {
+                        newBlocks.push({ type: 'text', value: '', id: generateId() });
+                      }
+                      setBlocks(newBlocks);
+                      setSelectedIdx(null);
+                    }
+                  }}
+                  className="w-full border-l-4 border-green-400 italic rounded p-2 my-2"
+                  placeholder="Alıntı..."
+                  rows={1}
+                  style={{ minHeight: 32 }}
+                />
+              </div>
+            );
+          }
           return (
             <div key={block.id} className="relative flex items-center group mb-6" style={{ pointerEvents: 'auto' }}>
               {/* Overlay sadece video/embed ve seçili değilken */}

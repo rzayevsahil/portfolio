@@ -229,7 +229,7 @@ const BlogList = () => {
                     className={`flex items-center space-x-2 text-sm font-medium transition-colors duration-300 mt-2 mb-4 px-4 ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}
                     onClick={() => {
                       localStorage.setItem('blogScroll', window.scrollY);
-                      navigate(`/article/${article.id}`, { state: { fromBlogList: true } });
+                      navigate(`/blog/${article.id}-${article.slug}`, { state: { fromBlogList: true } });
                     }}
                   >
                     <span>{t('blog.readMore')}</span>

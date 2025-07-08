@@ -10,66 +10,12 @@ import { articleApi, BASE_URL } from '../api/api';
 import { getImageUrl } from '../utils/imageHelpers';
 
 const ArticleDetail = () => {
-  const { id } = useParams();
+  const { idAndSlug } = useParams();
+  const id = idAndSlug.split('-')[0];
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
   const { isDarkMode } = useTheme();
-
-  const articles = [
-    {
-      id: 1,
-      title: t('blog.articles.article1.title'),
-      excerpt: t('blog.articles.article1.excerpt'),
-      content: t('blog.articles.article1.content'),
-      author: 'Sahil Rzayev',
-      date: '2024-01-15',
-      category: 'development',
-      tags: ['ASP.NET Core', 'Web API', 'C#'],
-      readTime: '8 dk',
-      image: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&h=400&fit=crop',
-      featured: true
-    },
-    {
-      id: 2,
-      title: t('blog.articles.article2.title'),
-      excerpt: t('blog.articles.article2.excerpt'),
-      content: t('blog.articles.article2.content'),
-      author: 'Sahil Rzayev',
-      date: '2024-01-10',
-      category: 'development',
-      tags: ['Clean Architecture', 'SOLID', 'Design Patterns'],
-      readTime: '12 dk',
-      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop'
-    },
-    {
-      id: 3,
-      title: t('blog.articles.article3.title'),
-      excerpt: t('blog.articles.article3.excerpt'),
-      content: t('blog.articles.article3.content'),
-      author: 'Sahil Rzayev',
-      date: '2024-01-05',
-      category: 'technology',
-      tags: ['Docker', 'Microservices', 'DevOps'],
-      readTime: '10 dk',
-      image: 'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&h=400&fit=crop'
-    },
-    {
-      id: 4,
-      title: t('blog.articles.article4.title'),
-      excerpt: t('blog.articles.article4.excerpt'),
-      content: t('blog.articles.article4.content'),
-      author: 'Sahil Rzayev',
-      date: '2024-02-01',
-      category: 'tips',
-      tags: ['Productivity', 'Tips', 'Motivation'],
-      readTime: '6 dk',
-      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=400&fit=crop',
-      featured: false
-    }
-  ];
-
-  const article = articles.find(a => a.id === parseInt(id));
 
   // Yorumlar için local state
   const [comments, setComments] = useState([
@@ -156,7 +102,7 @@ const ArticleDetail = () => {
   }
 
   // Eğer API'den makale geldiyse onu göster, yoksa örnek makaleyi göster
-  const currentArticle = apiArticle || article;
+  const currentArticle = apiArticle;
   const lang = i18n.language;
   const title = lang === 'en' ? currentArticle.titleEn || currentArticle.title : currentArticle.titleTr || currentArticle.title;
   const content = lang === 'en' ? currentArticle.contentEn || currentArticle.content : currentArticle.contentTr || currentArticle.content;

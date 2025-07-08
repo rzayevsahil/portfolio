@@ -1,6 +1,6 @@
-namespace BlogApi.Models
+namespace BlogApi.Entities
 {
-    public class LoginRequest
+    public class Login
     {
         public string Email { get; set; }
         public string Password { get; set; }

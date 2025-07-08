@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BlogApi.Data;
-using BlogApi.Models;
+using BlogApi.Entities;
 
 namespace BlogApi.Controllers
 {

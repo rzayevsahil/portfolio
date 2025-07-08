@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BlogApi.Data;
-using BlogApi.Models;
+using BlogApi.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
+using BlogApi.Entities;
 
 namespace BlogApi.Controllers
 {
@@ -18,20 +19,19 @@ namespace BlogApi.Controllers
             _context = context;
         }
 
-        // DTO tanımı
-        public class ArticleDto
+        // ArticleDto tanımını kaldırıyorum
+
+        // Slugify fonksiyonu ekle
+        private string Slugify(string text)
         {
-            public int Id { get; set; }
-            public string TitleTr { get; set; }
-            public string TitleEn { get; set; }
-            public string ContentTr { get; set; }
-            public string ContentEn { get; set; }
-            public string Author { get; set; }
-            public string Date { get; set; }
-            public string Image { get; set; }
-            public bool Status { get; set; }
-            public bool IsPublished { get; set; }
-            public string Type { get; set; }
+            if (string.IsNullOrEmpty(text)) return "";
+            var slug = text.ToLowerInvariant()
+                .Replace("ğ", "g").Replace("ü", "u").Replace("ş", "s").Replace("ı", "i").Replace("ö", "o").Replace("ç", "c");
+            slug = System.Text.RegularExpressions.Regex.Replace(slug, @"[^a-z0-9\s-]", "");
+            slug = System.Text.RegularExpressions.Regex.Replace(slug, @"\s+", "-");
+            slug = System.Text.RegularExpressions.Regex.Replace(slug, "-+", "-");
+            slug = slug.Trim('-');
+            return slug;
         }
 
         [Authorize]
@@ -51,7 +51,8 @@ namespace BlogApi.Controllers
                 Image = m.Image,
                 Status = m.Status,
                 IsPublished = m.IsPublished,
-                Type = m.Type
+                Type = m.Type,
+                Slug = m.Slug
             }).ToList();
             return result;
         }
@@ -76,7 +77,8 @@ namespace BlogApi.Controllers
                 Image = article.Image,
                 Status = article.Status,
                 IsPublished = article.IsPublished,
-                Type = article.Type
+                Type = article.Type,
+                Slug = article.Slug
             };
             return result;
         }
@@ -98,6 +100,7 @@ namespace BlogApi.Controllers
             article.Status = true;
             article.IsPublished = false;
             article.Type = string.IsNullOrEmpty(article.Type) ? "classic" : article.Type;
+            article.Slug = Slugify(article.TitleTr ?? article.TitleEn);
             _context.Articles.Add(article);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetArticle), new { id = article.Id }, article);
@@ -137,6 +140,7 @@ namespace BlogApi.Controllers
             existingArticle.Status = article.Status;
             existingArticle.IsPublished = article.IsPublished;
             existingArticle.Type = string.IsNullOrEmpty(article.Type) ? "classic" : article.Type;
+            existingArticle.Slug = Slugify(article.TitleTr ?? article.TitleEn);
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -183,7 +187,8 @@ namespace BlogApi.Controllers
                 Image = m.Image,
                 Status = m.Status,
                 IsPublished = m.IsPublished,
-                Type = m.Type
+                Type = m.Type,
+                Slug = m.Slug
             }).ToList();
             return result;
         }

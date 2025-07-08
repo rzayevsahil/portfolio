@@ -130,7 +130,7 @@ const Blog = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className={`flex items-center space-x-2 text-sm font-medium transition-colors duration-300 mt-2 mb-4 px-4 ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}
-                    onClick={() => navigate(`/article/${article.id}`, { state: { fromBlogList: false } })}
+                    onClick={() => navigate(`/blog/${article.id}-${article.slug}`, { state: { fromBlogList: false } })}
                   >
                     <span>{t('blog.readMore')}</span>
                     <FaArrowRight size={12} />
